@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react'
 import { loadAcademyUnit } from '../data/grammarAcademy/index.js'
+import SpeakButton from '../components/SpeakButton'
 import { recordAcademyDrillAttempt } from '../utils/academyProgress'
+import { recordGrammarDrillCompleted, recordQuestionAnswered } from '../utils/localStats'
+import { sendLearningEvent } from '../utils/globalStats'
 
 export default function GrammarAcademyDrill({ moduleId, unitId, onNavigate, onSelectAcademyUnit }) {
   const [state, setState] = useState({ loading: true, module: null, unit: null })
@@ -47,6 +50,8 @@ export default function GrammarAcademyDrill({ moduleId, unitId, onNavigate, onSe
 
   const selectAnswer = (choice) => {
     if (selectedAnswer) return
+    recordQuestionAnswered(currentQuestion.skillTag, choice === currentQuestion.correctAnswer)
+    sendLearningEvent('question_answered', { skillTag: currentQuestion.skillTag })
     setAnswers((current) => ({ ...current, [currentIndex]: choice }))
   }
 
@@ -55,7 +60,10 @@ export default function GrammarAcademyDrill({ moduleId, unitId, onNavigate, onSe
       .filter((question, index) => answers[index] !== question.correctAnswer)
       .map((question) => question.skillTag)
       .filter(Boolean)
+    const percentage = Math.round((score / questions.length) * 100)
     recordAcademyDrillAttempt(moduleId, unitId, score, questions.length, wrongTopics)
+    recordGrammarDrillCompleted(unitId, percentage)
+    sendLearningEvent('grammar_drill_completed', { lessonId: unitId, score: percentage })
     setFinished(true)
   }
 
@@ -106,7 +114,10 @@ export default function GrammarAcademyDrill({ moduleId, unitId, onNavigate, onSe
       </div>
 
       <div className="rounded-xl border border-purple-700/40 bg-purple-900/20 p-5">
-        <p className="mb-4 text-lg font-semibold text-purple-100">{currentQuestion.question}</p>
+        <div className="mb-4 flex flex-wrap items-start gap-2">
+          <p className="min-w-0 flex-1 text-lg font-semibold text-purple-100">{currentQuestion.question}</p>
+          <SpeakButton text={currentQuestion.question} label="Question" variant="button" size="sm" />
+        </div>
         <div className="space-y-2">
           {currentQuestion.choices.map((choice) => {
             const isSelected = selectedAnswer === choice
@@ -115,16 +126,18 @@ export default function GrammarAcademyDrill({ moduleId, unitId, onNavigate, onSe
             if (showResult && isCorrect) classes = 'border-green-500 bg-green-900/30'
             if (showResult && isSelected && !isCorrect) classes = 'border-red-500 bg-red-900/30'
             return (
-              <button
-                key={choice}
-                onClick={() => selectAnswer(choice)}
-                disabled={showResult}
-                className={`w-full rounded-lg border p-3 text-left text-purple-100 transition ${classes}`}
-              >
-                {choice}
-                {showResult && isCorrect && <span className="ml-2 text-green-300">correct</span>}
-                {showResult && isSelected && !isCorrect && <span className="ml-2 text-red-300">wrong</span>}
-              </button>
+              <div key={choice} className="flex items-stretch gap-2">
+                <button
+                  onClick={() => selectAnswer(choice)}
+                  disabled={showResult}
+                  className={`min-w-0 flex-1 rounded-lg border p-3 text-left text-purple-100 transition ${classes}`}
+                >
+                  {choice}
+                  {showResult && isCorrect && <span className="ml-2 text-green-300">correct</span>}
+                  {showResult && isSelected && !isCorrect && <span className="ml-2 text-red-300">wrong</span>}
+                </button>
+                <SpeakButton text={choice} label="Choice" size="sm" />
+              </div>
             )
           })}
         </div>

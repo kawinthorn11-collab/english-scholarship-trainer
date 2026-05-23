@@ -1,21 +1,34 @@
-export default function QuestionCard({ question, selectedAnswer, onSelect, showResult, questionNumber, hideSkillTag = false, hidePassage = false }) {
+import SpeakButton from './SpeakButton'
+
+export default function QuestionCard({
+  question,
+  selectedAnswer,
+  onSelect,
+  showResult,
+  questionNumber,
+  hideSkillTag = false,
+  hidePassage = false,
+}) {
   return (
     <div className="rounded-xl border border-purple-700/40 bg-purple-900/20 p-6">
-      {/* Passage — can be hidden when shown in a grouped panel */}
       {!hidePassage && question.passage && (
         <div className="mb-4 rounded-lg border border-purple-700/30 bg-purple-950/40 p-4 text-sm leading-relaxed text-purple-200/80">
-          <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-purple-400">Reading Passage</p>
+          <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+            <p className="text-xs font-semibold uppercase tracking-wide text-purple-400">Reading Passage</p>
+            <SpeakButton text={question.passage} label="Read passage" variant="button" size="sm" />
+          </div>
           {question.passage}
         </div>
       )}
 
-      {/* Question */}
-      <p className="mb-4 text-lg font-medium text-purple-100">
-        <span className="mr-2 text-purple-400">Q{questionNumber}.</span>
-        {question.question}
-      </p>
+      <div className="mb-4 flex flex-wrap items-start gap-2">
+        <p className="min-w-0 flex-1 text-lg font-medium text-purple-100">
+          <span className="mr-2 text-purple-400">Q{questionNumber}.</span>
+          {question.question}
+        </p>
+        <SpeakButton text={question.question} label="Question" variant="button" size="sm" />
+      </div>
 
-      {/* Choices */}
       <div className="space-y-2">
         {question.choices.map((choice, idx) => {
           const choiceNum = idx + 1
@@ -41,23 +54,24 @@ export default function QuestionCard({ question, selectedAnswer, onSelect, showR
           }
 
           return (
-            <button
-              key={idx}
-              type="button"
-              onClick={() => !showResult && onSelect(choice)}
-              disabled={showResult}
-              className={`w-full rounded-lg border p-3 text-left text-purple-100 transition ${borderClass} ${bgClass} ${showResult ? 'cursor-default' : 'cursor-pointer'}`}
-            >
-              <span className="mr-2 font-bold text-purple-400">{choiceNum}.</span>
-              {choice}
-              {showResult && isCorrect && <span className="ml-2 text-green-400">✓</span>}
-              {showResult && isSelected && !isCorrect && <span className="ml-2 text-red-400">✗</span>}
-            </button>
+            <div key={idx} className="flex items-stretch gap-2">
+              <button
+                type="button"
+                onClick={() => !showResult && onSelect(choice)}
+                disabled={showResult}
+                className={`min-w-0 flex-1 rounded-lg border p-3 text-left text-purple-100 transition ${borderClass} ${bgClass} ${showResult ? 'cursor-default' : 'cursor-pointer'}`}
+              >
+                <span className="mr-2 font-bold text-purple-400">{choiceNum}.</span>
+                {choice}
+                {showResult && isCorrect && <span className="ml-2 text-green-400">Correct</span>}
+                {showResult && isSelected && !isCorrect && <span className="ml-2 text-red-400">Try again</span>}
+              </button>
+              <SpeakButton text={choice} label={`Choice ${choiceNum}`} size="sm" />
+            </div>
           )
         })}
       </div>
 
-      {/* Skill tag — hidden during exam */}
       {!hideSkillTag && (
         <div className="mt-4 flex items-center gap-2">
           <span className="rounded-full bg-purple-800/50 px-3 py-1 text-xs text-purple-300">

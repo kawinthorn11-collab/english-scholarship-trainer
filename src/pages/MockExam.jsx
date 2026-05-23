@@ -8,6 +8,9 @@ import { analyzeWeakSkills } from '../utils/analysis'
 import { saveAttempt } from '../utils/storage'
 import { shuffleExam } from '../utils/shuffle'
 import { getPassageForQuestion, getPassageTitle } from '../utils/passage'
+import SpeakButton from '../components/SpeakButton'
+import { recordExamCompleted, recordExamStarted, recordQuestionAnswered } from '../utils/localStats'
+import { sendLearningEvent } from '../utils/globalStats'
 
 export default function MockExam({ selectedSetId, onNavigate, onExamStart, onExamEnd }) {
   const examSet = getExamSet(selectedSetId)
@@ -21,6 +24,7 @@ export default function MockExam({ selectedSetId, onNavigate, onExamStart, onExa
   const [score, setScore] = useState(null)
   const [showConfirm, setShowConfirm] = useState(false)
   const [finalTimeUsed, setFinalTimeUsed] = useState(0)
+  const startedRef = useRef(false)
   const elapsedRef = useRef(0)
   const questionAreaRef = useRef(null)
 
@@ -28,8 +32,12 @@ export default function MockExam({ selectedSetId, onNavigate, onExamStart, onExa
 
   // Signal exam start on mount
   useEffect(() => {
+    if (startedRef.current) return
+    startedRef.current = true
     if (onExamStart) onExamStart()
-  }, [])
+    recordExamStarted()
+    sendLearningEvent('exam_started', { examSetId: selectedSetId })
+  }, [onExamStart, selectedSetId])
 
   // beforeunload guard
   useEffect(() => {
@@ -78,6 +86,15 @@ export default function MockExam({ selectedSetId, onNavigate, onExamStart, onExa
     }
 
     saveAttempt(attempt)
+    recordExamCompleted(result.percentage)
+    result.details.forEach((detail) => {
+      recordQuestionAnswered(detail.skillTag, detail.isCorrect)
+      sendLearningEvent('question_answered', { skillTag: detail.skillTag })
+    })
+    sendLearningEvent('exam_completed', {
+      examSetId: selectedSetId,
+      score: result.percentage,
+    })
     setScore(result)
     setFinalTimeUsed(elapsedRef.current)
     setSubmitted(true)
@@ -170,6 +187,9 @@ export default function MockExam({ selectedSetId, onNavigate, onExamStart, onExa
                 📚 {title || (currentQuestion.section === 'Grammar' ? 'Grammar Passage' : 'Reading Passage')} (click to show/hide)
               </summary>
               <div className="border-t border-purple-700/30 p-4 text-sm leading-relaxed text-purple-200/80 whitespace-pre-line">
+                <div className="mb-3 flex justify-end">
+                  <SpeakButton text={passage} label="Read passage" variant="button" size="sm" />
+                </div>
                 {passage}
               </div>
             </details>

@@ -1,6 +1,7 @@
 import { grammarLessons, findLessonsBySkillTags } from '../data/grammarLessons/index.js'
 import { getAttempts, getGrammarProgress } from '../utils/storage'
 import { examSets } from '../data/examSets/index.js'
+import ComicCoach from '../components/ComicCoach'
 
 function countRelatedQuestions(skillTags) {
   let count = 0
@@ -52,6 +53,8 @@ export default function GrammarHub({ onNavigate, onSelectLesson }) {
         <StatPill label="Studied" value={studiedCount} />
         <StatPill label="Mastered" value={masteredCount} />
       </div>
+
+      <ComicCoach onNavigate={onNavigate} />
 
       {recommendedNext && (
         <div className="rounded-lg border border-purple-600/40 bg-purple-900/20 p-5">
@@ -203,4 +206,3 @@ function LessonCard({ lesson, progress, relatedCount, onSelect }) {
     </button>
   )
 }
-

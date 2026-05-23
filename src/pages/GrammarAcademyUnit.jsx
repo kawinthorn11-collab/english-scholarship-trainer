@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react'
 import { getNextAcademyUnitMeta, getPreviousAcademyUnitMeta, loadAcademyUnit } from '../data/grammarAcademy/index.js'
 import { markAcademyUnitComplete, markAcademyUnitStudied } from '../utils/academyProgress'
+import SpeakButton from '../components/SpeakButton'
+import ComicCoach from '../components/ComicCoach'
+import { recordGrammarLessonCompleted } from '../utils/localStats'
+import { sendLearningEvent } from '../utils/globalStats'
 
 export default function GrammarAcademyUnit({ moduleId, unitId, onNavigate, onSelectAcademyUnit, onStartAcademyDrill }) {
   const [state, setState] = useState({ loading: true, module: null, unit: null })
@@ -38,6 +42,8 @@ export default function GrammarAcademyUnit({ moduleId, unitId, onNavigate, onSel
 
   const completeUnit = () => {
     markAcademyUnitComplete(moduleId, unitId)
+    recordGrammarLessonCompleted(unitId)
+    sendLearningEvent('grammar_lesson_completed', { lessonId: unitId })
     if (nextUnit) onSelectAcademyUnit(nextUnit.moduleId, nextUnit.id)
   }
 
@@ -89,7 +95,10 @@ export default function GrammarAcademyUnit({ moduleId, unitId, onNavigate, onSel
         <div className="space-y-3">
           {unit.correctExamples.map((example, index) => (
             <div key={index} className="rounded-lg border border-green-700/30 bg-green-900/10 p-4">
-              <p className="text-sm font-semibold text-green-200">{example.sentence}</p>
+              <div className="flex flex-wrap items-start gap-2">
+                <p className="min-w-0 flex-1 text-sm font-semibold text-green-200">{example.sentence}</p>
+                <SpeakButton text={example.sentence} label="Example" size="sm" />
+              </div>
               <p className="mt-1 text-xs text-purple-300">{example.translationThai}</p>
               <p className="mt-1 text-xs text-green-100/80">{example.noteThai}</p>
             </div>
@@ -101,8 +110,14 @@ export default function GrammarAcademyUnit({ moduleId, unitId, onNavigate, onSel
         <div className="space-y-3">
           {unit.wrongExamples.map((example, index) => (
             <div key={index} className="rounded-lg border border-red-700/30 bg-red-900/10 p-4">
-              <p className="text-sm text-red-300 line-through">{example.sentence}</p>
-              <p className="mt-1 text-sm font-semibold text-green-300">{example.correction}</p>
+              <div className="flex flex-wrap items-start gap-2">
+                <p className="min-w-0 flex-1 text-sm text-red-300 line-through">{example.sentence}</p>
+                <SpeakButton text={example.sentence} label="Wrong" size="sm" />
+              </div>
+              <div className="mt-1 flex flex-wrap items-start gap-2">
+                <p className="min-w-0 flex-1 text-sm font-semibold text-green-300">{example.correction}</p>
+                <SpeakButton text={example.correction} label="Correction" size="sm" />
+              </div>
               <p className="mt-1 text-xs text-purple-300">{example.whyWrongThai}</p>
             </div>
           ))}
@@ -150,7 +165,10 @@ export default function GrammarAcademyUnit({ moduleId, unitId, onNavigate, onSel
         <div className="space-y-3">
           {unit.miniDrills.map((question, index) => (
             <div key={question.question} className="rounded-lg border border-purple-700/40 bg-purple-900/10 p-4">
-              <p className="text-sm font-semibold text-purple-100">{index + 1}. {question.question}</p>
+              <div className="flex flex-wrap items-start gap-2">
+                <p className="min-w-0 flex-1 text-sm font-semibold text-purple-100">{index + 1}. {question.question}</p>
+                <SpeakButton text={question.question} label="Question" size="sm" />
+              </div>
               <p className="mt-2 text-xs text-purple-400">4 choices พร้อมเฉลยละเอียดในโหมด Drill</p>
             </div>
           ))}
@@ -162,6 +180,8 @@ export default function GrammarAcademyUnit({ moduleId, unitId, onNavigate, onSel
           {unit.masteryChecklist.map((item) => <li key={item}>☐ {item}</li>)}
         </ul>
       </Section>
+
+      <ComicCoach onNavigate={onNavigate} />
 
       <div className="flex flex-col gap-3 sm:flex-row">
         <button onClick={() => onStartAcademyDrill(moduleId, unitId)} className="flex-1 rounded-xl bg-purple-600 px-5 py-3 font-semibold text-white transition hover:bg-purple-500">

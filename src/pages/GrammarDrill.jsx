@@ -1,13 +1,15 @@
 import { useState, useMemo } from 'react'
 import { getLesson } from '../data/grammarLessons/index.js'
 import { examSets } from '../data/examSets/index.js'
+import SpeakButton from '../components/SpeakButton'
 import { recordQuizAttempt } from '../utils/storage'
 import { shuffle } from '../utils/shuffle'
+import { recordGrammarDrillCompleted, recordQuestionAnswered } from '../utils/localStats'
+import { sendLearningEvent } from '../utils/globalStats'
 
 export default function GrammarDrill({ lessonId, onNavigate, onSelectLesson }) {
   const lesson = getLesson(lessonId)
 
-  // Build the drill: combine miniQuiz + related exam questions
   const drillQuestions = useMemo(() => {
     if (!lesson || lesson.status !== 'available') return []
 
@@ -18,6 +20,7 @@ export default function GrammarDrill({ lessonId, onNavigate, onSelectLesson }) {
       correctAnswer: q.correctAnswer,
       explanationThai: q.explanationThai,
       source: 'lesson',
+      skillTag: q.skillTag || lesson.relatedSkillTags?.[0],
     }))
 
     const relatedExamQs = []
@@ -32,12 +35,13 @@ export default function GrammarDrill({ lessonId, onNavigate, onSelectLesson }) {
             explanationThai: q.explanationThai,
             source: 'exam',
             sourceSet: set.title,
+            skillTag: q.skillTag,
           })
         }
       }
     }
 
-    return [...miniQuizQs, ...shuffle(relatedExamQs).slice(0, 8)] // cap exam questions for focused drill
+    return [...miniQuizQs, ...shuffle(relatedExamQs).slice(0, 8)]
   }, [lessonId, lesson])
 
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -70,17 +74,23 @@ export default function GrammarDrill({ lessonId, onNavigate, onSelectLesson }) {
 
   const handleSelect = (choice) => {
     if (showResult) return
+    const isCorrect = choice === currentQuestion.correctAnswer
     setSelectedAnswer(choice)
     setShowResult(true)
-    if (choice === currentQuestion.correctAnswer) {
+    recordQuestionAnswered(currentQuestion.skillTag, isCorrect)
+    sendLearningEvent('question_answered', { skillTag: currentQuestion.skillTag })
+    if (isCorrect) {
       setScore((s) => s + 1)
     }
   }
 
   const handleNext = () => {
     if (isLast) {
-      // Save progress
-      recordQuizAttempt(lessonId, score, drillQuestions.length)
+      const finalScore = score + (selectedAnswer === currentQuestion.correctAnswer ? 0 : 0)
+      const percentage = Math.round((finalScore / drillQuestions.length) * 100)
+      recordQuizAttempt(lessonId, finalScore, drillQuestions.length)
+      recordGrammarDrillCompleted(lessonId, percentage)
+      sendLearningEvent('grammar_drill_completed', { lessonId, score: percentage })
       setFinished(true)
     } else {
       setCurrentIndex((i) => i + 1)
@@ -94,11 +104,11 @@ export default function GrammarDrill({ lessonId, onNavigate, onSelectLesson }) {
     const grade = percentage >= 80 ? 'Excellent' : percentage >= 60 ? 'Good' : 'Keep practicing'
     return (
       <div className="space-y-6 text-center">
-        <h2 className="text-2xl font-bold text-purple-100">🎉 Drill Complete!</h2>
+        <h2 className="text-2xl font-bold text-purple-100">Drill Complete!</h2>
         <p className="text-sm text-purple-400">{lesson.title}</p>
         <div className="rounded-xl border border-purple-700/40 bg-purple-900/20 p-6">
           <p className="text-4xl font-bold text-purple-100">{score}/{drillQuestions.length}</p>
-          <p className="mt-2 text-lg text-purple-300">{percentage}% — {grade}</p>
+          <p className="mt-2 text-lg text-purple-300">{percentage}% - {grade}</p>
           <p className="mt-2 text-xs text-purple-400">Progress saved on this device for guest mode.</p>
         </div>
         <div className="flex flex-col gap-3 sm:flex-row">
@@ -106,19 +116,19 @@ export default function GrammarDrill({ lessonId, onNavigate, onSelectLesson }) {
             onClick={() => { setCurrentIndex(0); setSelectedAnswer(null); setShowResult(false); setScore(0); setFinished(false) }}
             className="flex-1 rounded-xl bg-purple-600 px-4 py-3 font-semibold text-white transition hover:bg-purple-500"
           >
-            🔁 Retry Drill
+            Retry Drill
           </button>
           <button
             onClick={() => onSelectLesson(lessonId)}
             className="flex-1 rounded-xl border border-purple-600 px-4 py-3 font-semibold text-purple-200 transition hover:bg-purple-900/40"
           >
-            📘 Review Lesson
+            Review Lesson
           </button>
           <button
             onClick={() => onNavigate('grammar')}
             className="flex-1 rounded-xl border border-purple-600 px-4 py-3 font-semibold text-purple-200 transition hover:bg-purple-900/40"
           >
-            ← Hub
+            Hub
           </button>
         </div>
       </div>
@@ -129,9 +139,9 @@ export default function GrammarDrill({ lessonId, onNavigate, onSelectLesson }) {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-purple-100">🏋️ {lesson.title} Drill</h2>
+          <h2 className="text-xl font-bold text-purple-100">{lesson.title} Drill</h2>
           <p className="text-xs text-purple-400">
-            Question {currentIndex + 1} of {drillQuestions.length} • Score: {score}
+            Question {currentIndex + 1} of {drillQuestions.length} - Score: {score}
           </p>
         </div>
       </div>
@@ -147,7 +157,10 @@ export default function GrammarDrill({ lessonId, onNavigate, onSelectLesson }) {
         <p className="mb-1 text-xs text-purple-400">
           {currentQuestion.source === 'lesson' ? 'From the lesson quiz' : `From ${currentQuestion.sourceSet}`}
         </p>
-        <p className="mb-4 text-lg font-medium text-purple-100">{currentQuestion.question}</p>
+        <div className="mb-4 flex flex-wrap items-start gap-2">
+          <p className="min-w-0 flex-1 text-lg font-medium text-purple-100">{currentQuestion.question}</p>
+          <SpeakButton text={currentQuestion.question} label="Question" variant="button" size="sm" />
+        </div>
         <div className="space-y-2">
           {currentQuestion.choices.map((choice, idx) => {
             const isSelected = selectedAnswer === choice
@@ -160,17 +173,19 @@ export default function GrammarDrill({ lessonId, onNavigate, onSelectLesson }) {
               cls = 'border-purple-400 bg-purple-800/40'
             }
             return (
-              <button
-                key={idx}
-                onClick={() => handleSelect(choice)}
-                disabled={showResult}
-                className={`w-full rounded-lg border p-3 text-left text-purple-100 transition ${cls}`}
-              >
-                <span className="mr-2 font-bold text-purple-400">{idx + 1}.</span>
-                {choice}
-                {showResult && isCorrect && <span className="ml-2 text-green-400">✓</span>}
-                {showResult && isSelected && !isCorrect && <span className="ml-2 text-red-400">✗</span>}
-              </button>
+              <div key={idx} className="flex items-stretch gap-2">
+                <button
+                  onClick={() => handleSelect(choice)}
+                  disabled={showResult}
+                  className={`min-w-0 flex-1 rounded-lg border p-3 text-left text-purple-100 transition ${cls}`}
+                >
+                  <span className="mr-2 font-bold text-purple-400">{idx + 1}.</span>
+                  {choice}
+                  {showResult && isCorrect && <span className="ml-2 text-green-400">Correct</span>}
+                  {showResult && isSelected && !isCorrect && <span className="ml-2 text-red-400">Try again</span>}
+                </button>
+                <SpeakButton text={choice} label={`Choice ${idx + 1}`} size="sm" />
+              </div>
             )
           })}
         </div>
@@ -179,7 +194,7 @@ export default function GrammarDrill({ lessonId, onNavigate, onSelectLesson }) {
       {showResult && (
         <div className="rounded-lg border border-purple-600/30 bg-purple-950/50 p-4 text-sm">
           <p className={`font-semibold ${selectedAnswer === currentQuestion.correctAnswer ? 'text-green-400' : 'text-red-400'}`}>
-            {selectedAnswer === currentQuestion.correctAnswer ? '✓ ถูกต้อง!' : `✗ คำตอบที่ถูกคือ: ${currentQuestion.correctAnswer}`}
+            {selectedAnswer === currentQuestion.correctAnswer ? 'ถูกต้อง!' : `คำตอบที่ถูกคือ: ${currentQuestion.correctAnswer}`}
           </p>
           {selectedAnswer !== currentQuestion.correctAnswer && (
             <p className="mt-1 text-xs text-red-200/80">Your answer: {selectedAnswer}</p>
@@ -194,7 +209,7 @@ export default function GrammarDrill({ lessonId, onNavigate, onSelectLesson }) {
             onClick={handleNext}
             className="flex-1 rounded-lg bg-purple-700 px-4 py-2 font-semibold text-white transition hover:bg-purple-600"
           >
-            {isLast ? 'Finish Drill' : 'Next Question →'}
+            {isLast ? 'Finish Drill' : 'Next Question'}
           </button>
         )}
         <button

@@ -2,6 +2,10 @@ import { useEffect } from 'react'
 import { getLesson } from '../data/grammarLessons/index.js'
 import { examSets } from '../data/examSets/index.js'
 import { markLessonStudied } from '../utils/storage'
+import SpeakButton from '../components/SpeakButton'
+import ComicCoach from '../components/ComicCoach'
+import { recordGrammarLessonCompleted } from '../utils/localStats'
+import { sendLearningEvent } from '../utils/globalStats'
 
 export default function GrammarLesson({ lessonId, onNavigate, onStartDrill }) {
   const lesson = getLesson(lessonId)
@@ -9,6 +13,8 @@ export default function GrammarLesson({ lessonId, onNavigate, onStartDrill }) {
   useEffect(() => {
     if (lesson && lesson.status === 'available') {
       markLessonStudied(lessonId)
+      recordGrammarLessonCompleted(lessonId)
+      sendLearningEvent('grammar_lesson_completed', { lessonId })
     }
   }, [lessonId, lesson])
 
@@ -176,7 +182,10 @@ export default function GrammarLesson({ lessonId, onNavigate, onStartDrill }) {
           <div className="space-y-2">
             {relatedQuestions.slice(0, 5).map((q) => (
               <div key={q.id} className="rounded-lg border border-purple-700/30 bg-purple-900/10 p-3 text-sm">
-                <p className="text-purple-100">{q.question}</p>
+                <div className="flex flex-wrap items-start gap-2">
+                  <p className="min-w-0 flex-1 text-purple-100">{q.question}</p>
+                  <SpeakButton text={q.question} label="Question" size="sm" />
+                </div>
                 <p className="mt-1 text-xs text-purple-400">{q.fromSetTitle} · {q.skillTag} · {q.difficulty}</p>
               </div>
             ))}
@@ -188,6 +197,8 @@ export default function GrammarLesson({ lessonId, onNavigate, onStartDrill }) {
           <p className="text-sm text-purple-300/80">{lesson.relatedExamLookupNoteThai || 'No direct exam questions are tagged for this topic yet.'}</p>
         )}
       </Section>
+
+      <ComicCoach onNavigate={onNavigate} />
 
       <div className="flex flex-col gap-3 sm:flex-row">
         <button
@@ -245,7 +256,10 @@ function ExampleList({ title, examples }) {
       <ul className="space-y-2">
         {examples.map((ex, j) => (
           <li key={j} className="text-sm">
-            <p className="text-purple-100">{ex.sentence}</p>
+            <div className="flex flex-wrap items-start gap-2">
+              <p className="min-w-0 flex-1 text-purple-100">{ex.sentence}</p>
+              <SpeakButton text={ex.sentence} label="Example" size="sm" />
+            </div>
             <p className="text-xs text-purple-400">{ex.translationThai}</p>
             {ex.noteThai && <p className="text-xs text-purple-300/70">{ex.noteThai}</p>}
           </li>
@@ -262,7 +276,10 @@ function WrongList({ examples }) {
       <ul className="space-y-2">
         {examples.map((ex, j) => (
           <li key={j} className="text-sm">
-            <p className="text-red-300 line-through">{ex.sentence}</p>
+            <div className="flex flex-wrap items-start gap-2">
+              <p className="min-w-0 flex-1 text-red-300 line-through">{ex.sentence}</p>
+              <SpeakButton text={ex.sentence} label="Wrong" size="sm" />
+            </div>
             <p className="text-green-300">→ {ex.correction}</p>
             <p className="text-xs text-purple-300/70">{ex.whyWrongThai}</p>
           </li>
@@ -271,4 +288,3 @@ function WrongList({ examples }) {
     </div>
   )
 }
-

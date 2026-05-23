@@ -30,7 +30,6 @@ export function getPassageForQuestion(question, allQuestions) {
 
   // Dev-only warning
   if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.DEV) {
-    // eslint-disable-next-line no-console
     console.warn(
       `[passage] No passage found for question id="${question.id}" passageId="${question.passageId}"`
     )

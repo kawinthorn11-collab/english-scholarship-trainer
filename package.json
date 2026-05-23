@@ -10,7 +10,9 @@
     "preview": "vite preview",
     "validate:sets": "node scripts/validateAllSets.js",
     "validate:grammar": "node scripts/validateGrammar.js",
-    "validate:academy": "node scripts/validateGrammarAcademy.js"
+    "validate:academy": "node scripts/validateGrammarAcademy.js",
+    "validate:analytics": "node scripts/validateAnalytics.js",
+    "validate:speech": "node scripts/validateSpeech.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.106.1",

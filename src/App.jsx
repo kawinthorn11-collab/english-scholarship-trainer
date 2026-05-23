@@ -10,6 +10,7 @@ import GrammarDrill from './pages/GrammarDrill'
 import GrammarAcademy from './pages/GrammarAcademy'
 import GrammarAcademyUnit from './pages/GrammarAcademyUnit'
 import GrammarAcademyDrill from './pages/GrammarAcademyDrill'
+import ListeningPractice from './pages/ListeningPractice'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Account from './pages/Account'
@@ -17,6 +18,7 @@ import ConfirmModal from './components/ConfirmModal'
 import { DEFAULT_SET_ID } from './data/examSets/index.js'
 import { getSelectedSetId, saveSelectedSetId } from './utils/storage'
 import { useAuth } from './context/AuthContext'
+import { useStudySession } from './hooks/useStudySession'
 
 const features = [
   { icon: '📝', title: 'Mock Exam Mode', desc: 'Simulate the real 60-question, 60-minute exam' },
@@ -35,6 +37,7 @@ const pagePaths = {
   results: '/results',
   grammar: '/grammar',
   academy: '/academy',
+  listening: '/listening',
   login: '/login',
   register: '/register',
   account: '/account',
@@ -79,6 +82,7 @@ function getRouteFromPathname(path) {
   if (path === '/results') return { page: 'results', lessonId: null }
   if (path === '/grammar') return { page: 'grammar', lessonId: null }
   if (path === '/academy') return { page: 'academy', lessonId: null, academyModuleId: null, academyUnitId: null }
+  if (path === '/listening') return { page: 'listening', lessonId: null, academyModuleId: null, academyUnitId: null }
   if (path === '/login') return { page: 'login', lessonId: null }
   if (path === '/register') return { page: 'register', lessonId: null }
   if (path === '/account') return { page: 'account', lessonId: null }
@@ -195,6 +199,7 @@ function App() {
   const [selectedLessonId, setSelectedLessonId] = useState(getLessonFromPath)
   const [selectedAcademyModuleId, setSelectedAcademyModuleId] = useState(getAcademyModuleFromPath)
   const [selectedAcademyUnitId, setSelectedAcademyUnitId] = useState(getAcademyUnitFromPath)
+  useStudySession(page)
 
   const changeSet = (setId) => {
     setSelectedSetIdState(setId)
@@ -338,6 +343,7 @@ function App() {
               <NavBtn label="Practice" active={page === 'practice'} onClick={() => navigate('practice')} />
               <NavBtn label="Grammar" active={page.startsWith('grammar')} onClick={() => navigate('grammar')} />
               <NavBtn label="Academy" active={page.startsWith('academy')} onClick={() => navigate('academy')} />
+              <NavBtn label="Listening" active={page === 'listening'} onClick={() => navigate('listening')} />
               <NavBtn label="Results" active={page === 'results'} onClick={() => navigate('results')} />
               <AuthNavButtons page={page} onNavigate={navigate} />
             </div>
@@ -360,6 +366,7 @@ function App() {
             {page === 'practice' && <Practice selectedSetId={selectedSetId} onNavigate={navigate} />}
             {page === 'results' && <Results selectedSetId={selectedSetId} onNavigate={navigate} onSelectLesson={selectLesson} />}
             {page === 'grammar' && <GrammarHub onNavigate={navigate} onSelectLesson={selectLesson} />}
+            {page === 'listening' && <ListeningPractice onNavigate={navigate} />}
             {page === 'academy' && (
               <GrammarAcademy
                 onNavigate={navigate}

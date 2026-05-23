@@ -2,6 +2,9 @@ import { getAttempts, getGrammarProgress } from '../utils/storage'
 import { getStatsFromAttempts } from '../utils/analysis'
 import { examSetList, getExamSet } from '../data/examSets/index.js'
 import { findLessonsBySkillTags, getAvailableLessons } from '../data/grammarLessons/index.js'
+import GlobalStatsPanel from '../components/GlobalStatsPanel'
+import ComicCoach from '../components/ComicCoach'
+import { getLocalStats } from '../utils/localStats'
 
 export default function Dashboard({ onNavigate, selectedSetId, onChangeSet, onSelectLesson }) {
   const attempts = getAttempts()
@@ -9,6 +12,7 @@ export default function Dashboard({ onNavigate, selectedSetId, onChangeSet, onSe
   const stats = getStatsFromAttempts(setAttempts)
   const selectedSet = getExamSet(selectedSetId)
   const grammarProgress = getGrammarProgress()
+  const localStats = getLocalStats()
 
   // Weak skills from latest attempt
   let weakSkills = []
@@ -42,6 +46,18 @@ export default function Dashboard({ onNavigate, selectedSetId, onChangeSet, onSe
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-bold text-purple-100">📊 Dashboard</h1>
+
+      <GlobalStatsPanel />
+      <ComicCoach onNavigate={onNavigate} />
+
+      <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-6">
+        <StatCard label="Today study" value={`${Math.round((localStats.todayStudySeconds || 0) / 60)}m`} />
+        <StatCard label="Total study" value={`${((localStats.totalStudySeconds || 0) / 3600).toFixed(1)}h`} />
+        <StatCard label="Streak" value={`${localStats.streakDays || 0}d`} />
+        <StatCard label="Exams done" value={localStats.examsCompleted || 0} />
+        <StatCard label="Lessons done" value={localStats.grammarLessonsCompleted || 0} />
+        <StatCard label="Listening" value={localStats.listenedItems || 0} />
+      </div>
 
       {/* Exam Set Selector */}
       <div className="rounded-xl border border-purple-700/40 bg-purple-900/20 p-5">
@@ -132,7 +148,7 @@ export default function Dashboard({ onNavigate, selectedSetId, onChangeSet, onSe
       )}
 
       {/* Action Buttons */}
-      <div className="grid gap-3 sm:grid-cols-4">
+      <div className="grid gap-3 sm:grid-cols-5">
         <button
           onClick={() => onNavigate('mock-exam')}
           className="rounded-xl bg-purple-600 px-4 py-4 font-semibold text-white shadow-lg transition hover:bg-purple-500"
@@ -156,6 +172,12 @@ export default function Dashboard({ onNavigate, selectedSetId, onChangeSet, onSe
           className="rounded-xl border border-purple-600 px-4 py-4 font-semibold text-purple-200 transition hover:bg-purple-900/40"
         >
           Grammar Academy
+        </button>
+        <button
+          onClick={() => onNavigate('listening')}
+          className="rounded-xl border border-purple-600 px-4 py-4 font-semibold text-purple-200 transition hover:bg-purple-900/40"
+        >
+          ฟังเสียง
         </button>
       </div>
 

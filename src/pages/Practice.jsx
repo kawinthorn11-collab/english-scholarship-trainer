@@ -3,6 +3,9 @@ import { getExamSet } from '../data/examSets/index.js'
 import QuestionCard from '../components/QuestionCard'
 import ExplanationPanel from '../components/ExplanationPanel'
 import { getPassageForQuestion, getPassageTitle } from '../utils/passage'
+import SpeakButton from '../components/SpeakButton'
+import { recordQuestionAnswered } from '../utils/localStats'
+import { sendLearningEvent } from '../utils/globalStats'
 
 export default function Practice({ selectedSetId, onNavigate }) {
   const examSet = getExamSet(selectedSetId)
@@ -49,6 +52,9 @@ export default function Practice({ selectedSetId, onNavigate }) {
 
   const handleSelect = (choice) => {
     if (showResult) return
+    const isCorrect = choice === currentQuestion.correctAnswer
+    recordQuestionAnswered(currentQuestion.skillTag, isCorrect)
+    sendLearningEvent('question_answered', { skillTag: currentQuestion.skillTag })
     setSelectedAnswer(choice)
     setShowResult(true)
   }
@@ -104,7 +110,12 @@ export default function Practice({ selectedSetId, onNavigate }) {
             <span className="text-xs text-purple-400">{passageExpanded ? '▲ Hide' : '▼ Show'}</span>
           </button>
           {passageExpanded && (
-            <div className="border-t border-purple-700/30 p-4 text-sm leading-relaxed text-purple-200/80 whitespace-pre-line">{currentPassage}</div>
+            <div className="border-t border-purple-700/30 p-4 text-sm leading-relaxed text-purple-200/80 whitespace-pre-line">
+              <div className="mb-3 flex justify-end">
+                <SpeakButton text={currentPassage} label="Read passage" variant="button" size="sm" />
+              </div>
+              {currentPassage}
+            </div>
           )}
         </div>
       )}

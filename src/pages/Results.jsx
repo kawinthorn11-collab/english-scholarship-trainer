@@ -3,6 +3,8 @@ import { getExamSet } from '../data/examSets/index.js'
 import ResultSummary from '../components/ResultSummary'
 import QuestionCard from '../components/QuestionCard'
 import ExplanationPanel from '../components/ExplanationPanel'
+import ComicCoach from '../components/ComicCoach'
+import SpeakButton from '../components/SpeakButton'
 import { analyzeWeakSkills, getRecommendations } from '../utils/analysis'
 import { getAttempts } from '../utils/storage'
 import { getPassageForQuestion, getPassageTitle } from '../utils/passage'
@@ -64,6 +66,8 @@ export default function Results({ selectedSetId, onNavigate, onSelectLesson }) {
       <p className="text-sm text-purple-400">{latest.setTitle || attemptSetId}</p>
 
       <ResultSummary score={score} />
+
+      <ComicCoach onNavigate={onNavigate} />
 
       {timeUsed > 0 && (
         <div className="rounded-xl border border-purple-700/40 bg-purple-900/20 p-4 text-center">
@@ -158,7 +162,12 @@ export default function Results({ selectedSetId, onNavigate, onSelectLesson }) {
                           <summary className="cursor-pointer p-3 text-xs font-semibold uppercase tracking-wide text-purple-400">
                             📚 {title || (reviewQuestion.section === 'Grammar' ? 'Grammar Passage' : 'Reading Passage')}
                           </summary>
-                          <div className="border-t border-purple-700/30 p-4 text-sm leading-relaxed text-purple-200/80 whitespace-pre-line">{passage}</div>
+                          <div className="border-t border-purple-700/30 p-4 text-sm leading-relaxed text-purple-200/80 whitespace-pre-line">
+                            <div className="mb-3 flex justify-end">
+                              <SpeakButton text={passage} label="Read passage" variant="button" size="sm" />
+                            </div>
+                            {passage}
+                          </div>
                         </details>
                       )
                     })()}
