@@ -10,61 +10,71 @@ export default function QuestionCard({
   hidePassage = false,
 }) {
   return (
-    <div className="rounded-xl border border-purple-700/40 bg-purple-900/20 p-6">
+    <div className="glass rounded-[1.75rem] p-5 sm:p-8">
       {!hidePassage && question.passage && (
-        <div className="mb-4 rounded-lg border border-purple-700/30 bg-purple-950/40 p-4 text-sm leading-relaxed text-purple-200/80">
-          <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
-            <p className="text-xs font-semibold uppercase tracking-wide text-purple-400">Reading Passage</p>
+        <div className="mb-6 rounded-2xl border border-white/[0.08] bg-white/[0.03] p-5 text-[15px] leading-relaxed text-purple-100/85">
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+            <p className="eyebrow">📚 Reading Passage</p>
             <SpeakButton text={question.passage} label="Read passage" variant="button" size="sm" />
           </div>
           {question.passage}
         </div>
       )}
 
-      <div className="mb-4 flex flex-wrap items-start gap-2">
-        <p className="min-w-0 flex-1 text-lg font-medium text-purple-100">
-          <span className="mr-2 text-purple-400">Q{questionNumber}.</span>
+      <div className="mb-6 flex flex-wrap items-start gap-3">
+        <span className="flex h-10 min-w-10 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 to-fuchsia-500 px-2 font-display text-base font-semibold text-white shadow-lg shadow-fuchsia-900/30">
+          {questionNumber}
+        </span>
+        <p className="min-w-0 flex-1 pt-1.5 text-lg font-medium leading-relaxed text-white sm:text-xl">
           {question.question}
         </p>
-        <SpeakButton text={question.question} label="Question" variant="button" size="sm" />
+        <SpeakButton text={question.question} label="Question" size="sm" />
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-3">
         {question.choices.map((choice, idx) => {
           const choiceNum = idx + 1
           const isSelected = selectedAnswer === choice
           const isCorrect = choice === question.correctAnswer
 
-          let borderClass = 'border-purple-700/40 hover:border-purple-500/60'
-          let bgClass = 'bg-purple-900/10 hover:bg-purple-900/30'
+          let tone = 'border-white/10 bg-white/[0.03] hover:border-violet-400/50 hover:bg-white/[0.07]'
+          let badge = 'bg-white/10 text-purple-100 group-hover:bg-violet-500/40'
+          let anim = ''
 
           if (isSelected && !showResult) {
-            borderClass = 'border-purple-400'
-            bgClass = 'bg-purple-800/40'
+            tone = 'border-violet-400 bg-violet-500/20 shadow-[0_0_0_4px_rgba(139,92,246,0.15)]'
+            badge = 'bg-gradient-to-br from-violet-500 to-fuchsia-500 text-white'
+            anim = 'animate-pop'
           }
 
           if (showResult) {
             if (isCorrect) {
-              borderClass = 'border-green-500'
-              bgClass = 'bg-green-900/30'
-            } else if (isSelected && !isCorrect) {
-              borderClass = 'border-red-500'
-              bgClass = 'bg-red-900/30'
+              tone = 'border-emerald-400/80 bg-emerald-500/15'
+              badge = 'bg-emerald-500 text-white'
+              anim = 'animate-pop'
+            } else if (isSelected) {
+              tone = 'border-rose-400/80 bg-rose-500/15'
+              badge = 'bg-rose-500 text-white'
+              anim = 'animate-shake'
+            } else {
+              tone = 'border-white/5 bg-white/[0.02] opacity-60'
             }
           }
 
           return (
-            <div key={idx} className="flex items-stretch gap-2">
+            <div key={idx} className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={() => !showResult && onSelect(choice)}
                 disabled={showResult}
-                className={`min-w-0 flex-1 rounded-lg border p-3 text-left text-purple-100 transition ${borderClass} ${bgClass} ${showResult ? 'cursor-default' : 'cursor-pointer'}`}
+                className={`group flex min-w-0 flex-1 items-center gap-3 rounded-2xl border px-4 py-3.5 text-left text-[15px] text-white transition-all duration-200 sm:text-base ${tone} ${anim} ${showResult ? 'cursor-default' : 'cursor-pointer'}`}
               >
-                <span className="mr-2 font-bold text-purple-400">{choiceNum}.</span>
-                {choice}
-                {showResult && isCorrect && <span className="ml-2 text-green-400">Correct</span>}
-                {showResult && isSelected && !isCorrect && <span className="ml-2 text-red-400">Try again</span>}
+                <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl text-sm font-bold transition ${badge}`}>
+                  {showResult && isCorrect ? '✓' : showResult && isSelected ? '✕' : choiceNum}
+                </span>
+                <span className="min-w-0 flex-1">{choice}</span>
+                {showResult && isCorrect && <span className="shrink-0 text-xs font-bold text-emerald-300">ถูกต้อง</span>}
+                {showResult && isSelected && !isCorrect && <span className="shrink-0 text-xs font-bold text-rose-300">คำตอบของคุณ</span>}
               </button>
               <SpeakButton text={choice} label={`Choice ${choiceNum}`} size="sm" />
             </div>
@@ -73,13 +83,9 @@ export default function QuestionCard({
       </div>
 
       {!hideSkillTag && (
-        <div className="mt-4 flex items-center gap-2">
-          <span className="rounded-full bg-purple-800/50 px-3 py-1 text-xs text-purple-300">
-            {question.skillTag}
-          </span>
-          <span className="rounded-full bg-purple-800/50 px-3 py-1 text-xs text-purple-300">
-            {question.difficulty}
-          </span>
+        <div className="mt-6 flex flex-wrap items-center gap-2">
+          <span className="chip">🏷 {question.skillTag}</span>
+          <span className="chip">⚡ {question.difficulty}</span>
         </div>
       )}
     </div>

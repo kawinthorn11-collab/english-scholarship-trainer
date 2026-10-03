@@ -1,10 +1,21 @@
 import { useState } from 'react'
+import Mascot, { SpeechBubble } from './Mascot'
 import { getLocalStats } from '../utils/localStats'
 import { getComicCoachMessage, getRecommendedCoachAction } from '../utils/comicCoachMessages'
 
 const COACH_MOOD_KEY = 'exam-trainer-comic-coach-mood'
 
-export default function ComicCoach({ onNavigate }) {
+const moodToMascot = {
+  starter: 'wave',
+  focused: 'teach',
+  sleepy: 'sleepy',
+  comeback: 'wave',
+  examReady: 'cheer',
+  weakSkillRepair: 'think',
+  streakFire: 'fire',
+}
+
+export default function ComicCoach({ onNavigate, greeting }) {
   const stats = getLocalStats()
   const initial = getComicCoachMessage(stats)
   const [coach, setCoach] = useState(() => {
@@ -24,22 +35,26 @@ export default function ComicCoach({ onNavigate }) {
   }
 
   return (
-    <div className="rounded-xl border border-purple-700/40 bg-purple-900/20 p-5">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-        <div className="mx-auto flex h-24 w-24 shrink-0 items-center justify-center rounded-full border-4 border-purple-500 bg-purple-950 text-5xl shadow-lg shadow-purple-950/50 sm:mx-0">
-          {coach.mood === 'streakFire' ? '🔥' : coach.mood === 'examReady' ? '🎓' : coach.mood === 'sleepy' ? '😴' : '😎'}
+    <div className="glass relative overflow-hidden rounded-[2rem] p-6 sm:p-8">
+      <div aria-hidden className="pointer-events-none absolute -left-10 top-0 h-56 w-56 rounded-full bg-violet-600/25 blur-3xl" />
+      <div aria-hidden className="pointer-events-none absolute -right-16 -bottom-16 h-56 w-56 rounded-full bg-fuchsia-500/20 blur-3xl" />
+      <div className="relative flex flex-col items-center gap-6 sm:flex-row sm:items-center">
+        <div className="shrink-0">
+          <Mascot mood={moodToMascot[coach.mood] || 'happy'} size={150} />
         </div>
-        <div className="min-w-0 flex-1">
-          <p className="text-xs uppercase tracking-wide text-purple-400">Comic Coach / โค้ชตัวแม่ประจำเครื่องนี้</p>
-          <div className="mt-2 rounded-2xl rounded-tl-sm border border-purple-600/40 bg-purple-950/60 p-4">
-            <p className="text-sm leading-relaxed text-purple-100">{coach.text}</p>
+        <div className="w-full min-w-0 flex-1 space-y-4">
+          <div>
+            <p className="eyebrow">🦉 ครูฮูก · โค้ชประจำเครื่องนี้</p>
+            {greeting && <h2 className="mt-2 text-2xl font-semibold text-white sm:text-3xl">{greeting}</h2>}
           </div>
-          <div className="mt-3 flex flex-col gap-2 sm:flex-row">
-            <button onClick={refresh} className="rounded-lg bg-purple-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-purple-500">
-              ให้กำลังใจอีกที
+          <SpeechBubble key={coach.text} text={coach.text} side="left" className="hidden sm:block" />
+          <SpeechBubble key={`m-${coach.text}`} text={coach.text} side="bottom" className="sm:hidden" />
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <button onClick={() => onNavigate?.(action.target)} className="btn btn-primary">
+              {action.label} →
             </button>
-            <button onClick={() => onNavigate?.(action.target)} className="rounded-lg border border-purple-600 px-4 py-2 text-sm font-semibold text-purple-200 transition hover:bg-purple-900/40">
-              {action.label}
+            <button onClick={refresh} className="btn btn-ghost">
+              💬 ให้กำลังใจอีกที
             </button>
           </div>
         </div>

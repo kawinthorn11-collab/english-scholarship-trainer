@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { academyModuleCatalog, academyStats, getFirstAcademyUnitMeta } from '../data/grammarAcademy/index.js'
 import { getAcademyProgressStats, getAcademyUnitKey } from '../utils/academyProgress'
 import { searchAcademyCatalog } from '../utils/academySearch'
+import { PageHeader, SectionTitle, StatTile } from '../components/ui'
 
 export default function GrammarAcademy({ moduleId, onNavigate, onSelectAcademyModule, onSelectAcademyUnit }) {
   const [query, setQuery] = useState('')
@@ -25,26 +26,28 @@ export default function GrammarAcademy({ moduleId, onNavigate, onSelectAcademyMo
 
   if (selectedModule) {
     return (
-      <div className="space-y-6">
-        <button onClick={() => onNavigate('academy')} className="text-sm text-purple-400 underline transition hover:text-purple-200">
+      <div className="space-y-8">
+        <button onClick={() => onNavigate('academy')} className="text-sm font-semibold text-purple-300 transition hover:text-white">
           Back to Grammar Academy
         </button>
 
-        <header className="rounded-lg border border-purple-700/40 bg-purple-900/20 p-5">
-          <p className="text-xs uppercase tracking-wide text-purple-400">Grammar Academy Module {selectedModule.order}</p>
-          <h1 className="mt-1 text-3xl font-bold text-purple-100">{selectedModule.title}</h1>
-          <p className="text-purple-300">{selectedModule.titleThai}</p>
-          <p className="mt-3 text-sm leading-relaxed text-purple-200/80">{selectedModule.descriptionThai}</p>
-          <div className="mt-4 flex flex-wrap gap-2 text-xs">
+        <PageHeader
+          eyebrow={`Grammar Academy · Module ${selectedModule.order}`}
+          icon="🎓"
+          title={selectedModule.title}
+          subtitle={<><span className="block text-purple-100">{selectedModule.titleThai}</span><span className="mt-2 block">{selectedModule.descriptionThai}</span></>}
+          mood="teach"
+        >
+          <div className="flex flex-wrap gap-2">
             <Badge>{selectedModule.unitCount} units</Badge>
             <Badge>{selectedModule.practiceCount} drills</Badge>
             <Badge>{selectedModule.estimatedStudyTime}</Badge>
             <Badge>{selectedModule.difficulty}</Badge>
             <Badge>{selectedModule.examImportance}</Badge>
           </div>
-        </header>
+        </PageHeader>
 
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid gap-4 sm:grid-cols-2">
           {selectedModule.units.map((unit) => {
             const key = getAcademyUnitKey(selectedModule.id, unit.id)
             const completed = Boolean(progress.completedUnits[key])
@@ -54,15 +57,15 @@ export default function GrammarAcademy({ moduleId, onNavigate, onSelectAcademyMo
               <button
                 key={unit.id}
                 onClick={() => onSelectAcademyUnit(selectedModule.id, unit.id)}
-                className="rounded-lg border border-purple-700/40 bg-purple-900/10 p-4 text-left transition hover:border-purple-500/60 hover:bg-purple-900/30"
+                className="glow-card rounded-3xl border border-white/[0.08] bg-white/[0.03] p-5 text-left transition hover:border-violet-400/50 hover:bg-white/[0.07]"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <p className="font-semibold text-purple-100">{unit.title}</p>
-                    <p className="text-xs text-purple-400">{unit.titleThai}</p>
+                    <p className="font-display text-lg font-semibold text-white">{unit.title}</p>
+                    <p className="text-xs text-purple-300/80">{unit.titleThai}</p>
                   </div>
-                  {completed && <span className="rounded-full bg-green-900/40 px-2 py-0.5 text-xs text-green-300">Done</span>}
-                  {studied && !completed && <span className="rounded-full bg-purple-800/50 px-2 py-0.5 text-xs text-purple-200">Studied</span>}
+                  {completed && <span className="rounded-full bg-emerald-500/20 px-2.5 py-0.5 text-xs font-semibold text-emerald-200">Done</span>}
+                  {studied && !completed && <span className="rounded-full bg-violet-500/15 px-2 py-0.5 text-xs text-purple-200">Studied</span>}
                 </div>
                 <div className="mt-3 flex flex-wrap gap-2 text-xs">
                   <Badge>{unit.difficulty}</Badge>
@@ -78,85 +81,88 @@ export default function GrammarAcademy({ moduleId, onNavigate, onSelectAcademyMo
   }
 
   return (
-    <div className="space-y-6">
-      <header className="space-y-3">
-        <p className="text-xs uppercase tracking-wide text-purple-400">Grammar Academy</p>
-        <h1 className="text-3xl font-bold text-purple-100">คอร์สแกรมมาร์ตัวแม่</h1>
-        <p className="text-sm leading-relaxed text-purple-300">
-          เรียน grammar แบบไทยเข้าใจง่าย แต่คิดเป็นระบบเหมือนคนทำข้อสอบเก่ง: อ่านโครงสร้างก่อน แปลทีหลัง ตัดช้อยส์ด้วยเหตุผล แล้วเก็บกับดักให้หมด
-        </p>
-      </header>
-
-      <div className="grid gap-3 sm:grid-cols-5">
-        <Stat label="Modules" value={academyStats.moduleCount} />
-        <Stat label="Units" value={academyStats.totalUnits} />
-        <Stat label="Completed" value={completedCount} />
-        <Stat label="Studied" value={studiedCount} />
-        <Stat label="Drills" value={attemptedDrills} />
-      </div>
-
-      <div className="rounded-lg border border-purple-700/40 bg-purple-900/20 p-5">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="text-sm font-semibold text-purple-100">Progress {progressPercent}%</p>
-            <p className="mt-1 text-xs text-purple-400">ใช้ localStorage บนอุปกรณ์นี้ ไม่ต้องล็อกอินก็เรียนต่อได้</p>
-          </div>
-          <button onClick={startAcademy} className="rounded-lg bg-purple-600 px-5 py-3 font-semibold text-white transition hover:bg-purple-500">
-            เริ่มเรียนแบบตัวแม่
+    <div className="space-y-8">
+      <PageHeader
+        eyebrow="Grammar Academy"
+        icon="🎓"
+        title="คอร์สแกรมมาร์ตัวแม่"
+        subtitle="เรียน grammar แบบไทยเข้าใจง่าย แต่คิดเป็นระบบเหมือนคนทำข้อสอบเก่ง: อ่านโครงสร้างก่อน แปลทีหลัง ตัดช้อยส์ด้วยเหตุผล แล้วเก็บกับดักให้หมด"
+        mood="teach"
+      >
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+          <button onClick={startAcademy} className="btn btn-primary shrink-0">
+            {progress.lastStudiedUnit ? 'เรียนต่อจากเดิม →' : 'เริ่มเรียนแบบตัวแม่ →'}
           </button>
+          <div className="min-w-0 flex-1">
+            <div className="flex justify-between text-xs text-purple-200/80">
+              <span>Progress</span>
+              <span className="font-semibold text-white">{progressPercent}%</span>
+            </div>
+            <div className="mt-1.5 h-2.5 overflow-hidden rounded-full bg-white/10">
+              <div className="h-full rounded-full bg-gradient-to-r from-violet-400 via-fuchsia-400 to-amber-300 transition-all duration-1000" style={{ width: `${Math.max(progressPercent, 2)}%` }} />
+            </div>
+            <p className="mt-1.5 text-[11px] text-purple-300/70">บันทึกบนอุปกรณ์นี้ ไม่ต้องล็อกอินก็เรียนต่อได้</p>
+          </div>
         </div>
-        <div className="mt-4 h-2 overflow-hidden rounded-full bg-purple-950">
-          <div className="h-full rounded-full bg-purple-500" style={{ width: `${progressPercent}%` }} />
-        </div>
+      </PageHeader>
+
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+        <StatTile icon="🧩" label="Modules" value={academyStats.moduleCount} />
+        <StatTile icon="📑" label="Units" value={academyStats.totalUnits} accent="from-sky-400/40 to-blue-500/10" />
+        <StatTile icon="✅" label="Completed" value={completedCount} accent="from-emerald-400/40 to-teal-500/10" />
+        <StatTile icon="👀" label="Studied" value={studiedCount} accent="from-amber-400/40 to-orange-500/10" />
+        <StatTile icon="✏️" label="Drills" value={attemptedDrills} accent="from-rose-400/40 to-pink-500/10" />
       </div>
 
-      <div className="rounded-lg border border-purple-700/40 bg-purple-900/10 p-4">
-        <label className="mb-2 block text-sm font-semibold text-purple-200">Search Academy</label>
+      <div className="relative">
+        <label htmlFor="academy-search" className="sr-only">Search Academy</label>
+        <span aria-hidden className="pointer-events-none absolute left-5 top-1/2 -translate-y-1/2 text-lg">🔍</span>
         <input
+          id="academy-search"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder="passive, gerund, preposition, question tags, reported speech..."
-          className="w-full rounded-lg border border-purple-700/40 bg-purple-950/60 px-4 py-3 text-purple-100 placeholder-purple-500 focus:border-purple-400 focus:outline-none"
+          className="input !rounded-full !py-4 !pl-14"
         />
       </div>
 
       {query.trim() && (
         <section className="space-y-3">
-          <h2 className="text-lg font-semibold text-purple-200">Search results</h2>
-          <div className="grid gap-3 sm:grid-cols-2">
+          <SectionTitle icon="🔎" title="Search results" />
+          <div className="grid gap-4 sm:grid-cols-2">
             {searchResults.map((unit) => (
               <button
                 key={`${unit.moduleId}-${unit.id}`}
                 onClick={() => onSelectAcademyUnit(unit.moduleId, unit.id)}
-                className="rounded-lg border border-purple-700/40 bg-purple-900/10 p-4 text-left transition hover:border-purple-500/60 hover:bg-purple-900/30"
+                className="glow-card rounded-3xl border border-white/[0.08] bg-white/[0.03] p-5 text-left transition hover:border-violet-400/50 hover:bg-white/[0.07]"
               >
-                <p className="font-semibold text-purple-100">{unit.title}</p>
-                <p className="text-xs text-purple-400">{unit.moduleTitle}</p>
+                <p className="font-display text-lg font-semibold text-white">{unit.title}</p>
+                <p className="text-xs text-purple-300/80">{unit.moduleTitle}</p>
               </button>
             ))}
           </div>
-          {searchResults.length === 0 && <p className="text-sm text-purple-400">ไม่เจอหัวข้อนี้ ลองคำอื่น เช่น passive, gerund, tense, article</p>}
+          {searchResults.length === 0 && <p className="text-sm text-purple-300/80">ไม่เจอหัวข้อนี้ ลองคำอื่น เช่น passive, gerund, tense, article</p>}
         </section>
       )}
 
       <section className="space-y-3">
-        <h2 className="text-lg font-semibold text-purple-200">Academy Modules</h2>
-        <div className="grid gap-3 sm:grid-cols-2">
+        <SectionTitle icon="🧩" title="Academy Modules" subtitle="เรียนตามลำดับ หรือเลือกโมดูลที่อยากเก็บก่อนก็ได้" />
+        <div className="grid gap-4 sm:grid-cols-2">
           {academyModuleCatalog.map((module) => {
             const doneInModule = module.units.filter((unit) => progress.completedUnits[getAcademyUnitKey(module.id, unit.id)]).length
             return (
               <button
                 key={module.id}
                 onClick={() => onSelectAcademyModule(module.id)}
-                className="rounded-lg border border-purple-700/40 bg-purple-900/10 p-5 text-left transition hover:border-purple-500/60 hover:bg-purple-900/30"
+                className="glow-card rounded-3xl border border-white/[0.08] bg-white/[0.03] p-6 text-left transition hover:border-violet-400/50 hover:bg-white/[0.07]"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <p className="text-xs uppercase tracking-wide text-purple-500">Module {module.order}</p>
-                    <h3 className="mt-1 font-semibold text-purple-100">{module.title}</h3>
-                    <p className="text-xs text-purple-400">{module.titleThai}</p>
+                    <p className="text-xs uppercase tracking-wide text-purple-300/60">Module {module.order}</p>
+                    <h3 className="mt-1 font-display text-lg font-semibold text-white">{module.title}</h3>
+                    <p className="text-xs text-purple-300/80">{module.titleThai}</p>
                   </div>
-                  <span className="rounded-full bg-purple-800/50 px-2 py-0.5 text-xs text-purple-200">{doneInModule}/{module.unitCount}</span>
+                  <span className="rounded-full bg-violet-500/15 px-2 py-0.5 text-xs text-purple-200">{doneInModule}/{module.unitCount}</span>
                 </div>
                 <p className="mt-3 text-xs leading-relaxed text-purple-300/80">{module.descriptionThai}</p>
                 <div className="mt-3 flex flex-wrap gap-2 text-xs">
@@ -174,15 +180,6 @@ export default function GrammarAcademy({ moduleId, onNavigate, onSelectAcademyMo
   )
 }
 
-function Stat({ label, value }) {
-  return (
-    <div className="rounded-lg border border-purple-700/40 bg-purple-900/20 p-4 text-center">
-      <p className="text-xs text-purple-400">{label}</p>
-      <p className="mt-1 text-2xl font-bold text-purple-100">{value}</p>
-    </div>
-  )
-}
-
 function Badge({ children }) {
-  return <span className="rounded-full bg-purple-800/50 px-2 py-0.5 text-purple-200">{children}</span>
+  return <span className="chip">{children}</span>
 }

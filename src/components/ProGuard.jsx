@@ -20,7 +20,7 @@ export default function ProGuard({ children, onNavigate, featureName }) {
 
   if (!isProUser(subscription)) {
     return (
-      <div className="mx-auto max-w-md space-y-4 rounded-xl border border-purple-600/40 bg-purple-900/20 p-6 text-center">
+      <div className="mx-auto max-w-md space-y-4 rounded-3xl border border-violet-400/25 bg-white/[0.04] p-6 text-center">
         <div className="text-4xl">🔒</div>
         <h3 className="text-lg font-semibold text-purple-100">
           {featureName || 'เนื้อหานี้'} สำหรับสมาชิก Pro
@@ -30,7 +30,7 @@ export default function ProGuard({ children, onNavigate, featureName }) {
         </p>
         <button
           onClick={() => onNavigate('pricing')}
-          className="rounded-lg bg-purple-600 px-6 py-2 font-semibold text-white transition hover:bg-purple-500"
+          className="btn btn-primary"
         >
           ⬆️ อัปเกรดเป็น Pro
         </button>

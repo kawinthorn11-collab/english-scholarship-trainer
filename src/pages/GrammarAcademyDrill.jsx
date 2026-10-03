@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { loadAcademyUnit } from '../data/grammarAcademy/index.js'
 import SpeakButton from '../components/SpeakButton'
+import Mascot from '../components/Mascot'
+import { Confetti, ProgressRing } from '../components/ui'
 import { recordAcademyDrillAttempt } from '../utils/academyProgress'
 import { recordGrammarDrillCompleted, recordQuestionAnswered } from '../utils/localStats'
 import { sendLearningEvent } from '../utils/globalStats'
@@ -33,7 +35,7 @@ export default function GrammarAcademyDrill({ moduleId, unitId, onNavigate, onSe
     return (
       <div className="space-y-4 text-center">
         <p className="text-purple-300">Academy drill not found.</p>
-        <button onClick={() => onNavigate('academy')} className="rounded-lg bg-purple-600 px-4 py-2 text-white">
+        <button onClick={() => onNavigate('academy')} className="btn btn-primary">
           Back to Academy
         </button>
       </div>
@@ -78,22 +80,27 @@ export default function GrammarAcademyDrill({ moduleId, unitId, onNavigate, onSe
   if (finished) {
     const percentage = Math.round((score / questions.length) * 100)
     return (
-      <div className="space-y-6 text-center">
-        <h1 className="text-3xl font-bold text-purple-100">Academy Drill Complete</h1>
+      <div className="space-y-8 text-center">
+        {percentage >= 80 && <Confetti />}
+        <p className="eyebrow justify-center">🎓 Academy Drill Complete</p>
+        <h1 className="text-3xl font-semibold text-white sm:text-4xl">{percentage >= 80 ? 'เยี่ยมไปเลย!' : percentage >= 50 ? 'ดีมาก ไปต่อกัน!' : 'ไม่เป็นไร ลองใหม่อีกรอบนะ'}</h1>
         <p className="text-purple-300">{module.title} / {unit.title}</p>
-        <div className="rounded-xl border border-purple-700/40 bg-purple-900/20 p-6">
-          <p className="text-5xl font-bold text-purple-100">{score}/{questions.length}</p>
-          <p className="mt-2 text-lg text-purple-300">{percentage}%</p>
-          <p className="mt-2 text-xs text-purple-400">บันทึกคะแนนลง localStorage แล้ว ใช้งานแบบ Guest ได้เต็มระบบ</p>
+        <div className="glass flex flex-col items-center justify-center gap-6 rounded-[2rem] p-8 sm:flex-row">
+          <ProgressRing percent={percentage} size={170}>
+            <p className="font-display text-4xl font-semibold text-white">{score}/{questions.length}</p>
+            <p className="text-sm text-purple-300">{percentage}%</p>
+          </ProgressRing>
+          <Mascot mood={percentage >= 80 ? 'cheer' : percentage >= 50 ? 'happy' : 'oops'} size={140} />
         </div>
+        <p className="text-xs text-purple-300/80">บันทึกคะแนนลง localStorage แล้ว ใช้งานแบบ Guest ได้เต็มระบบ</p>
         <div className="flex flex-col gap-3 sm:flex-row">
-          <button onClick={() => { setCurrentIndex(0); setAnswers({}); setFinished(false) }} className="flex-1 rounded-xl bg-purple-600 px-4 py-3 font-semibold text-white transition hover:bg-purple-500">
+          <button onClick={() => { setCurrentIndex(0); setAnswers({}); setFinished(false) }} className="flex-1 btn btn-primary">
             Retry Drill
           </button>
-          <button onClick={() => onSelectAcademyUnit(moduleId, unitId)} className="flex-1 rounded-xl border border-purple-600 px-4 py-3 font-semibold text-purple-200 transition hover:bg-purple-900/40">
+          <button onClick={() => onSelectAcademyUnit(moduleId, unitId)} className="flex-1 btn btn-ghost">
             Review Unit
           </button>
-          <button onClick={() => onNavigate('academy')} className="flex-1 rounded-xl border border-purple-600 px-4 py-3 font-semibold text-purple-200 transition hover:bg-purple-900/40">
+          <button onClick={() => onNavigate('academy')} className="flex-1 btn btn-ghost">
             Back to Academy
           </button>
         </div>
@@ -102,39 +109,45 @@ export default function GrammarAcademyDrill({ moduleId, unitId, onNavigate, onSe
   }
 
   return (
-    <div className="space-y-5">
-      <header>
-        <p className="text-xs uppercase tracking-wide text-purple-400">{module.title}</p>
-        <h1 className="text-2xl font-bold text-purple-100">{unit.title} Drill</h1>
-        <p className="text-xs text-purple-400">Question {currentIndex + 1} of {questions.length} / Score {score}</p>
+    <div className="space-y-6">
+      <header className="glass rounded-[2rem] p-5 sm:p-6">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <p className="eyebrow">🎓 {module.title}</p>
+            <h1 className="mt-1 text-2xl font-semibold text-white">{unit.title} Drill</h1>
+          </div>
+          <div className="flex gap-2">
+            <span className="chip">ข้อ {currentIndex + 1}/{questions.length}</span>
+            <span className="chip">⭐ {score}</span>
+          </div>
+        </div>
+        <div className="mt-4 h-2.5 overflow-hidden rounded-full bg-white/10">
+          <div className="h-full rounded-full bg-gradient-to-r from-violet-400 via-fuchsia-400 to-amber-300 transition-all duration-500" style={{ width: `${((currentIndex + 1) / questions.length) * 100}%` }} />
+        </div>
       </header>
 
-      <div className="h-2 overflow-hidden rounded-full bg-purple-950">
-        <div className="h-full rounded-full bg-purple-500 transition-all" style={{ width: `${((currentIndex + 1) / questions.length) * 100}%` }} />
-      </div>
-
-      <div className="rounded-xl border border-purple-700/40 bg-purple-900/20 p-5">
+      <div className="glass rounded-[1.75rem] p-5 sm:p-8">
         <div className="mb-4 flex flex-wrap items-start gap-2">
-          <p className="min-w-0 flex-1 text-lg font-semibold text-purple-100">{currentQuestion.question}</p>
+          <p className="min-w-0 flex-1 text-lg font-medium leading-relaxed text-white sm:text-xl">{currentQuestion.question}</p>
           <SpeakButton text={currentQuestion.question} label="Question" variant="button" size="sm" />
         </div>
-        <div className="space-y-2">
+        <div className="space-y-3">
           {currentQuestion.choices.map((choice) => {
             const isSelected = selectedAnswer === choice
             const isCorrect = currentQuestion.correctAnswer === choice
-            let classes = 'border-purple-700/40 bg-purple-900/10 hover:border-purple-500/60'
-            if (showResult && isCorrect) classes = 'border-green-500 bg-green-900/30'
-            if (showResult && isSelected && !isCorrect) classes = 'border-red-500 bg-red-900/30'
+            let classes = 'border-white/[0.08] bg-white/[0.03] hover:border-violet-400/50'
+            if (showResult && isCorrect) classes = 'border-emerald-400/80 bg-emerald-500/15 animate-pop'
+            if (showResult && isSelected && !isCorrect) classes = 'border-rose-400/80 bg-rose-500/15 animate-shake'
             return (
               <div key={choice} className="flex items-stretch gap-2">
                 <button
                   onClick={() => selectAnswer(choice)}
                   disabled={showResult}
-                  className={`min-w-0 flex-1 rounded-lg border p-3 text-left text-purple-100 transition ${classes}`}
+                  className={`min-w-0 flex-1 rounded-2xl border px-4 py-3.5 text-left text-white transition ${classes}`}
                 >
                   {choice}
-                  {showResult && isCorrect && <span className="ml-2 text-green-300">correct</span>}
-                  {showResult && isSelected && !isCorrect && <span className="ml-2 text-red-300">wrong</span>}
+                  {showResult && isCorrect && <span className="ml-2 text-xs font-bold text-emerald-300">✓ ถูกต้อง</span>}
+                  {showResult && isSelected && !isCorrect && <span className="ml-2 text-xs font-bold text-rose-300">✕ คำตอบของคุณ</span>}
                 </button>
                 <SpeakButton text={choice} label="Choice" size="sm" />
               </div>
@@ -144,21 +157,24 @@ export default function GrammarAcademyDrill({ moduleId, unitId, onNavigate, onSe
       </div>
 
       {showResult && (
-        <div className="rounded-lg border border-purple-700/40 bg-purple-950/60 p-4">
-          <p className={`font-semibold ${selectedAnswer === currentQuestion.correctAnswer ? 'text-green-300' : 'text-red-300'}`}>
-            {selectedAnswer === currentQuestion.correctAnswer ? 'ถูกต้อง ตัวแม่ยิ้มแล้ว' : `คำตอบที่ถูกคือ ${currentQuestion.correctAnswer}`}
-          </p>
-          <p className="mt-2 text-sm leading-relaxed text-purple-200/85">{currentQuestion.explanationThai}</p>
+        <div className={`flex animate-pop flex-col gap-4 rounded-3xl border p-5 sm:flex-row sm:items-center ${selectedAnswer === currentQuestion.correctAnswer ? 'border-emerald-400/30 bg-emerald-500/10' : 'border-rose-400/30 bg-rose-500/10'}`}>
+          <Mascot mood={selectedAnswer === currentQuestion.correctAnswer ? 'cheer' : 'oops'} size={80} className="shrink-0 self-center" />
+          <div>
+            <p className={`font-display text-lg font-semibold ${selectedAnswer === currentQuestion.correctAnswer ? 'text-emerald-200' : 'text-rose-200'}`}>
+              {selectedAnswer === currentQuestion.correctAnswer ? 'ถูกต้อง ตัวแม่ยิ้มแล้ว 🎉' : `คำตอบที่ถูกคือ ${currentQuestion.correctAnswer}`}
+            </p>
+            <p className="mt-1 text-[15px] leading-relaxed text-purple-100/85">{currentQuestion.explanationThai}</p>
+          </div>
         </div>
       )}
 
       <div className="flex gap-3">
         {showResult && (
-          <button onClick={nextQuestion} className="flex-1 rounded-lg bg-purple-600 px-4 py-3 font-semibold text-white transition hover:bg-purple-500">
+          <button onClick={nextQuestion} className="flex-1 btn btn-primary">
             {isLast ? 'Finish Drill' : 'Next Question'}
           </button>
         )}
-        <button onClick={() => onSelectAcademyUnit(moduleId, unitId)} className="rounded-lg border border-purple-600 px-4 py-3 text-sm font-semibold text-purple-200 transition hover:bg-purple-900/40">
+        <button onClick={() => onSelectAcademyUnit(moduleId, unitId)} className="btn btn-ghost text-sm">
           Exit
         </button>
       </div>

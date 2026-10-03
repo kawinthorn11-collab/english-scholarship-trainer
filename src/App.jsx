@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import './App.css'
 import Dashboard from './pages/Dashboard'
 import MockExam from './pages/MockExam'
 import Practice from './pages/Practice'
@@ -15,19 +14,14 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import Account from './pages/Account'
 import ConfirmModal from './components/ConfirmModal'
+import Landing from './pages/Landing'
+import MascotHelper from './components/MascotHelper'
+import { AuroraBackground, BrandLogo, ScrollProgress, SiteFooter } from './components/AppChrome'
+import { useScrollReveal } from './hooks/useScrollReveal'
 import { DEFAULT_SET_ID } from './data/examSets/index.js'
 import { getSelectedSetId, saveSelectedSetId } from './utils/storage'
 import { useAuth } from './context/AuthContext'
 import { useStudySession } from './hooks/useStudySession'
-
-const features = [
-  { icon: '📝', title: 'Mock Exam Mode', desc: 'Simulate the real 60-question, 60-minute exam' },
-  { icon: '📖', title: 'Grammar Practice', desc: 'Focus on Part I grammar questions' },
-  { icon: '📚', title: 'Reading Practice', desc: 'Focus on Part II reading comprehension' },
-  { icon: '💡', title: 'Detailed Explanation Mode', desc: 'Learn why each answer is correct' },
-  { icon: '🎯', title: 'Weak Point Analysis', desc: 'Identify and improve your weak areas' },
-  { icon: '📊', title: 'Progress Tracking', desc: 'Track your scores over time' },
-]
 
 const pagePaths = {
   landing: '/',
@@ -158,39 +152,6 @@ function getPathForPage(page, lessonId, academyModuleId, academyUnitId) {
   return pagePaths[page] || '/'
 }
 
-function LandingPage({ onNavigate }) {
-  return (
-    <div>
-      <header className="flex flex-col items-center justify-center px-4 pt-16 pb-12 text-center">
-        <div className="mb-4 text-5xl">🎓</div>
-        <h1 className="text-4xl font-bold tracking-tight text-purple-100 sm:text-5xl md:text-6xl">
-          English Scholarship Exam Trainer
-        </h1>
-        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-purple-200/80 sm:text-xl">
-          เว็บฝึกข้อสอบภาษาอังกฤษสำหรับสอบชิงทุน พร้อมโหมดเฉลยละเอียดและวิเคราะห์จุดอ่อน
-        </p>
-      </header>
-      <section className="mx-auto max-w-5xl px-4 pb-12">
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {features.map((f) => (
-            <div key={f.title} className="rounded-xl border border-purple-700/40 bg-purple-900/30 p-6 backdrop-blur transition hover:border-purple-500/60 hover:bg-purple-900/50">
-              <div className="mb-3 text-3xl">{f.icon}</div>
-              <h3 className="mb-1 text-lg font-semibold text-purple-100">{f.title}</h3>
-              <p className="text-sm text-purple-300/70">{f.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-      <section className="flex flex-col items-center px-4 pb-16">
-        <button type="button" onClick={() => onNavigate('dashboard')} className="rounded-full bg-purple-600 px-8 py-3 text-lg font-semibold text-white shadow-lg shadow-purple-900/50 transition hover:bg-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2 focus:ring-offset-[#1a0a2e]">
-          Start Learning
-        </button>
-        <p className="mt-6 text-xs text-purple-400/60">Private study app. Original practice questions only.</p>
-      </section>
-    </div>
-  )
-}
-
 function App() {
   const [page, setPage] = useState(getPageFromPath)
   const [examInProgress, setExamInProgress] = useState(false)
@@ -199,7 +160,14 @@ function App() {
   const [selectedLessonId, setSelectedLessonId] = useState(getLessonFromPath)
   const [selectedAcademyModuleId, setSelectedAcademyModuleId] = useState(getAcademyModuleFromPath)
   const [selectedAcademyUnitId, setSelectedAcademyUnitId] = useState(getAcademyUnitFromPath)
+  const [menuOpen, setMenuOpen] = useState(false)
   useStudySession(page)
+  const routeKey = `${page}|${selectedLessonId || ''}|${selectedAcademyModuleId || ''}|${selectedAcademyUnitId || ''}`
+  useScrollReveal(routeKey)
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' })
+  }, [routeKey])
 
   const changeSet = (setId) => {
     setSelectedSetIdState(setId)
@@ -259,6 +227,7 @@ function App() {
   }
 
   const navigate = (target, options = {}) => {
+    setMenuOpen(false)
     if (target === 'login') {
       setExamInProgress(false)
       setNavGuard(null)
@@ -321,39 +290,90 @@ function App() {
     commitNavigation('academy-drill', { academyModuleId: moduleId, academyUnitId: unitId })
   }
 
+  const mainWidth = page === 'landing'
+    ? 'max-w-6xl'
+    : ['dashboard', 'grammar', 'academy', 'academy-module'].includes(page) ? 'max-w-5xl' : 'max-w-4xl'
+
+  const navItems = [
+    { key: 'dashboard', label: 'Dashboard', icon: '🏠', active: page === 'dashboard' },
+    { key: 'mock-exam', label: 'Exam', icon: '📝', active: page === 'mock-exam' },
+    { key: 'practice', label: 'Practice', icon: '🏋️', active: page === 'practice' },
+    { key: 'grammar', label: 'Grammar', icon: '📖', active: page.startsWith('grammar') },
+    { key: 'academy', label: 'Academy', icon: '🎓', active: page.startsWith('academy') },
+    { key: 'listening', label: 'Listening', icon: '🎧', active: page === 'listening' },
+    { key: 'results', label: 'Results', icon: '📊', active: page === 'results' },
+  ]
+
   return (
-    <div className="min-h-screen bg-[#1a0a2e] text-white">
+    <div className="relative min-h-screen overflow-x-clip bg-ink text-white">
+      <AuroraBackground />
       {navGuard && (
         <ConfirmModal
-          title="Leave Exam?"
-          message="You have an exam in progress. If you leave now, your answers will be lost. Are you sure?"
+          title="ออกจากการสอบ?"
+          message="คุณกำลังทำข้อสอบอยู่ ถ้าออกตอนนี้คำตอบทั้งหมดจะหายไป แน่ใจหรือไม่?"
+          confirmLabel="ออกจากการสอบ"
+          tone="danger"
           onConfirm={confirmLeaveExam}
           onCancel={cancelLeaveExam}
         />
       )}
 
-      <nav className="sticky top-0 z-50 border-b border-purple-700/40 bg-[#1a0a2e]/95 backdrop-blur">
-          <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-            <button onClick={() => navigate('landing')} className="text-lg font-bold text-purple-200 transition hover:text-white">
-              🎓 Exam Trainer
+      <nav className="sticky top-0 z-50 h-16 border-b border-white/[0.06] bg-ink/70 backdrop-blur-xl">
+        <div className="mx-auto flex h-full max-w-6xl items-center justify-between gap-4 px-4">
+          <BrandLogo onClick={() => navigate('landing')} />
+
+          <div className="hidden items-center gap-1 rounded-full border border-white/[0.06] bg-white/[0.03] p-1 xl:flex">
+            {navItems.map((item) => (
+              <NavBtn key={item.key} label={item.label} icon={item.icon} active={item.active} onClick={() => navigate(item.key)} />
+            ))}
+          </div>
+
+          <div className="flex items-center gap-2">
+            <div className="hidden items-center gap-2 xl:flex">
+              <AuthNavButtons page={page} onNavigate={navigate} />
+            </div>
+            <button
+              onClick={() => setMenuOpen((v) => !v)}
+              className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.05] transition hover:bg-white/10 xl:hidden"
+              aria-label="เมนู"
+              aria-expanded={menuOpen}
+            >
+              <span className="relative block h-3.5 w-5">
+                <span className={`absolute left-0 top-0 h-0.5 w-5 rounded bg-white transition ${menuOpen ? 'translate-y-[6px] rotate-45' : ''}`} />
+                <span className={`absolute left-0 top-[6px] h-0.5 w-5 rounded bg-white transition ${menuOpen ? 'opacity-0' : ''}`} />
+                <span className={`absolute left-0 top-3 h-0.5 w-5 rounded bg-white transition ${menuOpen ? '-translate-y-[6px] -rotate-45' : ''}`} />
+              </span>
             </button>
-            <div className="flex flex-wrap gap-2">
-              <NavBtn label="Dashboard" active={page === 'dashboard'} onClick={() => navigate('dashboard')} />
-              <NavBtn label="Exam" active={page === 'mock-exam'} onClick={() => navigate('mock-exam')} />
-              <NavBtn label="Practice" active={page === 'practice'} onClick={() => navigate('practice')} />
-              <NavBtn label="Grammar" active={page.startsWith('grammar')} onClick={() => navigate('grammar')} />
-              <NavBtn label="Academy" active={page.startsWith('academy')} onClick={() => navigate('academy')} />
-              <NavBtn label="Listening" active={page === 'listening'} onClick={() => navigate('listening')} />
-              <NavBtn label="Results" active={page === 'results'} onClick={() => navigate('results')} />
+          </div>
+        </div>
+        <ScrollProgress />
+
+        {menuOpen && (
+          <div className="glass-strong absolute inset-x-3 top-[4.5rem] animate-pop rounded-3xl p-4 xl:hidden">
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+              {navItems.map((item) => (
+                <button
+                  key={item.key}
+                  onClick={() => navigate(item.key)}
+                  className={`flex items-center gap-3 rounded-2xl px-4 py-3.5 text-left text-sm font-semibold transition ${item.active ? 'bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white shadow-lg' : 'bg-white/[0.04] text-purple-100 hover:bg-white/10'}`}
+                >
+                  <span className="text-xl">{item.icon}</span>
+                  {item.label}
+                </button>
+              ))}
+            </div>
+            <div className="mt-3 flex flex-wrap gap-2 border-t border-white/10 pt-3">
               <AuthNavButtons page={page} onNavigate={navigate} />
             </div>
           </div>
+        )}
       </nav>
 
-      <main className="mx-auto max-w-4xl px-4 py-8">
+      <main className={`relative z-10 mx-auto ${mainWidth} px-4 pb-32 pt-8 sm:pt-10`}>
+        <div key={routeKey} data-page-root className="page-enter">
         {page === 'login' && <Login onNavigate={navigate} onNavigatePath={navigatePath} />}
         {page === 'register' && <Register onNavigate={navigate} onNavigatePath={navigatePath} />}
-            {page === 'landing' && <LandingPage onNavigate={navigate} />}
+            {page === 'landing' && <Landing onNavigate={navigate} />}
             {page === 'dashboard' && <Dashboard onNavigate={navigate} selectedSetId={selectedSetId} onChangeSet={changeSet} onSelectLesson={selectLesson} />}
             {page === 'mock-exam' && (
               <MockExam
@@ -416,14 +436,23 @@ function App() {
               />
             )}
             {page === 'account' && <Account onNavigate={navigate} />}
+        </div>
       </main>
+
+      {page !== 'mock-exam' && <SiteFooter onNavigate={navigate} />}
+      <MascotHelper page={page} />
     </div>
   )
 }
 
-function NavBtn({ label, active, onClick }) {
+function NavBtn({ label, icon, active, onClick }) {
   return (
-    <button onClick={onClick} className={`rounded-lg px-3 py-1.5 text-sm font-medium transition ${active ? 'bg-purple-700 text-white' : 'text-purple-300 hover:bg-purple-900/40 hover:text-purple-100'}`}>
+    <button
+      onClick={onClick}
+      aria-current={active ? 'page' : undefined}
+      className={`relative flex items-center gap-1.5 rounded-full px-3.5 py-2 text-sm font-semibold transition-all duration-300 ${active ? 'bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white shadow-[0_8px_24px_-8px_rgba(192,38,211,0.8)]' : 'text-purple-200/80 hover:bg-white/[0.07] hover:text-white'}`}
+    >
+      <span className={`text-base transition-transform duration-300 ${active ? 'scale-110' : ''}`}>{icon}</span>
       {label}
     </button>
   )
@@ -431,20 +460,17 @@ function NavBtn({ label, active, onClick }) {
 
 function AuthNavButtons({ page, onNavigate }) {
   const { isAuthenticated, user, signOut } = useAuth()
+  const pill = (active) => `whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold transition ${active ? 'bg-white/15 text-white' : 'text-purple-200/90 hover:bg-white/[0.08] hover:text-white'}`
 
   if (isAuthenticated) {
     return (
       <>
-        <button
-          onClick={() => onNavigate('account')}
-          className={`rounded-lg px-3 py-1.5 text-sm font-medium transition ${page === 'account' ? 'bg-purple-700 text-white' : 'text-purple-300 hover:bg-purple-900/40 hover:text-purple-100'}`}
-          title={user?.email}
-        >
+        <button onClick={() => onNavigate('account')} className={pill(page === 'account')} title={user?.email}>
           👤 {user?.user_metadata?.display_name || 'Account'}
         </button>
         <button
           onClick={async () => { await signOut(); onNavigate('dashboard', { replace: true }) }}
-          className="rounded-lg px-3 py-1.5 text-sm font-medium text-red-300 transition hover:bg-red-900/30"
+          className="rounded-full px-4 py-2 text-sm font-semibold text-rose-300 transition hover:bg-rose-500/10"
         >
           Logout
         </button>
@@ -455,17 +481,14 @@ function AuthNavButtons({ page, onNavigate }) {
   // Guest mode or not authenticated — keep the app open and offer optional auth.
   return (
     <>
-      <button
-        onClick={() => onNavigate('login')}
-        className={`rounded-lg px-3 py-1.5 text-sm font-medium transition ${page === 'login' ? 'bg-purple-700 text-white' : 'text-purple-300 hover:bg-purple-900/40 hover:text-purple-100'}`}
-      >
-        🔐 Login
+      <button onClick={() => onNavigate('login')} className={pill(page === 'login')}>
+        Login
       </button>
       <button
         onClick={() => onNavigate('register')}
-        className={`rounded-lg px-3 py-1.5 text-sm font-medium transition ${page === 'register' ? 'bg-purple-700 text-white' : 'text-purple-300 hover:bg-purple-900/40 hover:text-purple-100'}`}
+        className="whitespace-nowrap rounded-full bg-white px-4 py-2 text-sm font-bold text-violet-700 shadow-lg shadow-violet-900/30 transition hover:-translate-y-0.5 hover:bg-violet-50"
       >
-        Register
+        สมัครฟรี
       </button>
     </>
   )

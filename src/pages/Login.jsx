@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
+import Mascot from '../components/Mascot'
 import { isSupabaseConfigured } from '../lib/supabaseClient'
 
 function getSafeRedirectPath() {
@@ -27,13 +28,14 @@ export default function Login({ onNavigate, onNavigatePath }) {
 
   if (!isSupabaseConfigured()) {
     return (
-      <div className="mx-auto max-w-md space-y-4 text-center">
-        <h2 className="text-2xl font-bold text-purple-100">เข้าสู่ระบบ</h2>
+      <div className="glass mx-auto max-w-md space-y-6 rounded-[2rem] p-7 text-center sm:p-9">
+        <Mascot mood="wave" size={120} className="mx-auto -mt-2" />
+        <h2 className="text-3xl font-semibold text-white">เข้าสู่ระบบ</h2>
         <p className="text-purple-300">ระบบล็อกอินยังไม่ได้ตั้งค่า แต่คุณยังสามารถใช้งานบทเรียนและแบบทดสอบแบบ Guest ได้</p>
         <button
           type="button"
           onClick={goGuest}
-          className="w-full rounded-lg border border-purple-500 px-4 py-3 font-semibold text-purple-100 transition hover:bg-purple-900/40"
+          className="btn btn-ghost w-full"
         >
           ใช้งานแบบ Guest
         </button>
@@ -69,40 +71,41 @@ export default function Login({ onNavigate, onNavigatePath }) {
   }
 
   return (
-    <div className="mx-auto max-w-md space-y-6">
+    <div className="glass mx-auto max-w-md space-y-6 rounded-[2rem] p-7 sm:p-9">
+      <Mascot mood="wave" size={120} className="mx-auto -mt-2" />
       <div className="space-y-2 text-center">
-        <h2 className="text-2xl font-bold text-purple-100">เข้าสู่ระบบ</h2>
+        <h2 className="text-3xl font-semibold text-white">เข้าสู่ระบบ</h2>
         <p className="text-sm text-purple-300">เข้าสู่ระบบเพื่อซิงก์ความคืบหน้า หรือใช้งานแบบ Guest ได้ทันที</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="mb-1 block text-sm text-purple-300">อีเมล</label>
+          <label className="mb-1.5 block text-sm font-medium text-purple-200">อีเมล</label>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full rounded-lg border border-purple-700/40 bg-purple-900/30 px-4 py-2 text-purple-100 placeholder-purple-500 focus:border-purple-400 focus:outline-none"
+            className="input"
             placeholder="your@email.com"
           />
         </div>
         <div>
-          <label className="mb-1 block text-sm text-purple-300">รหัสผ่าน</label>
+          <label className="mb-1.5 block text-sm font-medium text-purple-200">รหัสผ่าน</label>
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            className="w-full rounded-lg border border-purple-700/40 bg-purple-900/30 px-4 py-2 text-purple-100 placeholder-purple-500 focus:border-purple-400 focus:outline-none"
+            className="input"
             placeholder="••••••••"
           />
         </div>
-        {error && <p className="rounded-lg bg-red-900/30 p-3 text-sm text-red-300">{error}</p>}
+        {error && <p className="animate-shake rounded-2xl border border-rose-400/30 bg-rose-500/10 p-4 text-sm text-rose-200">{error}</p>}
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded-lg bg-purple-600 px-4 py-3 font-semibold text-white transition hover:bg-purple-500 disabled:opacity-50"
+          className="btn btn-primary w-full py-3.5"
         >
           {loading ? 'กำลังเข้าสู่ระบบ...' : 'เข้าสู่ระบบ'}
         </button>
@@ -111,14 +114,14 @@ export default function Login({ onNavigate, onNavigatePath }) {
       <button
         type="button"
         onClick={goGuest}
-        className="w-full rounded-lg border border-purple-500 px-4 py-3 font-semibold text-purple-100 transition hover:bg-purple-900/40"
+        className="btn btn-ghost w-full"
       >
         ใช้งานแบบ Guest
       </button>
 
-      <div className="text-center text-sm text-purple-400">
+      <div className="text-center text-sm text-purple-300/80">
         <span>ยังไม่มีบัญชี? </span>
-        <button onClick={() => onNavigate('register')} className="text-purple-200 underline hover:text-white">
+        <button onClick={() => onNavigate('register')} className="font-semibold text-fuchsia-300 underline-offset-4 hover:text-white hover:underline">
           สมัครสมาชิก
         </button>
       </div>

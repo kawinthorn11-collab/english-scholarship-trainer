@@ -11,6 +11,8 @@ import { getPassageForQuestion, getPassageTitle } from '../utils/passage'
 import SpeakButton from '../components/SpeakButton'
 import { recordExamCompleted, recordExamStarted, recordQuestionAnswered } from '../utils/localStats'
 import { sendLearningEvent } from '../utils/globalStats'
+import Mascot from '../components/Mascot'
+import ResultSummary from '../components/ResultSummary'
 
 export default function MockExam({ selectedSetId, onNavigate, onExamStart, onExamEnd }) {
   const examSet = getExamSet(selectedSetId)
@@ -120,60 +122,74 @@ export default function MockExam({ selectedSetId, onNavigate, onExamStart, onExa
 
   if (!examSet) {
     return (
-      <div className="text-center text-purple-300">
+      <div className="glass mx-auto max-w-md space-y-4 rounded-[2rem] p-8 text-center text-purple-200">
+        <Mascot mood="oops" size={130} className="mx-auto" />
         <p>Exam set not found. Please select a valid set from the Dashboard.</p>
-        <button onClick={() => onNavigate('dashboard')} className="mt-4 rounded-lg bg-purple-600 px-4 py-2 text-white">Go to Dashboard</button>
+        <button onClick={() => onNavigate('dashboard')} className="btn btn-primary">Go to Dashboard</button>
       </div>
     )
   }
 
   if (submitted && score) {
     return (
-      <div className="space-y-6">
-        <h2 className="text-2xl font-bold text-purple-100">✅ Exam Submitted!</h2>
-        <p className="text-sm text-purple-400">{examSet.title}</p>
-        <div className="rounded-xl border border-purple-700/40 bg-purple-900/20 p-6 text-center">
-          <p className="text-4xl font-bold text-purple-100">{score.percentage}%</p>
-          <p className="mt-2 text-purple-300">{score.total}/{score.totalQuestions} correct</p>
-          <p className="mt-1 text-sm text-purple-400">Grammar: {score.grammar}/{score.grammarQuestions} | Reading: {score.reading}/{score.readingQuestions}</p>
-          <p className="mt-2 text-sm text-purple-400">⏱ Time used: {formatTime(finalTimeUsed)}</p>
+      <div className="space-y-8">
+        <div className="text-center">
+          <p className="eyebrow justify-center">✅ Exam Submitted</p>
+          <h1 className="mt-2 text-3xl font-semibold text-white sm:text-4xl">ส่งข้อสอบเรียบร้อย!</h1>
+          <p className="mt-2 text-sm text-purple-300/80">{examSet.title} · ⏱ ใช้เวลา {formatTime(finalTimeUsed)}</p>
         </div>
-        <div className="flex gap-3">
-          <button onClick={() => onNavigate('results')} className="flex-1 rounded-xl bg-purple-600 px-4 py-3 font-semibold text-white transition hover:bg-purple-500">View Detailed Results</button>
-          <button onClick={() => onNavigate('dashboard')} className="flex-1 rounded-xl border border-purple-600 px-4 py-3 font-semibold text-purple-200 transition hover:bg-purple-900/40">Back to Dashboard</button>
+        <ResultSummary score={score} />
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <button onClick={() => onNavigate('results')} className="btn btn-primary flex-1 py-4">ดูเฉลยละเอียด →</button>
+          <button onClick={() => onNavigate('dashboard')} className="btn btn-ghost flex-1 py-4">กลับ Dashboard</button>
         </div>
       </div>
     )
   }
 
+  const progressPct = examQuestions.length ? (answeredCount / examQuestions.length) * 100 : 0
+
   return (
-    <div className="space-y-4" ref={questionAreaRef}>
+    <div className="space-y-6" ref={questionAreaRef}>
       {showConfirm && (
-        <ConfirmModal title="Submit Exam" message={confirmMessage} onConfirm={doSubmit} onCancel={() => setShowConfirm(false)} />
+        <ConfirmModal title="ส่งข้อสอบ?" message={confirmMessage} confirmLabel="ส่งข้อสอบ" cancelLabel="ทำต่อ" onConfirm={doSubmit} onCancel={() => setShowConfirm(false)} />
       )}
 
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-xl font-bold text-purple-100">📝 Mock Exam</h2>
-          <p className="text-xs text-purple-400">{examSet.title}</p>
+      <div className="glass rounded-[2rem] p-5 sm:p-6">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 to-fuchsia-500 text-2xl shadow-lg shadow-fuchsia-900/30">📝</span>
+            <div>
+              <h1 className="text-xl font-semibold text-white">Mock Exam</h1>
+              <p className="text-xs text-purple-300/80">{examSet.title}</p>
+            </div>
+          </div>
+          <Timer durationMinutes={timeLimitMinutes} onTimeUp={handleTimeUp} onElapsedChange={handleElapsedChange} />
         </div>
-        <Timer durationMinutes={timeLimitMinutes} onTimeUp={handleTimeUp} onElapsedChange={handleElapsedChange} />
-      </div>
 
-      <div className="flex items-center justify-between text-sm text-purple-300">
-        <span>Question {currentIndex + 1} of {examQuestions.length}</span>
-        <span>{answeredCount}/{examQuestions.length} answered</span>
-      </div>
-      <div className="h-2 overflow-hidden rounded-full bg-purple-900/50">
-        <div className="h-full rounded-full bg-purple-500 transition-all" style={{ width: `${((currentIndex + 1) / examQuestions.length) * 100}%` }} />
-      </div>
+        <div className="mt-5 flex items-center justify-between text-sm text-purple-200/90">
+          <span>ข้อ <b className="text-white">{currentIndex + 1}</b> / {examQuestions.length}</span>
+          <span>ตอบแล้ว <b className="text-white">{answeredCount}</b> / {examQuestions.length}</span>
+        </div>
+        <div className="mt-2 h-2.5 overflow-hidden rounded-full bg-white/10">
+          <div className="h-full rounded-full bg-gradient-to-r from-violet-400 via-fuchsia-400 to-amber-300 transition-all duration-500" style={{ width: `${progressPct}%` }} />
+        </div>
 
-      <div className="flex flex-wrap gap-2">
-        {examQuestions.map((q, idx) => (
-          <button key={q.id} onClick={() => goToQuestion(idx)} className={`h-8 w-8 rounded-md text-xs font-bold transition ${idx === currentIndex ? 'bg-purple-500 text-white' : answers[q.id] ? 'bg-purple-700/60 text-purple-200' : 'bg-purple-900/40 text-purple-400'}`}>
-            {idx + 1}
-          </button>
-        ))}
+        <details className="mt-4">
+          <summary className="cursor-pointer text-sm font-semibold text-purple-200">แผงเลขข้อ (กดเพื่อกระโดดไปข้อนั้น)</summary>
+          <div className="mt-3 grid grid-cols-8 gap-2 sm:grid-cols-12">
+            {examQuestions.map((q, idx) => (
+              <button
+                key={q.id}
+                onClick={() => goToQuestion(idx)}
+                aria-label={`Question ${idx + 1}`}
+                className={`aspect-square rounded-xl text-xs font-bold transition hover:scale-110 ${idx === currentIndex ? 'bg-gradient-to-br from-violet-500 to-fuchsia-500 text-white shadow-lg shadow-fuchsia-900/40' : answers[q.id] ? 'bg-violet-500/30 text-violet-100' : 'bg-white/[0.05] text-purple-300/80 hover:bg-white/10'}`}
+              >
+                {idx + 1}
+              </button>
+            ))}
+          </div>
+        </details>
       </div>
 
       {currentQuestion && (() => {
@@ -181,12 +197,12 @@ export default function MockExam({ selectedSetId, onNavigate, onExamStart, onExa
         const title = getPassageTitle(currentQuestion, allQuestions)
         if (!passage) return null
         return (
-          <div className="sticky top-16 z-10 rounded-lg border border-purple-700/30 bg-purple-950/95 backdrop-blur">
+          <div className="glass-strong sticky top-[4.5rem] z-10 max-h-[45vh] overflow-y-auto rounded-3xl">
             <details open>
-              <summary className="cursor-pointer p-3 text-xs font-semibold uppercase tracking-wide text-purple-400">
-                📚 {title || (currentQuestion.section === 'Grammar' ? 'Grammar Passage' : 'Reading Passage')} (click to show/hide)
+              <summary className="cursor-pointer px-5 py-4 text-xs font-semibold uppercase tracking-wide text-purple-200">
+                📚 {title || (currentQuestion.section === 'Grammar' ? 'Grammar Passage' : 'Reading Passage')} <span className="normal-case text-purple-300/70">(กดเพื่อซ่อน/แสดง)</span>
               </summary>
-              <div className="border-t border-purple-700/30 p-4 text-sm leading-relaxed text-purple-200/80 whitespace-pre-line">
+              <div className="whitespace-pre-line border-t border-white/[0.06] px-5 py-4 text-[15px] leading-relaxed text-purple-100/85">
                 <div className="mb-3 flex justify-end">
                   <SpeakButton text={passage} label="Read passage" variant="button" size="sm" />
                 </div>
@@ -200,16 +216,16 @@ export default function MockExam({ selectedSetId, onNavigate, onExamStart, onExa
       <QuestionCard question={{ ...currentQuestion, passage: '' }} selectedAnswer={answers[currentQuestion.id]} onSelect={handleSelect} showResult={false} questionNumber={currentIndex + 1} hideSkillTag={true} />
 
       <div className="flex gap-3">
-        <button onClick={() => goToQuestion(Math.max(0, currentIndex - 1))} disabled={currentIndex === 0} className="flex-1 rounded-lg border border-purple-600 px-4 py-2 font-semibold text-purple-200 transition hover:bg-purple-900/40 disabled:opacity-30">← Previous</button>
+        <button onClick={() => goToQuestion(Math.max(0, currentIndex - 1))} disabled={currentIndex === 0} className="btn btn-ghost flex-1">← ก่อนหน้า</button>
         {currentIndex < examQuestions.length - 1 ? (
-          <button onClick={() => goToQuestion(currentIndex + 1)} className="flex-1 rounded-lg bg-purple-700 px-4 py-2 font-semibold text-white transition hover:bg-purple-600">Next →</button>
+          <button onClick={() => goToQuestion(currentIndex + 1)} className="btn btn-primary flex-1">ถัดไป →</button>
         ) : (
-          <button onClick={handleSubmitClick} className="flex-1 rounded-lg bg-green-700 px-4 py-2 font-semibold text-white transition hover:bg-green-600">Submit Exam ✓</button>
+          <button onClick={handleSubmitClick} className="btn btn-success flex-1">ส่งข้อสอบ ✓</button>
         )}
       </div>
 
       {currentIndex < examQuestions.length - 1 && answeredCount === examQuestions.length && (
-        <button onClick={handleSubmitClick} className="w-full rounded-lg bg-green-700/80 px-4 py-2 text-sm font-semibold text-white transition hover:bg-green-600">All answered — Submit Early ✓</button>
+        <button onClick={handleSubmitClick} className="btn btn-success w-full animate-pop">ตอบครบแล้ว — ส่งข้อสอบเลย ✓</button>
       )}
     </div>
   )
