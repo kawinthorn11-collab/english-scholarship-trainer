@@ -56,7 +56,20 @@ function stripBasePath(pathname) {
   return path
 }
 
+// Hash routing for hosts that can't rewrite paths (e.g. a static preview build).
+const useHashRouting = import.meta.env.VITE_HASH_ROUTER === '1'
+
+function currentAppPath() {
+  if (useHashRouting) return normalizeAppPath(window.location.hash.replace(/^#/, '') || '/')
+  return stripBasePath(window.location.pathname)
+}
+
+function currentBrowserPath() {
+  return useHashRouting ? window.location.hash || '#/' : window.location.pathname
+}
+
 function toBrowserPath(appPath) {
+  if (useHashRouting) return `#${normalizeAppPath(appPath)}`
   const path = normalizeAppPath(appPath)
   if (productionBasePath === '/') return path
   return `${productionBasePath.replace(/\/$/, '')}${path}`
@@ -125,7 +138,7 @@ function getRouteFromPathname(path) {
 
 function getRouteFromPath() {
   if (typeof window === 'undefined') return { page: 'landing', lessonId: null }
-  const appPath = stripBasePath(window.location.pathname)
+  const appPath = currentAppPath()
   const restoredPath = appPath === '/' ? getRedirectPathFromLocation() : null
   return getRouteFromPathname(restoredPath || appPath)
 }
@@ -178,7 +191,7 @@ function App() {
   }
 
   useEffect(() => {
-    const appPath = stripBasePath(window.location.pathname)
+    const appPath = currentAppPath()
     const restoredPath = appPath === '/' ? getRedirectPathFromLocation() : null
     if (restoredPath) {
       window.history.replaceState({}, '', toBrowserPath(restoredPath))
@@ -223,7 +236,7 @@ function App() {
 
     const nextPath = getPathForPage(target, lessonId, academyModuleId, academyUnitId)
     const browserPath = toBrowserPath(nextPath)
-    if (browserPath && window.location.pathname !== browserPath) {
+    if (browserPath && currentBrowserPath() !== browserPath) {
       const method = replace ? 'replaceState' : 'pushState'
       window.history[method]({}, '', browserPath)
     }
