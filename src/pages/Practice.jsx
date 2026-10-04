@@ -7,6 +7,7 @@ import SpeakButton from '../components/SpeakButton'
 import { recordQuestionAnswered } from '../utils/localStats'
 import { sendLearningEvent } from '../utils/globalStats'
 import Mascot from '../components/Mascot'
+import { speakLine } from '../utils/voice'
 import { PageHeader } from '../components/ui'
 
 export default function Practice({ selectedSetId, onNavigate }) {
@@ -59,6 +60,7 @@ export default function Practice({ selectedSetId, onNavigate }) {
     sendLearningEvent('question_answered', { skillTag: currentQuestion.skillTag })
     setSelectedAnswer(choice)
     setShowResult(true)
+    speakLine(isCorrect ? 'ถูกต้อง! เก่งมาก' : `ยังไม่ใช่นะ คำตอบที่ถูกคือ ${currentQuestion.correctAnswer}`, { speaker: isCorrect ? 'pig' : 'buffalo', lineId: 'practice-feedback' })
   }
 
   const handleNext = () => { navigateTo(Math.min(filteredQuestions.length - 1, currentIndex + 1)) }
@@ -74,7 +76,7 @@ export default function Practice({ selectedSetId, onNavigate }) {
           eyebrow="Practice Mode"
           icon="🏋️"
           title="ฝึกทีละข้อ เฉลยทันที"
-          subtitle={`${examSet?.title || 'No set selected'} — เลือกพาร์ทที่อยากฝึก ตอบแล้วครูฮูกจะอธิบายให้ทันทีว่าทำไมถูกหรือผิด`}
+          subtitle={`${examSet?.title || 'No set selected'} — เลือกพาร์ทที่อยากฝึก ตอบแล้วครูหมูกับครูควายจะอธิบายให้ทันทีว่าทำไมถูกหรือผิด`}
           mood="teach"
         />
         <div className="grid gap-5 sm:grid-cols-2">
@@ -130,7 +132,7 @@ export default function Practice({ selectedSetId, onNavigate }) {
 
       {showResult && (
         <div className={`flex animate-pop items-center gap-4 rounded-3xl border p-4 ${selectedAnswer === currentQuestion.correctAnswer ? 'border-emerald-400/40 bg-emerald-500/10' : 'border-rose-400/40 bg-rose-500/10'}`}>
-          <Mascot mood={selectedAnswer === currentQuestion.correctAnswer ? 'cheer' : 'oops'} size={72} className="shrink-0" />
+          <Mascot character={selectedAnswer === currentQuestion.correctAnswer ? 'pig' : 'buffalo'} mood={selectedAnswer === currentQuestion.correctAnswer ? 'cheer' : 'oops'} size={72} className="shrink-0" />
           <div>
             <p className={`font-display text-lg font-semibold ${selectedAnswer === currentQuestion.correctAnswer ? 'text-emerald-200' : 'text-rose-200'}`}>
               {selectedAnswer === currentQuestion.correctAnswer ? 'ถูกต้อง! เก่งมาก 🎉' : 'ยังไม่ใช่ ไม่เป็นไรนะ!'}

@@ -15,6 +15,7 @@ import Register from './pages/Register'
 import Account from './pages/Account'
 import ConfirmModal from './components/ConfirmModal'
 import Landing from './pages/Landing'
+import ClassRoom from './pages/ClassRoom'
 import MascotHelper from './components/MascotHelper'
 import { AuroraBackground, BrandLogo, ScrollProgress, SiteFooter } from './components/AppChrome'
 import { useScrollReveal } from './hooks/useScrollReveal'
@@ -26,6 +27,7 @@ import { useStudySession } from './hooks/useStudySession'
 const pagePaths = {
   landing: '/',
   dashboard: '/dashboard',
+  class: '/class',
   'mock-exam': '/exam',
   practice: '/practice',
   results: '/results',
@@ -71,6 +73,7 @@ function getRedirectPathFromLocation() {
 function getRouteFromPathname(path) {
   if (path === '/') return { page: 'landing', lessonId: null }
   if (path === '/dashboard') return { page: 'dashboard', lessonId: null }
+  if (path === '/class') return { page: 'class', lessonId: null }
   if (path === '/exam') return { page: 'mock-exam', lessonId: null }
   if (path === '/practice') return { page: 'practice', lessonId: null }
   if (path === '/results') return { page: 'results', lessonId: null }
@@ -292,10 +295,11 @@ function App() {
 
   const mainWidth = page === 'landing'
     ? 'max-w-6xl'
-    : ['dashboard', 'grammar', 'academy', 'academy-module'].includes(page) ? 'max-w-5xl' : 'max-w-4xl'
+    : ['dashboard', 'class', 'grammar', 'academy', 'academy-module'].includes(page) ? 'max-w-5xl' : 'max-w-4xl'
 
   const navItems = [
-    { key: 'dashboard', label: 'Dashboard', icon: '🏠', active: page === 'dashboard' },
+    { key: 'dashboard', label: 'Home', icon: '🏠', active: page === 'dashboard' },
+    { key: 'class', label: 'ห้องเรียน', icon: '🐷', active: page === 'class' },
     { key: 'mock-exam', label: 'Exam', icon: '📝', active: page === 'mock-exam' },
     { key: 'practice', label: 'Practice', icon: '🏋️', active: page === 'practice' },
     { key: 'grammar', label: 'Grammar', icon: '📖', active: page.startsWith('grammar') },
@@ -319,7 +323,7 @@ function App() {
       )}
 
       <nav className="sticky top-0 z-50 h-16 border-b border-white/[0.06] bg-ink/70 backdrop-blur-xl">
-        <div className="mx-auto flex h-full max-w-6xl items-center justify-between gap-4 px-4">
+        <div className="mx-auto flex h-full max-w-7xl items-center justify-between gap-4 px-4">
           <BrandLogo onClick={() => navigate('landing')} />
 
           <div className="hidden items-center gap-1 rounded-full border border-white/[0.06] bg-white/[0.03] p-1 xl:flex">
@@ -355,7 +359,7 @@ function App() {
                 <button
                   key={item.key}
                   onClick={() => navigate(item.key)}
-                  className={`flex items-center gap-3 rounded-2xl px-4 py-3.5 text-left text-sm font-semibold transition ${item.active ? 'bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white shadow-lg' : 'bg-white/[0.04] text-purple-100 hover:bg-white/10'}`}
+                  className={`flex items-center gap-3 rounded-2xl px-4 py-3.5 text-left text-sm font-semibold transition ${item.active ? 'bg-gradient-to-r from-pink-500 to-orange-400 text-white shadow-lg' : 'bg-white/[0.04] text-purple-100 hover:bg-white/10'}`}
                 >
                   <span className="text-xl">{item.icon}</span>
                   {item.label}
@@ -374,6 +378,7 @@ function App() {
         {page === 'login' && <Login onNavigate={navigate} onNavigatePath={navigatePath} />}
         {page === 'register' && <Register onNavigate={navigate} onNavigatePath={navigatePath} />}
             {page === 'landing' && <Landing onNavigate={navigate} />}
+            {page === 'class' && <ClassRoom onNavigate={navigate} />}
             {page === 'dashboard' && <Dashboard onNavigate={navigate} selectedSetId={selectedSetId} onChangeSet={changeSet} onSelectLesson={selectLesson} />}
             {page === 'mock-exam' && (
               <MockExam
@@ -450,9 +455,9 @@ function NavBtn({ label, icon, active, onClick }) {
     <button
       onClick={onClick}
       aria-current={active ? 'page' : undefined}
-      className={`relative flex items-center gap-1.5 rounded-full px-3.5 py-2 text-sm font-semibold transition-all duration-300 ${active ? 'bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white shadow-[0_8px_24px_-8px_rgba(192,38,211,0.8)]' : 'text-purple-200/80 hover:bg-white/[0.07] hover:text-white'}`}
+      className={`relative flex items-center gap-1 whitespace-nowrap rounded-full px-3 py-2 text-[13px] font-semibold transition-all duration-300 ${active ? 'bg-gradient-to-r from-pink-500 to-orange-400 text-white shadow-[0_8px_24px_-8px_rgba(255,61,139,0.9)]' : 'text-pink-50/80 hover:bg-white/[0.08] hover:text-white'}`}
     >
-      <span className={`text-base transition-transform duration-300 ${active ? 'scale-110' : ''}`}>{icon}</span>
+      <span className={`hidden text-base transition-transform duration-300 2xl:inline ${active ? 'scale-110' : ''}`}>{icon}</span>
       {label}
     </button>
   )
@@ -486,7 +491,7 @@ function AuthNavButtons({ page, onNavigate }) {
       </button>
       <button
         onClick={() => onNavigate('register')}
-        className="whitespace-nowrap rounded-full bg-white px-4 py-2 text-sm font-bold text-violet-700 shadow-lg shadow-violet-900/30 transition hover:-translate-y-0.5 hover:bg-violet-50"
+        className="whitespace-nowrap rounded-full bg-white px-4 py-2 text-sm font-bold text-pink-600 shadow-lg shadow-pink-900/30 transition hover:-translate-y-0.5 hover:bg-pink-50"
       >
         สมัครฟรี
       </button>

@@ -10,7 +10,7 @@ export default function Account({ onNavigate }) {
   if (!isSupabaseConfigured() || isGuest || !user) {
     return (
       <div className="glass mx-auto max-w-md space-y-6 rounded-[2rem] p-7 text-center sm:p-9">
-        <Mascot mood="happy" size={120} className="mx-auto -mt-2" />
+        <Mascot character="pig" mood="happy" size={120} className="mx-auto -mt-2" />
         <h2 className="text-3xl font-semibold text-white">บัญชีของฉัน</h2>
         <p className="text-purple-300">กรุณาเข้าสู่ระบบเพื่อดูบัญชีของคุณ</p>
         <div className="flex flex-col gap-3">
@@ -36,7 +36,7 @@ export default function Account({ onNavigate }) {
 
   return (
     <div className="glass mx-auto max-w-lg space-y-6 rounded-[2rem] p-7 sm:p-9">
-      <Mascot mood="happy" size={120} className="mx-auto -mt-2" />
+      <Mascot character="pig" mood="happy" size={120} className="mx-auto -mt-2" />
       <h2 className="text-center text-3xl font-semibold text-white">บัญชีของฉัน</h2>
 
       <div className="rounded-3xl border border-white/[0.08] bg-white/[0.04] p-6">

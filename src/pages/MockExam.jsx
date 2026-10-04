@@ -123,7 +123,7 @@ export default function MockExam({ selectedSetId, onNavigate, onExamStart, onExa
   if (!examSet) {
     return (
       <div className="glass mx-auto max-w-md space-y-4 rounded-[2rem] p-8 text-center text-purple-200">
-        <Mascot mood="oops" size={130} className="mx-auto" />
+        <Mascot character="buffalo" mood="oops" size={130} className="mx-auto" />
         <p>Exam set not found. Please select a valid set from the Dashboard.</p>
         <button onClick={() => onNavigate('dashboard')} className="btn btn-primary">Go to Dashboard</button>
       </div>

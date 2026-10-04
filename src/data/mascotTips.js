@@ -1,4 +1,4 @@
-// Short lessons that ครูฮูก (the mascot) teaches in the floating helper.
+// Short lessons that the pig & buffalo teachers read aloud in the floating helper.
 // Each tip: { title, text, example? } — `example` is English and can be read aloud.
 
 const examTips = [
@@ -33,7 +33,7 @@ const listeningTips = [
 ]
 
 const generalTips = [
-  { title: 'สวัสดี! ฉันคือครูฮูก 🦉', text: 'กดที่ตัวฉันได้ตลอด ฉันจะสอนเทคนิค grammar และวิธีทำข้อสอบให้ทีละนิด เรียนวันละนิดดีกว่าไม่เรียนเลย!', example: 'Practice a little every day.' },
+  { title: 'สวัสดี! เราคือหมูหวานกับควายขยัน', text: 'กดที่เราได้ตลอด เราจะพูดสอนเทคนิค grammar และวิธีทำข้อสอบให้ฟังทีละนิด ไม่ต้องอ่านเยอะ!', example: 'Practice a little every day.' },
   { title: 'วางแผนวันละ 20 นาที', text: 'ทำ Drill 10 นาที + ฟัง 5 นาที + ทบทวนข้อผิด 5 นาที ทำทุกวันจะเห็นผลภายใน 2 สัปดาห์', example: 'Consistency beats intensity.' },
   { title: 'ข้อผิดคือครูที่ดีที่สุด', text: 'หลังทำข้อสอบ ให้เปิดหน้า Results แล้วอ่านคำอธิบายข้อที่ผิดทุกข้อ นี่คือจุดที่คะแนนขึ้นเร็วที่สุด', example: 'Every mistake is a lesson.' },
   ...grammarTips.slice(0, 2),

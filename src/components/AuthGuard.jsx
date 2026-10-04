@@ -29,7 +29,7 @@ export default function AuthGuard({ children, onNavigate, redirectPath = '/' }) 
   if (!isSupabaseConfigured()) {
     return (
       <div className="glass mx-auto max-w-md space-y-6 rounded-[2rem] p-7 text-center sm:p-9">
-        <Mascot mood="think" size={120} className="mx-auto -mt-2" />
+        <Mascot character="buffalo" mood="think" size={120} className="mx-auto -mt-2" />
         <h2 className="text-3xl font-semibold text-white">เข้าสู่ระบบยังไม่พร้อมใช้งาน</h2>
         <p className="text-purple-300">ระบบล็อกอินยังไม่ได้ตั้งค่า กรุณาตั้งค่า Supabase ก่อน</p>
       </div>

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { loadAcademyUnit } from '../data/grammarAcademy/index.js'
 import SpeakButton from '../components/SpeakButton'
 import Mascot from '../components/Mascot'
+import { speakLine } from '../utils/voice'
 import { Confetti, ProgressRing } from '../components/ui'
 import { recordAcademyDrillAttempt } from '../utils/academyProgress'
 import { recordGrammarDrillCompleted, recordQuestionAnswered } from '../utils/localStats'
@@ -55,6 +56,7 @@ export default function GrammarAcademyDrill({ moduleId, unitId, onNavigate, onSe
     recordQuestionAnswered(currentQuestion.skillTag, choice === currentQuestion.correctAnswer)
     sendLearningEvent('question_answered', { skillTag: currentQuestion.skillTag })
     setAnswers((current) => ({ ...current, [currentIndex]: choice }))
+    speakLine(choice === currentQuestion.correctAnswer ? 'ถูกต้อง! เก่งมาก' : 'ยังไม่ใช่นะ ฟังคำอธิบายกัน ' + (currentQuestion.explanationThai || ''), { speaker: choice === currentQuestion.correctAnswer ? 'pig' : 'buffalo', lineId: 'drill-feedback' })
   }
 
   const finishDrill = () => {
@@ -90,7 +92,7 @@ export default function GrammarAcademyDrill({ moduleId, unitId, onNavigate, onSe
             <p className="font-display text-4xl font-semibold text-white">{score}/{questions.length}</p>
             <p className="text-sm text-purple-300">{percentage}%</p>
           </ProgressRing>
-          <Mascot mood={percentage >= 80 ? 'cheer' : percentage >= 50 ? 'happy' : 'oops'} size={140} />
+          <Mascot character="pig" mood={percentage >= 80 ? 'cheer' : percentage >= 50 ? 'happy' : 'oops'} size={140} />
         </div>
         <p className="text-xs text-purple-300/80">บันทึกคะแนนลง localStorage แล้ว ใช้งานแบบ Guest ได้เต็มระบบ</p>
         <div className="flex flex-col gap-3 sm:flex-row">
@@ -158,7 +160,7 @@ export default function GrammarAcademyDrill({ moduleId, unitId, onNavigate, onSe
 
       {showResult && (
         <div className={`flex animate-pop flex-col gap-4 rounded-3xl border p-5 sm:flex-row sm:items-center ${selectedAnswer === currentQuestion.correctAnswer ? 'border-emerald-400/30 bg-emerald-500/10' : 'border-rose-400/30 bg-rose-500/10'}`}>
-          <Mascot mood={selectedAnswer === currentQuestion.correctAnswer ? 'cheer' : 'oops'} size={80} className="shrink-0 self-center" />
+          <Mascot character={selectedAnswer === currentQuestion.correctAnswer ? 'pig' : 'buffalo'} mood={selectedAnswer === currentQuestion.correctAnswer ? 'cheer' : 'oops'} size={80} className="shrink-0 self-center" />
           <div>
             <p className={`font-display text-lg font-semibold ${selectedAnswer === currentQuestion.correctAnswer ? 'text-emerald-200' : 'text-rose-200'}`}>
               {selectedAnswer === currentQuestion.correctAnswer ? 'ถูกต้อง ตัวแม่ยิ้มแล้ว 🎉' : `คำตอบที่ถูกคือ ${currentQuestion.correctAnswer}`}

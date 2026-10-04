@@ -1,5 +1,7 @@
 import { examSets } from '../data/examSets/index.js'
 import SpeakButton from './SpeakButton'
+import Mascot from './Mascot'
+import { ListenButton } from './Duo'
 
 export default function ExplanationPanel({ question }) {
   let originalQuestion = null
@@ -21,12 +23,13 @@ export default function ExplanationPanel({ question }) {
 
   return (
     <div className="glass mt-5 space-y-5 rounded-[1.75rem] p-5 text-[15px] sm:p-7">
-      <div className="flex items-center gap-3">
-        <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-300 to-orange-400 text-xl shadow-lg shadow-orange-900/30">💡</span>
-        <div>
-          <h4 className="font-display text-lg font-semibold text-white">ครูฮูกอธิบาย</h4>
+      <div className="flex flex-wrap items-center gap-3">
+        <Mascot character="buffalo" mood="teach" size={64} className="shrink-0" />
+        <div className="min-w-0 flex-1">
+          <h4 className="font-display text-lg font-semibold text-white">ครูควายอธิบาย</h4>
           <p className="text-xs text-purple-300/80">Detailed Explanation</p>
         </div>
+        <ListenButton text={`${question.explanationThai || ''} ${question.examTrick || ''}`} speaker="buffalo" label="ฟังคำอธิบาย" />
       </div>
 
       <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-emerald-400/30 bg-emerald-500/10 px-4 py-3 font-semibold text-emerald-200">

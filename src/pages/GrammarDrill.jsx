@@ -3,6 +3,7 @@ import { getLesson } from '../data/grammarLessons/index.js'
 import { examSets } from '../data/examSets/index.js'
 import SpeakButton from '../components/SpeakButton'
 import Mascot from '../components/Mascot'
+import { speakLine } from '../utils/voice'
 import { Confetti, ProgressRing } from '../components/ui'
 import { recordQuizAttempt } from '../utils/storage'
 import { shuffle } from '../utils/shuffle'
@@ -80,6 +81,7 @@ export default function GrammarDrill({ lessonId, onNavigate, onSelectLesson }) {
     setSelectedAnswer(choice)
     setShowResult(true)
     recordQuestionAnswered(currentQuestion.skillTag, isCorrect)
+    speakLine(isCorrect ? 'ถูกต้อง! เก่งมาก' : 'ยังไม่ใช่นะ ฟังคำอธิบายกัน ' + (currentQuestion.explanationThai || ''), { speaker: isCorrect ? 'pig' : 'buffalo', lineId: 'drill-feedback' })
     sendLearningEvent('question_answered', { skillTag: currentQuestion.skillTag })
     if (isCorrect) {
       setScore((s) => s + 1)
@@ -115,7 +117,7 @@ export default function GrammarDrill({ lessonId, onNavigate, onSelectLesson }) {
             <p className="font-display text-4xl font-semibold text-white">{score}/{drillQuestions.length}</p>
             <p className="text-sm text-purple-300">{percentage}%</p>
           </ProgressRing>
-          <Mascot mood={percentage >= 80 ? 'cheer' : percentage >= 60 ? 'happy' : 'oops'} size={140} />
+          <Mascot character="pig" mood={percentage >= 80 ? 'cheer' : percentage >= 60 ? 'happy' : 'oops'} size={140} />
         </div>
         <p className="text-xs text-purple-300/80">Progress saved on this device for guest mode.</p>
         <div className="flex flex-col gap-3 sm:flex-row">
@@ -203,7 +205,7 @@ export default function GrammarDrill({ lessonId, onNavigate, onSelectLesson }) {
 
       {showResult && (
         <div className={`flex animate-pop flex-col gap-4 rounded-3xl border p-5 sm:flex-row sm:items-center ${selectedAnswer === currentQuestion.correctAnswer ? 'border-emerald-400/30 bg-emerald-500/10' : 'border-rose-400/30 bg-rose-500/10'}`}>
-          <Mascot mood={selectedAnswer === currentQuestion.correctAnswer ? 'cheer' : 'oops'} size={80} className="shrink-0 self-center" />
+          <Mascot character={selectedAnswer === currentQuestion.correctAnswer ? 'pig' : 'buffalo'} mood={selectedAnswer === currentQuestion.correctAnswer ? 'cheer' : 'oops'} size={80} className="shrink-0 self-center" />
           <div>
             <p className={`font-display text-lg font-semibold ${selectedAnswer === currentQuestion.correctAnswer ? 'text-emerald-200' : 'text-rose-200'}`}>
               {selectedAnswer === currentQuestion.correctAnswer ? 'ถูกต้อง! 🎉' : `คำตอบที่ถูกคือ: ${currentQuestion.correctAnswer}`}

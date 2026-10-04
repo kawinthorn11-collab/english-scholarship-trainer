@@ -44,7 +44,7 @@ export default function GrammarHub({ onNavigate, onSelectLesson }) {
         eyebrow="Grammar Lessons"
         icon="📖"
         title="เรียน Grammar แบบเข้าใจจริง"
-        subtitle="บทเรียนเป็นระบบ พร้อม exam traps, common mistakes, mini quizzes และข้อสอบที่เกี่ยวข้อง — ครูฮูกสรุปให้ทีละหัวข้อ"
+        subtitle="บทเรียนเป็นระบบ พร้อม exam traps, common mistakes, mini quizzes และข้อสอบที่เกี่ยวข้อง — หมูควายสรุปให้ทีละหัวข้อ"
         mood="teach"
       />
 

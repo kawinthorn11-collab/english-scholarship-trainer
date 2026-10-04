@@ -23,7 +23,7 @@ export default function Register({ onNavigate, onNavigatePath }) {
   if (!isSupabaseConfigured()) {
     return (
       <div className="glass mx-auto max-w-md space-y-6 rounded-[2rem] p-7 text-center sm:p-9">
-        <Mascot mood="cheer" size={120} className="mx-auto -mt-2" />
+        <Mascot character="pig" mood="cheer" size={120} className="mx-auto -mt-2" />
         <h2 className="text-3xl font-semibold text-white">สมัครสมาชิก</h2>
         <p className="text-purple-300">ระบบสมัครสมาชิกยังไม่ได้ตั้งค่า แต่คุณยังสามารถใช้งานบทเรียนและแบบทดสอบแบบ Guest ได้</p>
         <button
@@ -77,7 +77,7 @@ export default function Register({ onNavigate, onNavigatePath }) {
   if (success) {
     return (
       <div className="glass mx-auto max-w-md space-y-6 rounded-[2rem] p-7 text-center sm:p-9">
-        <Mascot mood="cheer" size={120} className="mx-auto -mt-2" />
+        <Mascot character="pig" mood="cheer" size={120} className="mx-auto -mt-2" />
         <h2 className="text-3xl font-semibold text-emerald-300">สมัครสำเร็จ</h2>
         <p className="text-purple-300">กรุณาตรวจสอบอีเมลเพื่อยืนยันบัญชี หรือใช้งานแบบ Guest ต่อได้ทันที</p>
         <button onClick={() => onNavigate('login')} className="btn btn-primary">
@@ -96,7 +96,7 @@ export default function Register({ onNavigate, onNavigatePath }) {
 
   return (
     <div className="glass mx-auto max-w-md space-y-6 rounded-[2rem] p-7 sm:p-9">
-      <Mascot mood="cheer" size={120} className="mx-auto -mt-2" />
+      <Mascot character="pig" mood="cheer" size={120} className="mx-auto -mt-2" />
       <div className="space-y-2 text-center">
         <h2 className="text-3xl font-semibold text-white">สมัครสมาชิก</h2>
         <p className="text-sm text-purple-300">สมัครสมาชิกเพื่อซิงก์ความคืบหน้า หรือใช้งานแบบ Guest ได้ทันที</p>

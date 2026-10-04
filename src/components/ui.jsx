@@ -6,8 +6,8 @@ import { prefersReducedMotion } from '../hooks/useMotion'
 export function PageHeader({ eyebrow, title, subtitle, mood, children, icon }) {
   return (
     <header className="glass relative overflow-hidden rounded-[2rem] p-6 sm:p-8">
-      <div aria-hidden className="pointer-events-none absolute -right-20 -top-24 h-64 w-64 rounded-full bg-fuchsia-500/20 blur-3xl" />
-      <div aria-hidden className="pointer-events-none absolute -bottom-24 left-10 h-56 w-56 rounded-full bg-violet-500/20 blur-3xl" />
+      <div aria-hidden className="pointer-events-none absolute -right-20 -top-24 h-64 w-64 rounded-full bg-pink-500/30 blur-3xl" />
+      <div aria-hidden className="pointer-events-none absolute -bottom-24 left-10 h-56 w-56 rounded-full bg-sky-400/20 blur-3xl" />
       <div className="relative flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0 flex-1 space-y-3">
           {eyebrow && <p className="eyebrow">{icon && <span className="text-base">{icon}</span>}{eyebrow}</p>}
@@ -16,8 +16,9 @@ export function PageHeader({ eyebrow, title, subtitle, mood, children, icon }) {
           {children && <div className="pt-2">{children}</div>}
         </div>
         {mood && (
-          <div className="mx-auto shrink-0 sm:mx-0">
-            <Mascot mood={mood} size={128} />
+          <div className="mx-auto flex shrink-0 items-end -space-x-5 sm:mx-0">
+            <Mascot character="pig" mood={mood === 'teach' ? 'happy' : mood} size={112} />
+            <Mascot character="buffalo" mood={mood} size={122} />
           </div>
         )}
       </div>

@@ -1,5 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Mascot, { SpeechBubble } from '../components/Mascot'
+import { PokeMascot } from '../components/Duo'
+import { useVoice } from '../hooks/useVoice'
+import { speakLine, stopVoice } from '../utils/voice'
 import { CountUp, Confetti } from '../components/ui'
 import { examSetList } from '../data/examSets/index.js'
 import { getAvailableLessons } from '../data/grammarLessons/index.js'
@@ -8,7 +11,7 @@ import { landingQuiz } from '../data/mascotTips'
 
 const features = [
   { icon: '📝', title: 'Mock Exam เสมือนจริง', desc: '60 ข้อ 60 นาที จับเวลาเหมือนห้องสอบ พร้อมสลับข้อทุกครั้ง', tone: 'from-violet-500/40 to-indigo-500/10', span: 'lg:col-span-2' },
-  { icon: '🦉', title: 'ครูฮูกช่วยสอน', desc: 'ตัวการ์ตูนคอยให้ทิปและกำลังใจทุกหน้า', tone: 'from-fuchsia-500/40 to-pink-500/10' },
+  { icon: '🐷', title: 'หมูควายพูดสอน', desc: 'ไม่ต้องอ่านเยอะ กดฟังครูหมูกับครูควายคุยกันได้เลย', tone: 'from-pink-500/50 to-orange-400/10' },
   { icon: '💡', title: 'เฉลยละเอียดสองภาษา', desc: 'รู้ว่าทำไมถูก ทำไมผิด พร้อม exam trick', tone: 'from-amber-400/40 to-orange-500/10' },
   { icon: '📚', title: 'Grammar Academy', desc: 'คอร์ส grammar เป็นระบบ ตั้งแต่พื้นฐานจนถึงกับดักข้อสอบ', tone: 'from-emerald-400/40 to-teal-500/10' },
   { icon: '🎯', title: 'วิเคราะห์จุดอ่อน', desc: 'บอกเลยว่าควรซ่อมเรื่องไหนก่อน แล้วพาไปบทเรียนที่ใช่', tone: 'from-rose-400/40 to-red-500/10', span: 'lg:col-span-2' },
@@ -18,7 +21,7 @@ const features = [
 const steps = [
   { icon: '🎯', title: 'ทำข้อสอบจำลอง', desc: 'วัดระดับตัวเองด้วยข้อสอบ 60 ข้อ' },
   { icon: '🔍', title: 'ดูจุดอ่อน', desc: 'ระบบวิเคราะห์ทักษะที่ยังพลาด' },
-  { icon: '📘', title: 'เรียนกับครูฮูก', desc: 'เข้าบทเรียน + drill ตรงจุด' },
+  { icon: '🎧', title: 'ฟังหมูควายสอน', desc: 'บทละ 1 นาที ฟังแล้วตอบ' },
   { icon: '🏆', title: 'คะแนนพุ่ง!', desc: 'กลับมาสอบใหม่แล้วเห็นพัฒนาการ' },
 ]
 
@@ -40,14 +43,14 @@ export default function Landing({ onNavigate }) {
             ภาษาอังกฤษ <span className="gradient-text">ให้ปังกว่าที่เคย</span>
           </h1>
           <p className="mx-auto max-w-xl animate-fade-up text-lg leading-relaxed text-purple-200/80 [animation-delay:160ms] lg:mx-0">
-            ข้อสอบจำลอง เฉลยละเอียด วิเคราะห์จุดอ่อน และ <b className="text-white">ครูฮูก</b> ที่จะคอยสอนเทคนิคให้ทุกก้าว — เรียนสนุก ไม่น่าเบื่อ ไม่แออัด
+            ฟัง <b className="text-pink-200">ครูหมูหวาน</b> กับ <b className="text-sky-200">ครูควายขยัน</b> คุยสอน grammar แบบสั้น ๆ ทีละประโยค ไม่ต้องอ่านเยอะ แล้วลุยข้อสอบจำลองพร้อมเฉลยละเอียด
           </p>
           <div className="flex animate-fade-up flex-col items-center gap-3 [animation-delay:240ms] sm:flex-row sm:justify-center lg:justify-start">
-            <button onClick={() => onNavigate('dashboard')} className="btn btn-primary w-full px-8 py-4 text-lg sm:w-auto">
-              เริ่มเรียนเลย 🚀
+            <button onClick={() => onNavigate('class')} className="btn btn-primary w-full px-8 py-4 text-lg sm:w-auto">
+              🎧 ฟังหมูควายสอน
             </button>
-            <button onClick={() => onNavigate('mock-exam')} className="btn btn-ghost w-full px-8 py-4 text-lg sm:w-auto">
-              ลองทำข้อสอบจำลอง
+            <button onClick={() => onNavigate('dashboard')} className="btn btn-ghost w-full px-8 py-4 text-lg sm:w-auto">
+              เริ่มเรียนเลย 🚀
             </button>
           </div>
           <div className="grid animate-fade-up grid-cols-3 gap-3 pt-4 [animation-delay:320ms]">
@@ -57,22 +60,7 @@ export default function Landing({ onNavigate }) {
           </div>
         </div>
 
-        <div className="relative mx-auto flex w-full max-w-md flex-col items-center">
-          <div aria-hidden className="absolute inset-0 m-auto h-80 w-80 rounded-full bg-gradient-to-br from-violet-600/40 via-fuchsia-500/30 to-amber-400/20 blur-3xl" />
-          <div aria-hidden className="absolute inset-0 m-auto h-[22rem] w-[22rem] animate-spin-slow rounded-full border border-dashed border-white/10" />
-          <SpeechBubble
-            side="bottom"
-            className="relative z-10 mb-4 w-full max-w-sm animate-pop"
-            text="Hello! ฉันคือครูฮูก 🦉 วันนี้มาเก็บคะแนน grammar กันสักนิดไหม? ฉันจะสอนทีละขั้นเลย!"
-          />
-          <div className="relative">
-            <Mascot mood="wave" size={260} className="relative z-10 drop-shadow-[0_30px_40px_rgba(124,58,237,0.45)]" />
-            <FloatingChip className="-left-16 top-10 [animation-delay:0s]" icon="📖" text="Grammar" />
-            <FloatingChip className="-right-14 top-24 [animation-delay:1.2s]" icon="🎧" text="Listening" />
-            <FloatingChip className="-left-10 bottom-14 [animation-delay:2.1s]" icon="⏱" text="60 ข้อ / 60 นาที" />
-            <FloatingChip className="-right-10 bottom-4 [animation-delay:0.6s]" icon="💡" text="เฉลยละเอียด" />
-          </div>
-        </div>
+        <HeroSkit />
       </section>
 
       {/* MARQUEE */}
@@ -88,7 +76,7 @@ export default function Landing({ onNavigate }) {
 
       {/* FEATURES */}
       <section className="space-y-10">
-        <SectionIntro eyebrow="ทำไมต้อง ScholarOwl" title={<>ครบทุกอย่างที่ต้องใช้ <span className="gradient-text">ในที่เดียว</span></>} subtitle="ออกแบบมาให้อ่านง่าย ไม่รก มีจังหวะ และสนุกจนลืมว่ากำลังติวอยู่" />
+        <SectionIntro eyebrow="ทำไมต้อง MooKwai" title={<>ครบทุกอย่างที่ต้องใช้ <span className="gradient-text">ในที่เดียว</span></>} subtitle="ออกแบบมาให้อ่านง่าย ไม่รก มีจังหวะ และสนุกจนลืมว่ากำลังติวอยู่" />
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {features.map((f) => (
             <div key={f.title} className={`glass glow-card lift group relative overflow-hidden rounded-[1.75rem] p-7 ${f.span || ''}`}>
@@ -107,7 +95,7 @@ export default function Landing({ onNavigate }) {
 
       {/* TRY IT — mascot teaches */}
       <section className="space-y-10">
-        <SectionIntro eyebrow="ลองเรียนกับครูฮูก" title="ลองตอบดูสักข้อ 👇" subtitle="ตอบผิดก็ไม่เป็นไร ครูฮูกจะอธิบายให้ทันที" />
+        <SectionIntro eyebrow="ลองเรียนกับหมูควาย" title="ลองตอบดูสักข้อ 👇" subtitle="ตอบแล้วครูควายจะพูดอธิบายให้ฟังทันที 🔊" />
         <MiniQuiz />
       </section>
 
@@ -136,13 +124,16 @@ export default function Landing({ onNavigate }) {
             <div aria-hidden className="absolute -left-20 -top-20 h-72 w-72 rounded-full bg-violet-600/30 blur-3xl" />
             <div aria-hidden className="absolute -bottom-24 -right-10 h-72 w-72 rounded-full bg-fuchsia-600/25 blur-3xl" />
             <div className="relative flex flex-col items-center gap-8 text-center md:flex-row md:text-left">
-              <Mascot mood="cheer" size={170} className="shrink-0" />
+              <div className="flex shrink-0 items-end -space-x-6">
+                <Mascot character="pig" mood="cheer" size={150} />
+                <Mascot character="buffalo" mood="cheer" size={160} />
+              </div>
               <div className="flex-1 space-y-4">
                 <h2 className="text-3xl font-semibold text-white sm:text-4xl">พร้อมคว้าทุนแล้วใช่ไหม?</h2>
                 <p className="text-lg text-purple-200/80">เริ่มวันนี้ วันละ 20 นาที ไม่ต้องสมัครก็ใช้ได้ทันที ความคืบหน้าบันทึกไว้ในเครื่องให้อัตโนมัติ</p>
               </div>
-              <button onClick={() => onNavigate('dashboard')} className="btn btn-primary shrink-0 px-8 py-4 text-lg">
-                ไปที่ Dashboard →
+              <button onClick={() => onNavigate('class')} className="btn btn-primary shrink-0 px-8 py-4 text-lg">
+                เข้าห้องเรียนเลย →
               </button>
             </div>
           </div>
@@ -183,6 +174,14 @@ function MiniQuiz() {
   const [picked, setPicked] = useState(null)
   const correct = picked === landingQuiz.answer
   const mood = picked == null ? 'teach' : correct ? 'cheer' : 'oops'
+  const voice = useVoice()
+
+  const choose = (choice) => {
+    if (picked) return
+    setPicked(choice)
+    const ok = choice === landingQuiz.answer
+    speakLine(ok ? landingQuiz.explainCorrect : landingQuiz.explainWrong, { speaker: 'buffalo', lineId: 'landing-quiz' })
+  }
   const message = picked == null
     ? 'เติมคำในช่องว่างให้ถูกต้อง เลือกคำตอบที่คิดว่าใช่เลย!'
     : correct ? landingQuiz.explainCorrect : landingQuiz.explainWrong
@@ -191,11 +190,11 @@ function MiniQuiz() {
     <div className="glass mx-auto grid max-w-4xl items-center gap-8 rounded-[2rem] p-6 sm:p-10 md:grid-cols-[auto_1fr]">
       {picked && correct && <Confetti key={picked} count={50} />}
       <div className="flex flex-col items-center gap-4">
-        <Mascot mood={mood} size={170} />
+        <Mascot character="buffalo" mood={mood} talking={voice.speaker === 'buffalo'} size={180} />
       </div>
       <div className="space-y-5">
-        <SpeechBubble key={message} side="left" text={message} className="hidden md:block" />
-        <SpeechBubble key={`m-${message}`} side="bottom" text={message} className="md:hidden" />
+        <SpeechBubble key={message} side="left" tone="buffalo" text={message} className="hidden md:block" />
+        <SpeechBubble key={`m-${message}`} side="bottom" tone="buffalo" text={message} className="md:hidden" />
         <p className="font-display text-xl text-white sm:text-2xl">{landingQuiz.question}</p>
         <div className="grid gap-3 sm:grid-cols-2">
           {landingQuiz.choices.map((choice, i) => {
@@ -210,7 +209,7 @@ function MiniQuiz() {
             return (
               <button
                 key={choice}
-                onClick={() => !picked && setPicked(choice)}
+                onClick={() => choose(choice)}
                 disabled={Boolean(picked)}
                 className={`flex items-center gap-3 rounded-2xl border px-4 py-3.5 text-left font-medium text-white transition ${tone}`}
               >
@@ -223,11 +222,73 @@ function MiniQuiz() {
           })}
         </div>
         {picked && (
-          <button onClick={() => setPicked(null)} className="text-sm font-semibold text-purple-300 underline-offset-4 transition hover:text-white hover:underline">
+          <button onClick={() => { stopVoice(); setPicked(null) }} className="text-sm font-semibold text-purple-300 underline-offset-4 transition hover:text-white hover:underline">
             ↺ ลองอีกครั้ง
           </button>
         )}
       </div>
+    </div>
+  )
+}
+
+const skit = [
+  { who: 'pig', text: 'Hello! หมูหวานเอง วันนี้มาติวสอบชิงทุนกัน!' },
+  { who: 'buffalo', text: 'ส่วนนี่ควายขยัน ใครว่าควายโง่ ตัวนี้สอบได้ทุนนะ!' },
+  { who: 'pig', text: 'ไม่ต้องอ่านเยอะ กดฟังเราสอนได้เลย' },
+  { who: 'buffalo', text: 'Let us study together. Ready?' },
+]
+
+function HeroSkit() {
+  const [i, setI] = useState(0)
+  const [auto, setAuto] = useState(true)
+  const voice = useVoice()
+  const line = skit[i % skit.length]
+
+  // Silent auto-rotation until the visitor presses play.
+  useEffect(() => {
+    if (!auto) return undefined
+    const t = window.setTimeout(() => setI((n) => n + 1), 4200)
+    return () => window.clearTimeout(t)
+  }, [i, auto])
+
+  const playAll = async () => {
+    setAuto(false)
+    for (let n = 0; n < skit.length; n += 1) {
+      setI(n)
+      const finished = await speakLine(skit[n].text, { speaker: skit[n].who, lineId: `skit-${n}` })
+      if (!finished) return
+    }
+  }
+
+  const playing = voice.lineId?.startsWith('skit-')
+
+  return (
+    <div className="relative mx-auto flex w-full max-w-lg flex-col items-center">
+      <div aria-hidden className="absolute inset-0 m-auto h-80 w-80 rounded-full bg-gradient-to-br from-pink-500/50 via-orange-400/30 to-sky-400/30 blur-3xl" />
+      <div aria-hidden className="absolute inset-0 m-auto h-[24rem] w-[24rem] animate-spin-slow rounded-full border-2 border-dashed border-white/15" />
+      <SpeechBubble
+        key={i}
+        side="bottom"
+        tone={line.who}
+        className={`relative z-10 mb-3 w-full max-w-sm animate-pop ${line.who === 'buffalo' ? 'sm:translate-x-10' : 'sm:-translate-x-10'}`}
+        text={line.text}
+      />
+      <div className="relative z-10 flex items-end justify-center -space-x-6">
+        <PokeMascot character="pig" mood={line.who === 'pig' ? 'wave' : 'happy'} size={230} className={`transition-transform duration-500 ${line.who === 'pig' ? 'scale-105' : 'scale-95'}`} />
+        <PokeMascot character="buffalo" mood={line.who === 'buffalo' ? 'teach' : 'happy'} size={245} className={`transition-transform duration-500 ${line.who === 'buffalo' ? 'scale-105' : 'scale-95'}`} />
+        <FloatingChip className="-left-10 top-2 [animation-delay:0s]" icon="📖" text="Grammar" />
+        <FloatingChip className="-right-8 top-0 [animation-delay:1.2s]" icon="🎧" text="ฟังเสียง" />
+        <FloatingChip className="-left-14 bottom-10 [animation-delay:2.1s]" icon="⏱" text="60 ข้อ / 60 นาที" />
+        <FloatingChip className="-right-12 bottom-16 [animation-delay:0.6s]" icon="💡" text="เฉลยละเอียด" />
+      </div>
+      <button
+        onClick={() => (playing ? stopVoice() : playAll())}
+        className="relative z-10 mt-4 inline-flex items-center gap-3 rounded-full border border-white/25 bg-white/10 px-5 py-3 font-semibold text-white backdrop-blur transition hover:-translate-y-0.5 hover:bg-white/20"
+      >
+        <span className={`flex h-9 w-9 items-center justify-center rounded-full bg-white text-pink-600 ${playing ? 'animate-pulse' : ''}`}>{playing ? '⏹' : '▶'}</span>
+        {playing ? 'กำลังพูด... กดเพื่อหยุด' : 'กดฟังหมูควายแนะนำตัว 🔊'}
+      </button>
+      <p className="relative z-10 mt-2 text-xs text-pink-100/70">แตะที่ตัวการ์ตูนเพื่อให้พูดได้นะ 👆</p>
     </div>
   )
 }

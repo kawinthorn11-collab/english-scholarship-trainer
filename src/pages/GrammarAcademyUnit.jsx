@@ -28,8 +28,8 @@ export default function GrammarAcademyUnit({ moduleId, unitId, onNavigate, onSel
   if (state.loading) {
     return (
       <div className="flex flex-col items-center gap-4 py-16 text-center text-purple-200">
-        <Mascot mood="think" size={130} />
-        <p className="animate-pulse">ครูฮูกกำลังเปิดบทเรียนให้...</p>
+        <Mascot character="buffalo" mood="think" size={130} />
+        <p className="animate-pulse">ครูหมูกับครูควายกำลังเปิดบทเรียนให้...</p>
       </div>
     )
   }

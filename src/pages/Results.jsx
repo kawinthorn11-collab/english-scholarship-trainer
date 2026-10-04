@@ -23,9 +23,9 @@ export default function Results({ selectedSetId, onNavigate, onSelectLesson }) {
   if (!latest) {
     return (
       <div className="glass mx-auto max-w-lg space-y-5 rounded-[2rem] p-10 text-center">
-        <Mascot mood="think" size={150} className="mx-auto" />
+        <Mascot character="buffalo" mood="think" size={150} className="mx-auto" />
         <h1 className="text-3xl font-semibold text-white">ยังไม่มีผลสอบเลย</h1>
-        <p className="text-purple-200/80">ลองทำข้อสอบจำลองสักชุด แล้วครูฮูกจะวิเคราะห์จุดอ่อนให้ทันที!</p>
+        <p className="text-purple-200/80">ลองทำข้อสอบจำลองสักชุด แล้วหมูควายจะวิเคราะห์จุดอ่อนให้ทันที!</p>
         <button onClick={() => onNavigate('mock-exam')} className="btn btn-primary px-8 py-4">📝 เริ่มทำ Mock Exam</button>
       </div>
     )

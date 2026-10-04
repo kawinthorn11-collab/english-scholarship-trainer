@@ -5,7 +5,7 @@ function getGrade(pct) {
   if (pct >= 90) return { label: 'Excellent', thai: 'ยอดเยี่ยมมาก!', color: 'text-emerald-300', mood: 'cheer' }
   if (pct >= 75) return { label: 'Good', thai: 'เก่งมาก ไปต่ออีกนิด!', color: 'text-sky-300', mood: 'cheer' }
   if (pct >= 60) return { label: 'Fair', thai: 'มาถูกทางแล้ว!', color: 'text-amber-300', mood: 'happy' }
-  return { label: 'Needs Improvement', thai: 'ไม่เป็นไร ครูฮูกช่วยได้!', color: 'text-rose-300', mood: 'oops' }
+  return { label: 'Needs Improvement', thai: 'ไม่เป็นไร หมูควายช่วยได้!', color: 'text-rose-300', mood: 'oops' }
 }
 
 export default function ResultSummary({ score, celebrate = true }) {
@@ -30,7 +30,10 @@ export default function ResultSummary({ score, celebrate = true }) {
             <ScoreBar label="📚 Reading" value={score.reading} total={score.readingQuestions} />
           </div>
         </div>
-        <Mascot mood={grade.mood} size={130} className="hidden shrink-0 lg:block" />
+        <div className="hidden shrink-0 items-end -space-x-4 lg:flex">
+          <Mascot character="pig" mood={grade.mood} size={110} />
+          <Mascot character="buffalo" mood={grade.mood === 'oops' ? 'teach' : grade.mood} size={118} />
+        </div>
       </div>
     </div>
   )
