@@ -7,7 +7,7 @@ body:
     id: where
     attributes:
       label: อยู่ตรงไหน
-      placeholder: "เช่น Mock Exam Set 02 ข้อ S02-Q015 หรือ ห้องเรียนหมูควาย บท Passive Voice"
+      placeholder: "เช่น ชุด M-Style ข้อ 21 หรือ บทเรียนแกรมม่า หัวข้อคำเชื่อม"
     validations: { required: true }
   - type: textarea
     id: problem

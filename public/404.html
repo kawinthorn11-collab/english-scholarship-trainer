@@ -1,22 +1,15 @@
 <!doctype html>
-<html lang="en">
+<html lang="th">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>English Scholarship Exam Trainer</title>
+    <title>ติวทุนอังกฤษ</title>
     <script>
-      (function () {
-        var base = '/english-scholarship-trainer/';
-        var path = window.location.pathname;
-        var route = path.indexOf(base) === 0 ? path.slice(base.length) : path.replace(/^\/+/, '');
-        var search = window.location.search || '';
-        var hash = window.location.hash || '';
-        var target = base + '?redirect=/' + encodeURIComponent(route).replace(/%2F/g, '/') + search + hash;
-        window.location.replace(target);
-      })();
+      // เว็บนี้ใช้ลิงก์แบบ #/... ถ้าเปิดลิงก์เก่าที่ไม่มี # ให้พากลับไปหน้าแรก
+      window.location.replace('/english-scholarship-trainer/')
     </script>
   </head>
   <body>
-    Redirecting to English Scholarship Exam Trainer...
+    กำลังพาไปหน้าแรก...
   </body>
 </html>

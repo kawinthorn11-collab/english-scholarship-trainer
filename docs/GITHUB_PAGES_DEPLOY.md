@@ -2,7 +2,7 @@
 
 Public site:
 
-https://kawinthorn11.github.io/english-scholarship-trainer/
+https://kawinthorn11-collab.github.io/english-scholarship-trainer/
 
 ## What Deploys The Site
 
@@ -14,9 +14,9 @@ It installs dependencies with `npm ci`, builds the Vite app, uploads `dist`, and
 
 On Windows, double-click `deploy-github-pages.bat`.
 
-The helper runs the build, validations, lint, commits safe project files, and pushes to `origin main`.
+The helper runs lint, data validation and the build, commits the project files, and pushes to `origin main`.
 
-Never commit `.env.local`, `.env`, Supabase service role keys, Stripe secrets, or any private API key.
+The site is fully static: there is no login, database or API key to configure.
 
 ## Blank Page Troubleshooting
 
@@ -28,11 +28,10 @@ base: '/english-scholarship-trainer/'
 
 Then rebuild and push again.
 
-## 404 On Refresh Troubleshooting
+## Links And Refresh
 
-This project includes `public/404.html`, which redirects GitHub Pages deep links back into the app.
-
-If refreshing `/academy` or `/grammar` gives a 404, confirm `public/404.html` exists and the latest workflow deployed successfully.
+Pages use hash links such as `#/exam/setM?q=5` and `#/grammar/conjunction`, so refreshing never hits a GitHub Pages 404.
+`public/404.html` sends old links from the previous version of the site back to the home page.
 
 ## CSS Or Asset Troubleshooting
 

@@ -44,10 +44,10 @@ echo.
 echo Starting local website...
 echo The browser will open automatically.
 echo.
-echo URL: http://localhost:5173
+echo URL: http://localhost:5173/english-scholarship-trainer/
 echo.
 
-start "" cmd /c "timeout /t 3 >nul && start http://localhost:5173"
+start "" cmd /c "timeout /t 3 >nul && start http://localhost:5173/english-scholarship-trainer/"
 
 call npm run dev
 

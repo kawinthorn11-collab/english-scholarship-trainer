@@ -559,8 +559,8 @@ const questions = [
     whyWrong: {
       '1': '"neither" works similarly but typically pairs with "Neither did my hands" at sentence start, not after a comma in this construction.',
       '2': '"either" follows positive statements: "I did not shake, and my hands didn\'t either."',
-      '3': '',
-      '4': '"so" follows positive statements: "It rained, and so did the wind."',
+      '3': '"so" follows positive statements: "It rained, and so did the wind."',
+      '4': '',
     },
     examTrick: 'After negatives → "nor" or "neither." After positives → "so." Both invert the auxiliary: nor did I, so do I.',
     commonMistake: 'Thai students often use "either" or "too" instead of "nor" because the inversion (nor + did + subject) feels unfamiliar.',

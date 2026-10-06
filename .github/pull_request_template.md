@@ -4,7 +4,6 @@
 
 ## ตรวจแล้ว
 
-- [ ] `npm run lint` และ `npm run build` ผ่าน
-- [ ] `npm run validate:sets` / `validate:grammar` / `validate:academy` / `validate:speech` ผ่าน
+- [ ] `npm run lint`, `npm run validate` และ `npm run build` ผ่าน
 - [ ] ลองบนจอมือถือแล้ว (ถ้าเปลี่ยนหน้าตา แนบภาพหน้าจอ)
 - [ ] เนื้อหาข้อสอบ/บทเรียนแต่งขึ้นเอง ไม่ได้คัดลอกมา

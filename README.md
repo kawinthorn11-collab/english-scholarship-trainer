@@ -1,46 +1,41 @@
-# MooKwai · หมูควายติวทุน 🐷🐃
+# ติวทุนอังกฤษ · English Scholarship Trainer
 
-**เว็บติวสอบชิงทุนภาษาอังกฤษฟรี** ที่มีครูหมูหวานกับครูควายขยันคอยพูดสอนให้ฟัง
-ทำขึ้นเพื่อช่วยน้อง ๆ ที่อยากสอบชิงทุนเรียนมหาวิทยาลัยนานาชาติ (เช่น ABAC) ซึ่งค่าเทอมสูงมาก
-ให้มีที่ฝึกข้อสอบคุณภาพดีได้โดยไม่ต้องเสียเงิน
+**เว็บฝึกข้อสอบภาษาอังกฤษสอบชิงทุนฟรี** แนวข้อสอบเข้ามหาวิทยาลัยนานาชาติ (เช่น ABAC)
+เฉลยละเอียดทีละข้อ กดฟังครูพูดอธิบายได้ทุกข้อ และมีหมวดแกรมม่าที่สรุปจากข้อสอบจริง
 
 **👉 ใช้งานได้เลย: https://kawinthorn11-collab.github.io/english-scholarship-trainer/**
 
 ไม่ต้องสมัคร ไม่ต้องติดตั้ง เปิดได้ทั้งมือถือและคอมพิวเตอร์ ความคืบหน้าบันทึกไว้ในเครื่องให้อัตโนมัติ
 
-> *A free, open-source English scholarship-exam trainer for Thai students, taught by two animated cartoon teachers (a pig and a water buffalo) who speak the lessons out loud.* English summary below.
-
 ---
 
 ## มีอะไรบ้าง
 
-| ฟีเจอร์ | รายละเอียด |
+| | |
 | --- | --- |
-| 🎧 **ห้องเรียนหมูควาย** | บทเรียนบทละ 1 นาที ฟังครูหมูกับครูควายคุยสอนทีละประโยค มีโหมดช้าและโหมดฟังอย่างเดียว จบบทมีคำถามพร้อมเฉลยแบบพูด |
-| 📝 **ข้อสอบจำลอง** | 3 ชุด ชุดละ 60 ข้อ 60 นาที (Grammar 30 + Reading 30) จับเวลาเหมือนห้องสอบจริง สลับข้อทุกครั้ง |
-| 💡 **เฉลยละเอียด** | ทุกข้ออธิบายทั้งไทยและอังกฤษ บอกว่าทำไมช้อยส์อื่นผิด เทคนิคทำข้อสอบ และจุดที่คนไทยพลาดบ่อย |
-| 🎯 **วิเคราะห์จุดอ่อน** | หลังสอบบอกเลยว่าควรซ่อมทักษะไหน แล้วพาไปบทเรียนที่ตรงจุด |
-| 📖 **Grammar Lessons + Academy** | บทเรียน grammar 20 หัวข้อ และคอร์สเป็นระบบเกือบ 200 ยูนิต พร้อม drill |
-| 🔊 **ฝึกฟังเสียง Native** | ฟังประโยคข้อสอบแบบช้า/ปกติ ฝึก shadowing ได้ |
+| 📝 **ชุด M-Style · แนวข้อสอบจริง** | 60 ข้อ แต่งใหม่ทั้งหมด แต่ทดสอบจุดเดียวกับข้อสอบจริงทีละข้อ (Grammar cloze 3 บทความ + Reading 3 บทความที่มีเลขบรรทัด) |
+| 📚 **ชุดฝึกเพิ่มอีก 3 ชุด** | รูปแบบเดียวกัน ชุดละ 60 ข้อ รวมทั้งหมด 240 ข้อ |
+| ✅ **ฝึกทีละข้อ** | ตอบแล้วเฉลยขึ้นทันที บอกว่าทำไมถูก ทำไมช้อยส์อื่นผิดทีละตัว และเทคนิคจำง่าย |
+| 🔊 **ครูพูดสอน** | กดปุ่มเดียว ครูอ่านเฉลยให้ฟัง (ไทยปนอังกฤษ) ปรับความเร็ว ช้า/ปกติ/เร็ว ได้ |
+| ⏱️ **จำลองสอบ 60 นาที** | จับเวลาเหมือนห้องสอบ ส่งแล้วได้คะแนน Grammar/Reading และหัวข้อที่ควรทบทวน |
+| 🧩 **หมวดแกรมม่าจากข้อสอบจริง** | 13 หัวข้อ เรียงตามที่ออกบ่อย มีหลักการ ตัวอย่าง กับดัก และแบบฝึกท้ายบท |
 
-ข้อสอบและบทความทั้งหมดเป็นเนื้อหาที่แต่งขึ้นใหม่ (original) ไม่ได้คัดลอกจากข้อสอบจริง
+> เสียงพูดใช้เสียงที่มีในเครื่อง ถ้าไม่มีเสียงภาษาไทย เว็บจะบอกวิธีเพิ่มให้ (Android / iPhone / Windows)
+
+## ข้อสอบจริงออกอะไร
+
+ข้อสอบเข้า 1 ชุด = 60 ข้อ 60 นาที
+
+- **Part I Grammar (30 ข้อ)** บทความ 3 เรื่อง เติมคำ 10 ช่องต่อเรื่อง ออกบ่อยที่สุดคือ คำเชื่อม (6 ข้อ), บุพบท (5), Tense/Passive (4), สรรพนาม, Parallel structure, รูปคำ
+- **Part II Reading (30 ข้อ)** บทความ 3 เรื่อง ถามคำอ้างอิง (*"he" in line 6 refers to…*) ถึง 10 ข้อ ที่เหลือเป็นรายละเอียด ศัพท์ในบริบท และการอนุมาน
+
+ข้อสอบทุกข้อในเว็บนี้ **แต่งขึ้นใหม่** ไม่ได้คัดลอกข้อสอบจริง เพราะข้อสอบจริงเป็นลิขสิทธิ์และห้ามเผยแพร่
 
 ## สำหรับอาจารย์และรุ่นพี่
 
-- **ส่งลิงก์ให้นักเรียนได้เลย** ไม่ต้องให้นักเรียนสมัครบัญชี
-- อยากช่วยเพิ่มข้อสอบ แก้คำอธิบาย หรือเสนอบทเรียนใหม่ **ไม่ต้องเขียนโค้ดเป็น** — เปิด [Issue](../../issues/new/choose) แล้วกรอกแบบฟอร์มได้เลย
-- อ่านวิธีร่วมพัฒนาแบบละเอียดได้ที่ [CONTRIBUTING.md](CONTRIBUTING.md)
-
-## ร่วมพัฒนา
-
-ทุกคนช่วยได้ ไม่ว่าจะเป็นครู นักเรียน หรือโปรแกรมเมอร์
-
-- ✏️ เพิ่มหรือตรวจข้อสอบ / คำอธิบาย
-- 🐷 เขียนบทสนทนาหมูควายบทใหม่
-- 🐛 แจ้งบั๊กหรือจุดที่ใช้งานยาก
-- 💻 พัฒนาฟีเจอร์ (ดู Issue ที่ติดป้าย `good first issue`)
-
-ดูขั้นตอนทั้งหมดใน [CONTRIBUTING.md](CONTRIBUTING.md)
+- ส่งลิงก์ให้นักเรียนได้เลย ไม่ต้องสมัครบัญชี
+- ส่งลิงก์ตรงไปที่ข้อใดข้อหนึ่งได้ เช่น `…/#/exam/setM?q=21` หรือบทเรียน `…/#/grammar/conjunction`
+- อยากเพิ่มข้อสอบหรือแก้คำอธิบาย **ไม่ต้องเขียนโค้ด** เปิด [Issue](../../issues/new/choose) แล้วกรอกแบบฟอร์มได้เลย
 
 ## รันบนเครื่องตัวเอง
 
@@ -48,53 +43,49 @@
 
 ```bash
 npm install
-npm run dev        # เปิดที่ http://localhost:5173/english-scholarship-trainer/
+npm run dev        # เปิด http://localhost:5173/english-scholarship-trainer/
 ```
 
-คำสั่งตรวจก่อนส่งงาน:
+ก่อนส่งงาน:
 
 ```bash
 npm run lint
+npm run validate   # ตรวจข้อสอบทุกข้อและบทเรียนแกรมม่า
 npm run build
-npm run validate:sets      # ตรวจข้อสอบทุกชุด
-npm run validate:grammar   # ตรวจบทเรียน grammar
-npm run validate:academy   # ตรวจ Grammar Academy
-npm run validate:speech    # ตรวจระบบเสียง
 ```
 
-ระบบล็อกอินและสถิติรวม (Supabase) เป็นตัวเลือกเสริม ถ้าไม่ตั้งค่า เว็บจะทำงานแบบ Guest ได้ครบทุกฟีเจอร์ ดูวิธีตั้งค่าที่ [docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md)
+push เข้า `main` แล้ว GitHub Actions จะ deploy ขึ้น GitHub Pages ให้อัตโนมัติ
 
 ## โครงสร้างโปรเจกต์
 
 ```
 src/
-  pages/            หน้าต่าง ๆ (ClassRoom, MockExam, Practice, Results, Grammar...)
-  components/       ตัวการ์ตูน (Mascot.jsx), การ์ดคำถาม, เฉลย ฯลฯ
+  pages/              Home, Exams, Quiz (ฝึก/จับเวลา/ดูเฉลย), Result, Grammar, Topic
+  components/         Passage (บทความ), Explanation (เฉลย), SpeakButton (ปุ่มเสียง)
+  lib/                speech.js (เสียงครู), exam.js (คะแนน/บทพูด/บันทึก), router.js
   data/
-    examSets/       ข้อสอบจำลองแต่ละชุด
-    duoLessons.js   บทสนทนาหมูควายในห้องเรียน
-    grammarLessons/ บทเรียน grammar
-    grammarAcademy/ คอร์ส Grammar Academy
-  utils/voice.js    ระบบเสียงพูดไทย/อังกฤษของตัวการ์ตูน
-scripts/            สคริปต์ตรวจความถูกต้องของข้อมูล
+    sets/setM.js      ชุด M-Style แนวข้อสอบจริง
+    sets/index.js     รวมทุกชุดให้อยู่ในรูปแบบเดียวกัน
+    examSets/         ชุดฝึก 1–3
+    grammarTopics.js  หมวดแกรมม่า 13 หัวข้อ
+scripts/validate.js   ตรวจความถูกต้องของข้อมูล
 ```
 
-เทคโนโลยี: React 19, Vite, Tailwind CSS 4, Web Speech API, deploy บน GitHub Pages
+เทคโนโลยี: React 19, Vite, CSS ธรรมดา, Web Speech API, GitHub Pages
 
 ---
 
 ## English summary
 
-**MooKwai** is a free web app that helps Thai high-school students prepare for English scholarship exams at international universities, where tuition is out of reach for many families.
+A free, open-source trainer for Thai students preparing for English scholarship entrance exams (Assumption University–style: 30 grammar cloze + 30 reading items in 60 minutes).
 
-- **Pig & Buffalo Classroom** – one-minute spoken dialogue lessons (Thai + English text-to-speech) with a quiz at the end
-- **Mock exams** – three original 60-question, 60-minute sets with bilingual, choice-by-choice explanations
-- **Weak-skill analysis** that links straight to the matching grammar lesson
-- **Grammar lessons, a ~200-unit Grammar Academy, and native-speed listening practice**
-- Works without an account; progress is stored on the device
+- **M-Style set**: 60 original questions that each test the same point as the corresponding item of a past paper, plus 3 more practice sets (240 questions)
+- **Practice mode** with instant, choice-by-choice Thai explanations; **timed mode** with scoring and weak-topic analysis
+- **Spoken teaching**: every explanation and lesson can be read aloud (mixed Thai/English text-to-speech)
+- **13 grammar topics** derived from what the real exam tests, each with examples, traps, and a mini quiz
 
-All questions and passages are original. Contributions of questions, explanations, lessons, and code are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
+All questions and passages are original. Contributions are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
-[MIT](LICENSE) — ใช้ แก้ไข และแจกต่อได้ฟรี
+[MIT](LICENSE)

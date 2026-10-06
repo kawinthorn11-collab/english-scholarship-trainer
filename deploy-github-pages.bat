@@ -51,13 +51,7 @@ echo Running build and validations...
 call npm run build
 if errorlevel 1 goto failed
 
-call npm run validate:sets
-if errorlevel 1 goto failed
-
-call npm run validate:grammar
-if errorlevel 1 goto failed
-
-call npm run validate:academy
+call npm run validate
 if errorlevel 1 goto failed
 
 call npm run lint
@@ -69,7 +63,7 @@ git status --short
 
 echo.
 echo Adding safe project files only...
-git add .github docs public scripts src supabase api .gitignore .env.example eslint.config.js index.html package.json package-lock.json README.md start-web.bat vite.config.js deploy-github-pages.bat english-scholarship-trainer.code-workspace
+git add -A .github docs public scripts src .gitignore eslint.config.js index.html package.json package-lock.json README.md start-web.bat vite.config.js deploy-github-pages.bat english-scholarship-trainer.code-workspace
 
 git diff --cached --quiet
 if errorlevel 1 (
@@ -85,7 +79,7 @@ if errorlevel 1 goto failed
 
 echo.
 echo Done. GitHub Actions will deploy:
-echo https://kawinthorn11.github.io/english-scholarship-trainer/
+echo https://kawinthorn11-collab.github.io/english-scholarship-trainer/
 pause
 exit /b 0
 
