@@ -1,0 +1,21 @@
+name: 🧩 เสนอบทเรียนแกรมม่า
+description: หัวข้อ ตัวอย่าง หรือแบบฝึกที่อยากให้เพิ่มในหมวดแกรมม่า
+title: "[แกรมม่า] "
+labels: ["content", "grammar-lesson"]
+body:
+  - type: input
+    id: topic
+    attributes:
+      label: หัวข้อ
+      placeholder: "เช่น a / an / the, Reported speech, เดาความหมายศัพท์จากบริบท"
+    validations: { required: true }
+  - type: textarea
+    id: dialogue
+    attributes:
+      label: หลักการและตัวอย่าง (ถ้ามี)
+      description: อธิบายสั้น ๆ พร้อมประโยคตัวอย่างภาษาอังกฤษและคำแปล
+      placeholder: "หลักการ: ...\nตัวอย่าง: ... = ..."
+  - type: textarea
+    id: quiz
+    attributes:
+      label: คำถามท้ายบท (ถ้ามี)

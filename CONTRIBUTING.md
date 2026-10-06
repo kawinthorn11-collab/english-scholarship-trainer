@@ -1,7 +1,6 @@
-# ร่วมพัฒนา MooKwai · หมูควายติวทุน
+# ร่วมพัฒนา ติวทุนอังกฤษ
 
-ขอบคุณที่อยากช่วยน้อง ๆ เตรียมสอบชิงทุนครับ 🙏
-ทุกการช่วยเหลือมีค่า ตั้งแต่แก้คำผิดหนึ่งคำไปจนถึงเขียนฟีเจอร์ใหม่
+ขอบคุณที่อยากช่วยน้อง ๆ เตรียมสอบชิงทุนครับ 🙏 ตั้งแต่แก้คำผิดหนึ่งคำไปจนถึงเพิ่มข้อสอบทั้งชุด ช่วยได้หมด
 
 ## ไม่เขียนโค้ดก็ช่วยได้
 
@@ -11,21 +10,16 @@
 | --- | --- |
 | ✏️ **เสนอข้อสอบใหม่** | อยากเพิ่มข้อ grammar หรือ reading |
 | 🔍 **แจ้งเฉลยผิด / คำอธิบายไม่ชัด** | เจอข้อที่เฉลยผิด หรืออธิบายแล้วงง |
-| 🐷 **เสนอบทเรียนหมูควาย** | มีไอเดียหัวข้อหรือบทสนทนาใหม่ |
+| 🧩 **เสนอบทเรียนแกรมม่า** | มีหัวข้อหรือตัวอย่างที่อยากให้เพิ่ม |
 | 🐛 **แจ้งปัญหาการใช้งาน** | เว็บค้าง ปุ่มกดไม่ได้ เสียงไม่ออก ฯลฯ |
-
-ผู้ดูแลจะนำเนื้อหาไปใส่ในเว็บให้ และใส่ชื่อคุณเป็นผู้ร่วมพัฒนา
 
 ## กติกาเรื่องเนื้อหา
 
-- **ห้ามคัดลอกข้อสอบจริงหรือข้อสอบที่มีลิขสิทธิ์** ให้แต่งใหม่เองทั้งหมด (โจทย์ บทความ และช้อยส์)
-- ภาษาอังกฤษต้องถูกต้องตามหลัก ถ้าไม่แน่ใจ เขียนหมายเหตุไว้ได้
-- คำอธิบายภาษาไทยให้สั้น เข้าใจง่าย เหมือนรุ่นพี่อธิบายให้น้องฟัง
-- บทสนทนาหมูควายให้แต่ละประโยค **สั้น** (อ่านออกเสียงไม่เกิน 5 วินาที) เพราะจะถูกพูดออกเสียง
+- **ห้ามคัดลอกข้อสอบจริงหรือข้อสอบที่มีลิขสิทธิ์** แต่งบทความ โจทย์ และช้อยส์ใหม่ทั้งหมด (เลียนแบบ "รูปแบบ" ได้)
+- คำอธิบายภาษาไทยให้เข้าใจง่าย เหมือนรุ่นพี่อธิบายให้น้องฟัง และต้องบอกว่าทำไมช้อยส์อื่นผิดทุกตัว
+- คำอธิบายจะถูกอ่านออกเสียง จึงไม่ควรใช้สัญลักษณ์แปลก ๆ หรืออีโมจิในประโยค
 
 ## สำหรับคนที่เขียนโค้ด
-
-### เริ่มต้น
 
 ```bash
 git clone https://github.com/kawinthorn11-collab/english-scholarship-trainer.git
@@ -34,64 +28,46 @@ npm install
 npm run dev
 ```
 
-### ขั้นตอนส่งงาน
+ก่อนเปิด Pull Request ให้รันผ่านทั้งหมด:
 
-1. Fork repo แล้วสร้าง branch ใหม่ เช่น `add-set04-grammar` หรือ `fix-q12-explanation`
-2. แก้ไขแล้วรันคำสั่งตรวจให้ผ่านทั้งหมด:
-   ```bash
-   npm run lint
-   npm run build
-   npm run validate:sets
-   npm run validate:grammar
-   npm run validate:academy
-   npm run validate:speech
-   ```
-3. เปิด Pull Request อธิบายว่าเปลี่ยนอะไร ถ้าเปลี่ยนหน้าตาให้แนบภาพหน้าจอ
-
-ถ้าเพิ่งเริ่ม ลองดู Issue ที่ติดป้าย [`good first issue`](../../issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22)
-
-### เพิ่มบทเรียนหมูควาย
-
-แก้ไฟล์ `src/data/duoLessons.js` แล้วเพิ่ม object ต่อท้ายอาร์เรย์ `duoLessons`:
-
-```js
-{
-  id: 'articles',                       // ไม่ซ้ำกับบทอื่น
-  emoji: '🅰️',
-  title: 'a / an / the',
-  titleThai: 'ใช้ article ให้ถูก',
-  color: 'from-sky-400 to-pink-500',    // คลาส gradient ของ Tailwind
-  lines: [
-    { who: 'pig', text: 'an hour หรือ a hour ดีนะ?' },
-    { who: 'buffalo', text: 'ดูที่เสียง ไม่ใช่ตัวอักษร h ในคำนี้ไม่ออกเสียง', example: 'It took an hour.' },
-  ],
-  quiz: {
-    question: 'She is ___ university student.',
-    choices: ['a', 'an', 'the', '-'],
-    answer: 'a',
-    explain: 'university ออกเสียง "ยู" เป็นเสียงพยัญชนะ จึงใช้ a',
-  },
-},
+```bash
+npm run lint
+npm run validate
+npm run build
 ```
 
-- `who` เป็น `'pig'` หรือ `'buffalo'`
-- `example` (ไม่บังคับ) คือประโยคภาษาอังกฤษที่จะขึ้นการ์ดและอ่านด้วยเสียงอังกฤษ
-- `answer` ต้องตรงกับข้อความในช้อยส์ตัวใดตัวหนึ่งทุกตัวอักษร
+### เพิ่มข้อสอบชุดใหม่
 
-### เพิ่มข้อสอบ
+ดูตัวอย่างที่ `src/data/sets/setM.js` แต่ละชุดมี `passages` และ `questions` 60 ข้อ
 
-ข้อสอบแต่ละชุดอยู่ใน `src/data/examSets/` (ดูตัวอย่างโครงสร้างที่ `set03/`)
-แต่ละข้อต้องมีฟิลด์: `id`, `section`, `question`, `choices` (4 ตัว), `correctAnswer`, `skillTag`, `difficulty`,
-`explanationThai`, `explanationEnglish`, `whyCorrect`, `whyWrong`, `examTrick`, `commonMistake`, `miniLesson`
+```js
+// บทความ grammar: ใช้ __(n)__ แทนช่องว่าง
+g1: { part: 'grammar', title: '...', titleTh: '...', text: `... too stressed __(1)__ sleep ...` },
+// บทความ reading: แยกเป็นบรรทัด เพื่อให้โจทย์อ้างอิง "in line 9" ได้
+r1: { part: 'reading', title: '...', lines: ['บรรทัดที่ 1', 'บรรทัดที่ 2'] },
 
-สร้างชุดใหม่แล้วอย่าลืมลงทะเบียนใน `src/data/examSets/index.js` และรัน `npm run validate:sets`
+// คำถาม
+{
+  n: 1, passage: 'g1', topic: 'too-to',          // topic = id ใน src/data/grammarTopics.js
+  choices: ['for', 'about', 'to', 'by'], answer: 2, // answer = index ของช้อยส์ที่ถูก (0 = ช้อยส์ 1)
+  why: 'อธิบายว่าทำไมถูก',
+  wrong: ['ทำไม for ผิด', 'ทำไม about ผิด', '', 'ทำไม by ผิด'], // ช่องของคำตอบที่ถูกเว้นว่าง
+  tip: 'เทคนิคจำง่าย',
+}
+// คำถาม reading มี q: 'โจทย์' และ lines: [บรรทัดที่เป็นหลักฐาน]
+```
+
+แล้วเพิ่มชุดใหม่ในรายการ `sets` ที่ `src/data/sets/index.js` และรัน `npm run validate`
+
+### เพิ่มหรือแก้บทเรียนแกรมม่า
+
+แก้ `src/data/grammarTopics.js` แต่ละหัวข้อมี `sections` (หลักการ + ตัวอย่าง), `traps` และ `quiz`
 
 ### สไตล์โค้ด
 
-- ใช้ Tailwind utility class และคลาสที่มีอยู่ใน `src/index.css` (`glass`, `btn btn-primary`, `chip` ฯลฯ)
-- ตัวการ์ตูนใช้ `<Mascot character="pig|buffalo" mood="..." />` จาก `src/components/Mascot.jsx`
-- เสียงพูดใช้ `speakLine(text, { speaker })` จาก `src/utils/voice.js`
-- ทุกหน้าต้องใช้งานได้บนมือถือ (กว้างประมาณ 390px)
+- ใช้คลาสที่มีอยู่ใน `src/styles.css` (`card`, `btn btn-primary`, `choice` ฯลฯ) และสีจากตัวแปร `--accent`, `--right`, `--wrong`
+- ปุ่มเสียงใช้ `<SpeakButton id="..." text="..." />` จาก `src/components/SpeakButton.jsx`
+- ทุกหน้าต้องใช้งานได้บนมือถือ (กว้างประมาณ 390px) และในโหมดมืด
 
 ## การอยู่ร่วมกัน
 
@@ -99,4 +75,4 @@ npm run dev
 
 ---
 
-*English: Contributions are welcome in English too. Open an issue with one of the templates, or fork, run the checks above, and open a pull request. All exam content must be original — never copy real or copyrighted exam questions.*
+*English: Contributions are welcome in English too. Open an issue with one of the templates, or fork, run `npm run lint && npm run validate && npm run build`, and open a pull request. All exam content must be original — never copy real or copyrighted exam questions.*
