@@ -1,21 +1,36 @@
-export default function ConfirmModal({ title, message, onConfirm, onCancel }) {
+import { useEffect } from 'react'
+import Mascot from './Mascot'
+
+export default function ConfirmModal({
+  title,
+  message,
+  onConfirm,
+  onCancel,
+  confirmLabel = 'ยืนยัน',
+  cancelLabel = 'ยกเลิก',
+  tone = 'primary',
+}) {
+  useEffect(() => {
+    const onKey = (event) => { if (event.key === 'Escape') onCancel?.() }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [onCancel])
+
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
-      <div className="w-full max-w-md rounded-xl border border-purple-600/50 bg-[#1a0a2e] p-6 shadow-2xl">
-        <h3 className="mb-2 text-lg font-bold text-purple-100">{title}</h3>
-        <p className="mb-6 text-sm text-purple-300">{message}</p>
-        <div className="flex gap-3">
-          <button
-            onClick={onCancel}
-            className="flex-1 rounded-lg border border-purple-600 px-4 py-2 font-semibold text-purple-200 transition hover:bg-purple-900/40"
-          >
-            Cancel
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 px-4 backdrop-blur-md" style={{ animation: 'fade-up 0.25s ease both' }} role="dialog" aria-modal="true" aria-label={title}>
+      <div className="glass-strong w-full max-w-md animate-pop rounded-[2rem] p-7 text-center">
+        <Mascot character="buffalo" mood={tone === 'danger' ? 'oops' : 'think'} size={110} className="mx-auto -mt-2 mb-3" />
+        <h3 className="mb-2 text-2xl font-semibold text-white">{title}</h3>
+        <p className="mb-7 text-[15px] leading-relaxed text-purple-200/85">{message}</p>
+        <div className="flex flex-col-reverse gap-3 sm:flex-row">
+          <button onClick={onCancel} className="btn btn-ghost flex-1">
+            {cancelLabel}
           </button>
           <button
             onClick={onConfirm}
-            className="flex-1 rounded-lg bg-purple-600 px-4 py-2 font-semibold text-white transition hover:bg-purple-500"
+            className={`btn flex-1 ${tone === 'danger' ? 'bg-gradient-to-r from-rose-600 to-red-500 text-white shadow-lg shadow-rose-900/40' : 'btn-primary'}`}
           >
-            Submit
+            {confirmLabel}
           </button>
         </div>
       </div>

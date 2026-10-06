@@ -4,6 +4,7 @@ import { examSets } from '../data/examSets/index.js'
 import SpeakButton from '../components/SpeakButton'
 import SpeechSettings from '../components/SpeechSettings'
 import { recordListeningActivity } from '../utils/localStats'
+import { PageHeader } from '../components/ui'
 
 function buildListeningItems() {
   const grammarExamples = grammarLessons.flatMap((lesson) =>
@@ -70,21 +71,23 @@ export default function ListeningPractice({ onNavigate }) {
   }
 
   return (
-    <div className="space-y-6">
-      <header>
-        <p className="text-xs uppercase tracking-wide text-purple-400">Listening / ฟังเสียง</p>
-        <h1 className="text-3xl font-bold text-purple-100">Native Listening Practice</h1>
-        <p className="mt-2 text-sm text-purple-300">ใช้เสียงจาก browser ไม่ต้องใช้ backend ไม่ต้องล็อกอิน ฝึกฟังประโยคสอบแบบช้า/ปกติได้เลย</p>
-      </header>
+    <div className="space-y-8">
+      <PageHeader
+        eyebrow="Listening · ฟังเสียง"
+        icon="🎧"
+        title="Native Listening Practice"
+        subtitle="ฟังประโยคสอบแบบช้า/ปกติ ฝึก shadowing พูดตาม แล้วค่อยเปิดดูตัวหนังสือ — ใช้เสียงจาก browser ไม่ต้องล็อกอิน"
+        mood="happy"
+      />
 
       <SpeechSettings />
 
-      <div className="grid gap-2 sm:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {sources.map((name) => (
           <button
             key={name}
             onClick={() => { setSource(name); setIndex(0) }}
-            className={`rounded-lg border px-3 py-3 text-sm font-semibold transition ${source === name ? 'border-purple-400 bg-purple-700 text-white' : 'border-purple-700/40 bg-purple-900/20 text-purple-200 hover:bg-purple-900/40'}`}
+            className={`rounded-2xl border px-4 py-3.5 text-sm font-semibold transition ${source === name ? 'border-transparent bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white shadow-lg shadow-fuchsia-900/30' : 'border-white/[0.08] bg-white/[0.04] text-purple-200 hover:bg-white/[0.07]'}`}
           >
             {name}
           </button>
@@ -92,11 +95,19 @@ export default function ListeningPractice({ onNavigate }) {
       </div>
 
       {current && (
-        <div className="rounded-xl border border-purple-700/40 bg-purple-900/20 p-5">
-          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-            <div>
-              <p className="text-xs text-purple-400">{current.source}</p>
-              <h2 className="font-semibold text-purple-100">{current.title}</h2>
+        <div className="glass relative overflow-hidden rounded-[2rem] p-6 sm:p-8">
+          <div aria-hidden className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-sky-500/20 blur-3xl" />
+          <div className="relative mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-4">
+              <div aria-hidden className="flex h-12 items-end gap-1">
+                {[0, 1, 2, 3, 4].map((bar) => (
+                  <span key={bar} className="w-1.5 rounded-full bg-gradient-to-t from-violet-500 to-sky-300" style={{ height: '100%', transformOrigin: 'bottom', animation: `eq ${0.7 + bar * 0.13}s ease-in-out ${bar * 0.1}s infinite` }} />
+                ))}
+              </div>
+              <div>
+                <p className="eyebrow">{current.source} · {index + 1}/{filtered.length}</p>
+                <h2 className="mt-1 text-xl font-semibold text-white">{current.title}</h2>
+              </div>
             </div>
             <div className="flex flex-wrap gap-2">
               <SpeakButton text={current.text} label="Slow" size="md" variant="button" rate={0.75} />
@@ -104,32 +115,32 @@ export default function ListeningPractice({ onNavigate }) {
             </div>
           </div>
 
-          <div className="rounded-lg border border-purple-700/40 bg-purple-950/50 p-4">
+          <div className="relative rounded-3xl border border-white/[0.08] bg-black/20 p-6">
             {hidden ? (
-              <p className="text-purple-500">Text hidden. Listen first, then reveal.</p>
+              <p className="py-4 text-center text-purple-300/70">🙈 ซ่อนข้อความอยู่ — ฟังก่อน แล้วค่อยกดเปิดดู</p>
             ) : (
-              <p className="whitespace-pre-line text-sm leading-relaxed text-purple-100">{current.text}</p>
+              <p className="whitespace-pre-line text-[17px] leading-relaxed text-purple-50">{current.text}</p>
             )}
           </div>
 
-          <div className="mt-4 flex flex-col gap-2 sm:flex-row">
-            <button onClick={() => setHidden((value) => !value)} className="rounded-lg border border-purple-600 px-4 py-2 text-sm font-semibold text-purple-200 transition hover:bg-purple-900/40">
-              {hidden ? 'Show text' : 'Hide text'}
+          <div className="relative mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <button onClick={() => setHidden((value) => !value)} className="btn btn-ghost text-sm">
+              {hidden ? '👀 Show text' : '🙈 Hide text'}
             </button>
-            <button onClick={markRepeated} className="rounded-lg border border-purple-600 px-4 py-2 text-sm font-semibold text-purple-200 transition hover:bg-purple-900/40">
-              Repeat counted
+            <button onClick={markRepeated} className="btn btn-ghost text-sm">
+              🔁 Repeat counted
             </button>
-            <button onClick={markUnderstood} className="rounded-lg bg-green-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-green-600">
-              I understood
+            <button onClick={markUnderstood} className="btn btn-success text-sm">
+              ✓ I understood
             </button>
-            <button onClick={next} className="rounded-lg bg-purple-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-purple-500">
-              Next
+            <button onClick={next} className="btn btn-primary text-sm">
+              Next →
             </button>
           </div>
         </div>
       )}
 
-      <button onClick={() => onNavigate('dashboard')} className="text-sm text-purple-400 underline transition hover:text-purple-200">
+      <button onClick={() => onNavigate('dashboard')} className="text-sm font-semibold text-purple-300 transition hover:text-white">
         Back to Dashboard
       </button>
     </div>

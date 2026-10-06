@@ -7,20 +7,16 @@ export default function PassagePanel({ passage }) {
   if (!passage) return null
 
   return (
-    <div className="mb-4 overflow-hidden rounded-xl border border-purple-700/30 bg-purple-950/40">
+    <div className="glass mb-5 overflow-hidden rounded-3xl">
       <button
         onClick={() => setCollapsed(!collapsed)}
-        className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left transition hover:bg-purple-900/30"
+        className="flex w-full items-center justify-between gap-3 px-5 py-4 text-left transition hover:bg-white/[0.04]"
       >
-        <span className="text-xs font-semibold uppercase tracking-wide text-purple-400">
-          Reading Passage
-        </span>
-        <span className="text-xs text-purple-400">
-          {collapsed ? 'Show' : 'Hide'}
-        </span>
+        <span className="eyebrow">📚 Reading Passage</span>
+        <span className="chip">{collapsed ? '▼ Show' : '▲ Hide'}</span>
       </button>
       {!collapsed && (
-        <div className="border-t border-purple-700/20 px-4 py-3 text-sm leading-relaxed text-purple-200/80">
+        <div className="border-t border-white/[0.06] px-5 py-4 text-[15px] leading-relaxed text-purple-100/85" style={{ animation: 'fade-up 0.35s ease both' }}>
           <div className="mb-3 flex justify-end">
             <SpeakButton text={passage} label="Read passage" variant="button" size="sm" />
           </div>

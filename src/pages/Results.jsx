@@ -9,6 +9,8 @@ import { analyzeWeakSkills, getRecommendations } from '../utils/analysis'
 import { getAttempts } from '../utils/storage'
 import { getPassageForQuestion, getPassageTitle } from '../utils/passage'
 import { findLessonBySkillTag } from '../data/grammarLessons/index.js'
+import Mascot from '../components/Mascot'
+import { SectionTitle } from '../components/ui'
 
 export default function Results({ selectedSetId, onNavigate, onSelectLesson }) {
   const [expandedId, setExpandedId] = useState(null)
@@ -20,10 +22,11 @@ export default function Results({ selectedSetId, onNavigate, onSelectLesson }) {
 
   if (!latest) {
     return (
-      <div className="space-y-4 text-center">
-        <h2 className="text-2xl font-bold text-purple-100">📋 Results</h2>
-        <p className="text-purple-300">No exam attempts yet. Take a mock exam first!</p>
-        <button onClick={() => onNavigate('mock-exam')} className="rounded-xl bg-purple-600 px-6 py-3 font-semibold text-white transition hover:bg-purple-500">Start Mock Exam</button>
+      <div className="glass mx-auto max-w-lg space-y-5 rounded-[2rem] p-10 text-center">
+        <Mascot character="buffalo" mood="think" size={150} className="mx-auto" />
+        <h1 className="text-3xl font-semibold text-white">ยังไม่มีผลสอบเลย</h1>
+        <p className="text-purple-200/80">ลองทำข้อสอบจำลองสักชุด แล้วหมูควายจะวิเคราะห์จุดอ่อนให้ทันที!</p>
+        <button onClick={() => onNavigate('mock-exam')} className="btn btn-primary px-8 py-4">📝 เริ่มทำ Mock Exam</button>
       </div>
     )
   }
@@ -61,36 +64,32 @@ export default function Results({ selectedSetId, onNavigate, onSelectLesson }) {
   }
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-purple-100">📋 Detailed Results</h2>
-      <p className="text-sm text-purple-400">{latest.setTitle || attemptSetId}</p>
+    <div className="space-y-10">
+      <div className="text-center">
+        <p className="eyebrow justify-center">📋 Detailed Results</p>
+        <h1 className="mt-2 text-3xl font-semibold text-white sm:text-4xl">ผลสอบล่าสุดของคุณ</h1>
+        <p className="mt-2 text-sm text-purple-300/80">{latest.setTitle || attemptSetId}{timeUsed > 0 && ` · ⏱ ใช้เวลา ${formatTime(timeUsed)}`}</p>
+      </div>
 
-      <ResultSummary score={score} />
+      <ResultSummary score={score} celebrate={false} />
 
       <ComicCoach onNavigate={onNavigate} />
 
-      {timeUsed > 0 && (
-        <div className="rounded-xl border border-purple-700/40 bg-purple-900/20 p-4 text-center">
-          <p className="text-sm text-purple-400">⏱ Time Used</p>
-          <p className="mt-1 text-xl font-bold text-purple-100">{formatTime(timeUsed)}</p>
-        </div>
-      )}
-
       {weak.length > 0 && (
-        <div className="rounded-xl border border-red-700/40 bg-red-900/10 p-5">
-          <h3 className="mb-4 text-lg font-semibold text-red-300">⚠️ Weak Skills — Focus Here</h3>
-          <div className="space-y-3">
+        <div className="rounded-[2rem] border border-rose-400/20 bg-gradient-to-br from-rose-500/10 to-transparent p-6 sm:p-7">
+          <SectionTitle icon="⚠️" title="Weak Skills — โฟกัสตรงนี้" subtitle="ซ่อมจุดเหล่านี้ คะแนนจะขึ้นเร็วที่สุด" />
+          <div className="grid gap-4 md:grid-cols-2">
             {recommendations.map((r) => {
               const matchedLesson = findLessonBySkillTag(r.skill)
               const w = weak.find((x) => x.skill === r.skill)
               return (
-                <div key={r.skill} className="rounded-lg bg-red-900/20 px-4 py-3">
+                <div key={r.skill} className="rounded-3xl border border-rose-400/15 bg-rose-500/[0.07] p-5">
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium text-red-200">{r.skill}</p>
-                      <p className="text-xs text-red-300/70">{r.message}</p>
+                      <p className="font-semibold text-rose-100">{r.skill}</p>
+                      <p className="mt-1 text-xs leading-relaxed text-rose-200/75">{r.message}</p>
                     </div>
-                    <span className="rounded-full bg-red-800/50 px-3 py-1 text-sm font-bold text-red-300 whitespace-nowrap">
+                    <span className="whitespace-nowrap rounded-full bg-rose-500/25 px-3 py-1 text-sm font-bold text-rose-100">
                       {w?.correct}/{w?.total}
                     </span>
                   </div>
@@ -98,14 +97,14 @@ export default function Results({ selectedSetId, onNavigate, onSelectLesson }) {
                     {matchedLesson && matchedLesson.status === 'available' && onSelectLesson && (
                       <button
                         onClick={() => onSelectLesson(matchedLesson.id)}
-                        className="rounded-lg bg-purple-700 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-purple-600"
+                        className="btn btn-primary !px-4 !py-2 text-xs"
                       >
                         📘 Study This Grammar
                       </button>
                     )}
                     <button
                       onClick={() => onNavigate('practice')}
-                      className="rounded-lg border border-red-600 px-3 py-1.5 text-xs font-semibold text-red-200 transition hover:bg-red-900/40"
+                      className="btn btn-ghost !px-4 !py-2 text-xs"
                     >
                       🏋️ Practice This Skill
                     </button>
@@ -118,51 +117,50 @@ export default function Results({ selectedSetId, onNavigate, onSelectLesson }) {
       )}
 
       {strong.length > 0 && (
-        <div className="rounded-xl border border-green-700/30 bg-green-900/10 p-5">
-          <h3 className="mb-3 text-lg font-semibold text-green-300">✅ Strong Skills</h3>
+        <div className="rounded-[2rem] border border-emerald-400/20 bg-gradient-to-br from-emerald-500/10 to-transparent p-6 sm:p-7">
+          <SectionTitle icon="💪" title="Strong Skills" subtitle="จุดแข็งที่ทำได้ดีแล้ว รักษาไว้นะ!" />
           <div className="flex flex-wrap gap-2">
             {strong.map((s) => (
-              <span key={s.skill} className="rounded-full bg-green-900/30 px-3 py-1 text-sm text-green-300">{s.skill} ({s.correct}/{s.total})</span>
+              <span key={s.skill} className="rounded-full border border-emerald-400/20 bg-emerald-500/15 px-4 py-1.5 text-sm text-emerald-100">{s.skill} ({s.correct}/{s.total})</span>
             ))}
           </div>
         </div>
       )}
 
       <div>
-        <h3 className="mb-3 text-lg font-semibold text-purple-200">📝 Question Review</h3>
-        <p className="mb-3 text-xs text-purple-400">Click a question to expand the full explanation.</p>
+        <SectionTitle icon="📝" title="ทบทวนทีละข้อ" subtitle="กดที่ข้อเพื่อดูคำอธิบายแบบเต็ม" />
         <div className="space-y-3">
           {score.details.map((detail, idx) => {
             const reviewQuestion = getReviewQuestion(detail.id)
             if (!reviewQuestion) return null
             return (
-              <div key={detail.id} className="rounded-lg border border-purple-700/30 bg-purple-900/10 overflow-hidden">
-                <button onClick={() => setExpandedId(expandedId === detail.id ? null : detail.id)} className="flex w-full items-center gap-3 p-3 text-left transition hover:bg-purple-900/20">
-                  <span className={`flex h-7 w-7 items-center justify-center rounded-full text-sm font-bold ${detail.isCorrect ? 'bg-green-900/40 text-green-400' : 'bg-red-900/40 text-red-400'}`}>
+              <div key={detail.id} className={`glass overflow-hidden rounded-3xl transition ${expandedId === detail.id ? 'ring-1 ring-violet-400/40' : ''}`}>
+                <button onClick={() => setExpandedId(expandedId === detail.id ? null : detail.id)} className="flex w-full items-center gap-4 px-5 py-4 text-left transition hover:bg-white/[0.04]">
+                  <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl text-sm font-bold ${detail.isCorrect ? 'bg-emerald-500/20 text-emerald-300' : 'bg-rose-500/20 text-rose-300'}`}>
                     {detail.isCorrect ? '✓' : '✗'}
                   </span>
                   <div className="flex-1 min-w-0">
-                    <p className="truncate text-sm text-purple-200">Q{idx + 1}. {detail.question}</p>
-                    <div className="mt-1 flex gap-2">
-                      <span className="text-xs text-purple-400">{detail.section}</span>
-                      <span className="text-xs text-purple-500">•</span>
-                      <span className="text-xs text-purple-400">{detail.skillTag}</span>
+                    <p className="truncate text-[15px] text-white">Q{idx + 1}. {detail.question}</p>
+                    <div className="mt-1 flex gap-2 text-xs text-purple-300/80">
+                      <span>{detail.section}</span>
+                      <span>•</span>
+                      <span>{detail.skillTag}</span>
                     </div>
                   </div>
-                  <span className="text-purple-500">{expandedId === detail.id ? '▲' : '▼'}</span>
+                  <span className={`text-purple-300 transition-transform duration-300 ${expandedId === detail.id ? 'rotate-180' : ''}`}>▼</span>
                 </button>
                 {expandedId === detail.id && (
-                  <div className="border-t border-purple-700/30 p-4">
+                  <div className="border-t border-white/[0.06] p-4 sm:p-5" style={{ animation: 'fade-up 0.4s ease both' }}>
                     {(() => {
                       const passage = getPassageForQuestion(reviewQuestion, allQuestions)
                       const title = getPassageTitle(reviewQuestion, allQuestions)
                       if (!passage) return null
                       return (
-                        <details open className="mb-4 rounded-lg border border-purple-700/30 bg-purple-950/40">
-                          <summary className="cursor-pointer p-3 text-xs font-semibold uppercase tracking-wide text-purple-400">
+                        <details open className="mb-5 rounded-3xl border border-white/[0.07] bg-white/[0.03]">
+                          <summary className="cursor-pointer px-5 py-4 text-xs font-semibold uppercase tracking-wide text-purple-200">
                             📚 {title || (reviewQuestion.section === 'Grammar' ? 'Grammar Passage' : 'Reading Passage')}
                           </summary>
-                          <div className="border-t border-purple-700/30 p-4 text-sm leading-relaxed text-purple-200/80 whitespace-pre-line">
+                          <div className="whitespace-pre-line border-t border-white/[0.06] px-5 py-4 text-[15px] leading-relaxed text-purple-100/85">
                             <div className="mb-3 flex justify-end">
                               <SpeakButton text={passage} label="Read passage" variant="button" size="sm" />
                             </div>
@@ -182,9 +180,9 @@ export default function Results({ selectedSetId, onNavigate, onSelectLesson }) {
       </div>
 
       <div className="grid gap-3 sm:grid-cols-3">
-        <button onClick={() => onNavigate('mock-exam')} className="rounded-xl bg-purple-600 px-4 py-3 font-semibold text-white transition hover:bg-purple-500">📝 Retake Exam</button>
-        <button onClick={() => onNavigate('practice')} className="rounded-xl border border-purple-600 px-4 py-3 font-semibold text-purple-200 transition hover:bg-purple-900/40">🏋️ Practice Mode</button>
-        <button onClick={() => onNavigate('dashboard')} className="rounded-xl border border-purple-600 px-4 py-3 font-semibold text-purple-200 transition hover:bg-purple-900/40">📊 Dashboard</button>
+        <button onClick={() => onNavigate('mock-exam')} className="btn btn-primary py-4">📝 สอบใหม่อีกครั้ง</button>
+        <button onClick={() => onNavigate('practice')} className="btn btn-ghost py-4">🏋️ Practice Mode</button>
+        <button onClick={() => onNavigate('dashboard')} className="btn btn-ghost py-4">🏠 Dashboard</button>
       </div>
     </div>
   )

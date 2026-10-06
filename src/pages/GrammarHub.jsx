@@ -1,7 +1,7 @@
 import { grammarLessons, findLessonsBySkillTags } from '../data/grammarLessons/index.js'
 import { getAttempts, getGrammarProgress } from '../utils/storage'
 import { examSets } from '../data/examSets/index.js'
-import ComicCoach from '../components/ComicCoach'
+import { PageHeader, SectionTitle, StatTile } from '../components/ui'
 
 function countRelatedQuestions(skillTags) {
   let count = 0
@@ -39,45 +39,44 @@ export default function GrammarHub({ onNavigate, onSelectLesson }) {
     || completedLessons[0]
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-purple-100">Grammar Lessons</h1>
-        <p className="mt-1 text-sm text-purple-300">
-          เรียน grammar แบบเป็นระบบ พร้อม exam traps, common mistakes, mini quizzes และข้อสอบที่เกี่ยวข้อง
-        </p>
-      </div>
+    <div className="space-y-8">
+      <PageHeader
+        eyebrow="Grammar Lessons"
+        icon="📖"
+        title="เรียน Grammar แบบเข้าใจจริง"
+        subtitle="บทเรียนเป็นระบบ พร้อม exam traps, common mistakes, mini quizzes และข้อสอบที่เกี่ยวข้อง — หมูควายสรุปให้ทีละหัวข้อ"
+        mood="teach"
+      />
 
-      <div className="grid gap-3 sm:grid-cols-4">
-        <StatPill label="Available lessons" value={`${completedLessons.length}/20`} />
-        <StatPill label="Mini quiz bank" value={totalMiniQuiz} />
-        <StatPill label="Studied" value={studiedCount} />
-        <StatPill label="Mastered" value={masteredCount} />
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <StatTile icon="📚" label="Available lessons" value={`${completedLessons.length}/20`} />
+        <StatTile icon="✏️" label="Mini quiz bank" value={totalMiniQuiz} accent="from-amber-400/40 to-orange-500/10" />
+        <StatTile icon="👀" label="Studied" value={studiedCount} accent="from-sky-400/40 to-blue-500/10" />
+        <StatTile icon="🏆" label="Mastered" value={masteredCount} accent="from-emerald-400/40 to-teal-500/10" />
       </div>
-
-      <ComicCoach onNavigate={onNavigate} />
 
       {recommendedNext && (
-        <div className="rounded-lg border border-purple-600/40 bg-purple-900/20 p-5">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="rainbow-border rounded-[2rem]">
+          <div className="flex flex-col gap-4 rounded-[1.95rem] bg-ink-2 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-7">
             <div>
-              <p className="text-xs uppercase tracking-wide text-purple-400">Recommended next</p>
-              <h3 className="mt-1 text-lg font-semibold text-purple-100">{recommendedNext.title}</h3>
+              <p className="eyebrow">⭐ Recommended next</p>
+              <h3 className="mt-2 text-2xl font-semibold text-white">{recommendedNext.title}</h3>
               <p className="mt-1 text-sm text-purple-300/80">{recommendedNext.shortDescriptionThai}</p>
             </div>
             <button
               onClick={() => onSelectLesson(recommendedNext.id)}
-              className="rounded-lg bg-purple-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-purple-500"
+              className="btn btn-primary shrink-0"
             >
-              Start lesson
+              เริ่มบทเรียน →
             </button>
           </div>
         </div>
       )}
 
       {recommendedLessons.length > 0 && (
-        <div className="rounded-lg border border-purple-600/40 bg-purple-900/20 p-5">
-          <h3 className="mb-3 text-lg font-semibold text-purple-200">Recommended from your latest result</h3>
-          <div className="grid gap-3 sm:grid-cols-2">
+        <div>
+          <SectionTitle icon="🎯" title="แนะนำจากผลสอบล่าสุด" />
+          <div className="grid gap-4 sm:grid-cols-2">
             {recommendedLessons.map((l) => (
               <LessonCard
                 key={l.id}
@@ -92,8 +91,8 @@ export default function GrammarHub({ onNavigate, onSelectLesson }) {
       )}
 
       <div>
-        <h3 className="mb-3 text-lg font-semibold text-purple-200">All Grammar Categories</h3>
-        <div className="grid gap-3 sm:grid-cols-2">
+        <SectionTitle icon="🗂️" title="All Grammar Categories" subtitle="เลือกหัวข้อที่อยากเรียนได้เลย" />
+        <div className="grid gap-4 sm:grid-cols-2">
           {completedLessons.map((l) => (
             <LessonCard
               key={l.id}
@@ -108,8 +107,8 @@ export default function GrammarHub({ onNavigate, onSelectLesson }) {
 
       {comingSoonLessons.length > 0 && (
         <div>
-          <h3 className="mb-3 text-lg font-semibold text-purple-200">Coming soon</h3>
-          <div className="grid gap-3 sm:grid-cols-2">
+          <SectionTitle icon="⏳" title="Coming soon" />
+          <div className="grid gap-4 sm:grid-cols-2">
             {comingSoonLessons.map((l) => (
               <LessonCard
                 key={l.id}
@@ -125,19 +124,10 @@ export default function GrammarHub({ onNavigate, onSelectLesson }) {
 
       <button
         onClick={() => onNavigate('dashboard')}
-        className="text-sm text-purple-400 underline transition hover:text-purple-200"
+        className="text-sm font-semibold text-purple-300 transition hover:text-white"
       >
         Back to Dashboard
       </button>
-    </div>
-  )
-}
-
-function StatPill({ label, value }) {
-  return (
-    <div className="rounded-lg border border-purple-700/40 bg-purple-900/20 p-4">
-      <p className="text-xs text-purple-400">{label}</p>
-      <p className="mt-1 text-2xl font-bold text-purple-100">{value}</p>
     </div>
   )
 }
@@ -152,29 +142,29 @@ function LessonCard({ lesson, progress, relatedCount, onSelect }) {
     <button
       onClick={onSelect}
       disabled={!isAvailable}
-      className={`rounded-lg border p-4 text-left transition ${
+      className={`glow-card rounded-3xl border p-5 text-left transition ${
         isAvailable
-          ? 'border-purple-700/40 bg-purple-900/10 hover:border-purple-500/60 hover:bg-purple-900/30 cursor-pointer'
-          : 'border-purple-900/40 bg-purple-950/30 cursor-not-allowed opacity-60'
+          ? 'border-white/[0.08] bg-white/[0.03] hover:border-violet-400/50 hover:bg-white/[0.07] cursor-pointer'
+          : 'border-white/[0.05] bg-white/[0.03] cursor-not-allowed opacity-60'
       }`}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1">
-          <p className="font-semibold text-purple-100">{lesson.title}</p>
-          <p className="text-xs text-purple-400">{lesson.titleThai}</p>
+          <p className="font-display text-lg font-semibold text-white">{lesson.title}</p>
+          <p className="text-xs text-purple-300/80">{lesson.titleThai}</p>
         </div>
         {!isAvailable && (
-          <span className="rounded-full bg-purple-900/60 px-2 py-0.5 text-xs text-purple-300">
+          <span className="rounded-full bg-violet-500/15 px-2 py-0.5 text-xs text-purple-300">
             Coming soon
           </span>
         )}
         {isAvailable && mastered && (
-          <span className="rounded-full bg-green-900/40 px-2 py-0.5 text-xs text-green-300">
+          <span className="rounded-full bg-emerald-500/20 px-2.5 py-0.5 text-xs font-semibold text-emerald-200">
             Mastered
           </span>
         )}
         {isAvailable && studied && !mastered && (
-          <span className="rounded-full bg-purple-700/40 px-2 py-0.5 text-xs text-purple-200">
+          <span className="rounded-full bg-violet-500/25 px-2 py-0.5 text-xs text-purple-200">
             Studied
           </span>
         )}
@@ -183,17 +173,17 @@ function LessonCard({ lesson, progress, relatedCount, onSelect }) {
         {lesson.shortDescriptionThai}
       </p>
       <div className="mt-3 flex flex-wrap gap-2 text-xs">
-        <span className="rounded-full bg-purple-800/50 px-2 py-0.5 text-purple-300">
+        <span className="rounded-full bg-violet-500/15 px-2 py-0.5 text-purple-300">
           {lesson.level}
         </span>
-        <span className="rounded-full bg-purple-800/50 px-2 py-0.5 text-purple-300">
+        <span className="rounded-full bg-violet-500/15 px-2 py-0.5 text-purple-300">
           {relatedCount} exam Q
         </span>
-        <span className="rounded-full bg-purple-800/50 px-2 py-0.5 text-purple-300">
+        <span className="rounded-full bg-violet-500/15 px-2 py-0.5 text-purple-300">
           {lesson.miniQuiz?.length || 0} quiz Q
         </span>
         {lesson.estimatedStudyMinutes && (
-          <span className="rounded-full bg-purple-800/50 px-2 py-0.5 text-purple-300">
+          <span className="rounded-full bg-violet-500/15 px-2 py-0.5 text-purple-300">
             {lesson.estimatedStudyMinutes} min
           </span>
         )}
