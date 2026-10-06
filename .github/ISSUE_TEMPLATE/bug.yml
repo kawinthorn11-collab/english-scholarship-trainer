@@ -1,0 +1,25 @@
+name: 🐛 แจ้งปัญหาการใช้งาน
+description: เว็บค้าง ปุ่มกดไม่ได้ เสียงไม่ออก หน้าจอเพี้ยน ฯลฯ
+title: "[บั๊ก] "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: เกิดอะไรขึ้น
+    validations: { required: true }
+  - type: textarea
+    id: steps
+    attributes:
+      label: ทำอะไรก่อนเกิดปัญหา
+      placeholder: "1. เข้าหน้า...\n2. กด...\n3. ..."
+  - type: input
+    id: device
+    attributes:
+      label: อุปกรณ์และเบราว์เซอร์
+      placeholder: "เช่น iPhone 13 / Safari, Android / Chrome, Windows / Edge"
+    validations: { required: true }
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: ภาพหน้าจอ (ถ้ามี)

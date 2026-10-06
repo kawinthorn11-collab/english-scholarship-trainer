@@ -1,0 +1,20 @@
+name: 🔍 แจ้งเฉลยผิด / คำอธิบายไม่ชัด
+description: เจอข้อที่เฉลยผิด พิมพ์ผิด หรืออธิบายแล้วงง
+title: "[แก้เนื้อหา] "
+labels: ["content", "fix"]
+body:
+  - type: input
+    id: where
+    attributes:
+      label: อยู่ตรงไหน
+      placeholder: "เช่น Mock Exam Set 02 ข้อ S02-Q015 หรือ ห้องเรียนหมูควาย บท Passive Voice"
+    validations: { required: true }
+  - type: textarea
+    id: problem
+    attributes:
+      label: ปัญหาคืออะไร
+    validations: { required: true }
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: ควรแก้เป็นอะไร

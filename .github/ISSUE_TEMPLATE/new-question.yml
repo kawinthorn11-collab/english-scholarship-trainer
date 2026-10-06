@@ -1,0 +1,43 @@
+name: ✏️ เสนอข้อสอบใหม่
+description: เพิ่มข้อ grammar หรือ reading (ไม่ต้องเขียนโค้ด)
+title: "[ข้อสอบใหม่] "
+labels: ["content", "new-question"]
+body:
+  - type: markdown
+    attributes:
+      value: "ขอบคุณที่ช่วยครับ 🙏 กรุณา **แต่งข้อสอบเอง** ห้ามคัดลอกจากข้อสอบจริงหรือหนังสือที่มีลิขสิทธิ์"
+  - type: dropdown
+    id: section
+    attributes:
+      label: พาร์ท
+      options: [Grammar, Reading]
+    validations: { required: true }
+  - type: textarea
+    id: question
+    attributes:
+      label: โจทย์ (และบทความ ถ้าเป็น Reading)
+    validations: { required: true }
+  - type: textarea
+    id: choices
+    attributes:
+      label: ช้อยส์ 4 ตัว
+      placeholder: "1. ...\n2. ...\n3. ...\n4. ..."
+    validations: { required: true }
+  - type: input
+    id: answer
+    attributes:
+      label: คำตอบที่ถูก
+    validations: { required: true }
+  - type: textarea
+    id: explain
+    attributes:
+      label: คำอธิบาย (ภาษาไทย)
+      description: ทำไมข้อนี้ถูก และทำไมช้อยส์อื่นผิด
+    validations: { required: true }
+  - type: checkboxes
+    id: original
+    attributes:
+      label: ยืนยัน
+      options:
+        - label: ข้อสอบนี้แต่งขึ้นเอง ไม่ได้คัดลอกมา
+          required: true
