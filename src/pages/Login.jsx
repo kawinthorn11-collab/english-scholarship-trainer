@@ -29,9 +29,9 @@ export default function Login({ onNavigate, onNavigatePath }) {
   if (!isSupabaseConfigured()) {
     return (
       <div className="glass mx-auto max-w-md space-y-6 rounded-[2rem] p-7 text-center sm:p-9">
-        <Mascot character="pig" mood="wave" size={120} className="mx-auto -mt-2" />
+        <Mascot character="pig" mood="wave" size={120} className="mx-auto -mt-2 !block" />
         <h2 className="text-3xl font-semibold text-white">เข้าสู่ระบบ</h2>
-        <p className="text-purple-300">ระบบล็อกอินยังไม่ได้ตั้งค่า แต่คุณยังสามารถใช้งานบทเรียนและแบบทดสอบแบบ Guest ได้</p>
+        <p className="text-purple-300">ระบบสมาชิกกำลังจะเปิดเร็ว ๆ นี้ ระหว่างนี้ใช้งานแบบ Guest ได้ครบทุกฟีเจอร์ ความคืบหน้าจะเก็บไว้ในเครื่องนี้</p>
         <button
           type="button"
           onClick={goGuest}
@@ -72,7 +72,7 @@ export default function Login({ onNavigate, onNavigatePath }) {
 
   return (
     <div className="glass mx-auto max-w-md space-y-6 rounded-[2rem] p-7 sm:p-9">
-      <Mascot character="pig" mood="wave" size={120} className="mx-auto -mt-2" />
+      <Mascot character="pig" mood="wave" size={120} className="mx-auto -mt-2 !block" />
       <div className="space-y-2 text-center">
         <h2 className="text-3xl font-semibold text-white">เข้าสู่ระบบ</h2>
         <p className="text-sm text-purple-300">เข้าสู่ระบบเพื่อซิงก์ความคืบหน้า หรือใช้งานแบบ Guest ได้ทันที</p>
