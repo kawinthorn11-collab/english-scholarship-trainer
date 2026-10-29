@@ -67,7 +67,7 @@ export function getRecommendedCoachAction(stats) {
     }
   }
   if ((stats.todayStudySeconds || 0) < 15 * 60) {
-    return { label: 'เก็บ Grammar Academy สักบท', target: 'academy' }
+    return { label: 'ฟังห้องเรียนหมูควายสักบท', target: 'class' }
   }
   return { label: 'ลองฟังเสียง native สักรอบ', target: 'listening' }
 }

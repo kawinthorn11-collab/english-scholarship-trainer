@@ -1,28 +1,30 @@
-// Character voices for the pig & buffalo teachers.
+// Character voices for the pig & buffalo teachers, using the device's own
+// speech engine (free, works offline once voices are installed).
 //
-// 1. Pre-recorded ElevenLabs audio (public/audio/<key>.mp3, listed in
-//    public/audio/manifest.json) is used whenever a line has been generated.
-// 2. Otherwise the browser's own speech engine reads the line, Thai and
-//    English segments separately.
-// 3. Without speech support the line is "played" silently for an estimated
-//    duration so the mascots still move their mouths.
+// To sound as native as possible it ranks every installed voice and prefers
+// neural / "Natural" / "Enhanced" voices (Microsoft Edge, Google, Apple), a
+// female voice for the pig and a male voice for the buffalo, separately for
+// Thai and English. Learners can override the choice in Voice Settings.
 //
 // The engine broadcasts who is talking so mascots can animate in sync.
 import { getSpeechPreferences, isSpeechSupported } from './speech'
-import { normalizeSpeech, voiceKey } from './voiceKey'
 
-// Gentle differences only: big pitch shifts make the browser voices sound broken.
+const PREFS_KEY = 'mk-voice-prefs-v1'
+
+// Gentle pitch changes only, and only when both characters must share one voice.
 const CHARACTERS = {
-  pig: { pitch: 1.12, rate: 1 },
-  buffalo: { pitch: 0.92, rate: 0.96 },
-  narrator: { pitch: 1, rate: 1 },
+  pig: { gender: 'female', pitch: 1.1, rate: 1 },
+  buffalo: { gender: 'male', pitch: 0.9, rate: 0.97 },
+  narrator: { gender: 'female', pitch: 1, rate: 1 },
 }
+
+const FEMALE = /\b(ava|emma|jenny|aria|michelle|ana|sara|nancy|libby|sonia|maisie|natasha|samantha|karen|moira|tessa|serena|allison|susan|zira|hazel|catherine|victoria|fiona|premwadee|achara|kanya|narisa|female|woman)\b/i
+const MALE = /\b(andrew|brian|guy|davis|christopher|eric|roger|steffan|tony|jason|ryan|thomas|william|daniel|alex|aaron|arthur|oliver|fred|tom|george|david|mark|james|niwat|male|man)\b/i
 
 const listeners = new Set()
 let state = { speaker: null, lineId: null }
 let token = 0
-let currentAudio = null
-let manifestPromise = null
+let keepAlive = null
 
 export function subscribeVoice(listener) {
   listeners.add(listener)
@@ -38,31 +40,102 @@ function setState(next) {
   listeners.forEach((listener) => listener(state))
 }
 
-const audioBase = `${import.meta.env?.BASE_URL || '/'}audio/`
+/* ------------------------------------------------------------------ */
+/*  Voice ranking                                                      */
+/* ------------------------------------------------------------------ */
 
-function loadManifest() {
-  if (!manifestPromise) {
-    manifestPromise = fetch(`${audioBase}manifest.json`, { cache: 'no-cache' })
-      .then((res) => (res.ok ? res.json() : { keys: [] }))
-      .then((data) => new Set(data.keys || []))
-      .catch(() => new Set())
+function langOf(voice) {
+  return voice.lang.replace('_', '-').toLowerCase()
+}
+
+export function getVoicesFor(lang) {
+  if (!isSpeechSupported()) return []
+  return window.speechSynthesis.getVoices().filter((v) => langOf(v).startsWith(lang))
+}
+
+export function guessGender(voice) {
+  if (FEMALE.test(voice.name)) return 'female'
+  if (MALE.test(voice.name)) return 'male'
+  return null
+}
+
+/** Higher = more natural-sounding. */
+export function voiceQuality(voice) {
+  const name = voice.name
+  let score = 0
+  if (/natural|neural|online/i.test(name)) score += 100 // Microsoft Edge neural voices
+  if (/premium|enhanced|siri|\(high\)/i.test(name)) score += 85 // Apple high-quality voices
+  if (/google/i.test(name)) score += 60 // Chrome / Android network voices
+  if (/premwadee|niwat|achara|kanya|narisa/i.test(name)) score += 25 // well-known Thai voices
+  if (/ava|andrew|emma|brian|jenny|aria|guy|samantha|daniel/i.test(name)) score += 15
+  if (/compact|espeak|robot|novelty|bells|whisper|bad news|good news|zarvox|trinoids|bubbles|jester|organ|cellos/i.test(name)) score -= 200
+  const lang = langOf(voice)
+  if (lang === 'en-us' || lang === 'en-gb' || lang === 'th-th') score += 10
+  if (voice.localService === false) score += 5
+  return score
+}
+
+export function qualityLabel(voice) {
+  const q = voiceQuality(voice)
+  if (q >= 100) return 'ธรรมชาติมาก'
+  if (q >= 60) return 'ดี'
+  if (q >= 0) return 'ปกติ'
+  return 'หุ่นยนต์'
+}
+
+export function getVoicePrefs() {
+  try {
+    return JSON.parse(localStorage.getItem(PREFS_KEY) || '{}')
+  } catch {
+    return {}
   }
-  return manifestPromise
 }
 
-/** True when at least one line has natural pre-recorded audio. */
-export async function hasRecordedVoices() {
-  return (await loadManifest()).size > 0
+export function setVoicePref(key, voiceName) {
+  const prefs = getVoicePrefs()
+  if (voiceName) prefs[key] = voiceName
+  else delete prefs[key]
+  try {
+    localStorage.setItem(PREFS_KEY, JSON.stringify(prefs))
+  } catch {
+    // optional
+  }
 }
 
-function findVoice(prefix) {
-  if (!isSpeechSupported()) return null
-  const voices = window.speechSynthesis.getVoices()
-  return voices.find((voice) => voice.lang.replace('_', '-').toLowerCase().startsWith(prefix)) || null
+/** Best voice for a character in a language ('th' | 'en'), honouring user choices. */
+export function pickVoice(speaker, lang) {
+  const voices = getVoicesFor(lang)
+  if (voices.length === 0) return null
+  const prefs = getVoicePrefs()
+  const chosen = prefs[`${speaker}-${lang}`] && voices.find((v) => v.name === prefs[`${speaker}-${lang}`])
+  if (chosen) return chosen
+
+  const wantGender = (CHARACTERS[speaker] || CHARACTERS.narrator).gender
+  const ranked = [...voices].sort((a, b) => {
+    const genderBonus = (v) => (guessGender(v) === wantGender ? 30 : guessGender(v) ? -30 : 0)
+    return voiceQuality(b) + genderBonus(b) - (voiceQuality(a) + genderBonus(a))
+  })
+  return ranked[0]
 }
 
 export function hasThaiVoice() {
-  return Boolean(findVoice('th'))
+  return getVoicesFor('th').length > 0
+}
+
+export function hasNaturalVoices() {
+  return [...getVoicesFor('en'), ...getVoicesFor('th')].some((v) => voiceQuality(v) >= 60)
+}
+
+/* ------------------------------------------------------------------ */
+/*  Text handling                                                      */
+/* ------------------------------------------------------------------ */
+
+export function normalizeSpeech(text) {
+  return String(text || '')
+    .replace(/[\p{Extended_Pictographic}\u{FE0F}\u{200D}]/gu, '')
+    .replace(/_{2,}\(?\d*\)?_*/g, ' blank ')
+    .replace(/\s+/g, ' ')
+    .trim()
 }
 
 /** Split text into Thai / English runs. Emoji and symbols are dropped. */
@@ -78,55 +151,56 @@ export function splitMixedText(text) {
   return segments
 }
 
+// Chrome stops long utterances after ~15 seconds, so keep chunks short.
+function chunk(text, max = 160) {
+  if (text.length <= max) return [text]
+  const out = []
+  let current = ''
+  for (const word of text.split(' ')) {
+    const next = current ? `${current} ${word}` : word
+    // prefer to break right after sentence punctuation once a chunk is long enough
+    if (next.length > max || (current.length > max * 0.6 && /[.!?;:]$/.test(current))) {
+      if (current) out.push(current)
+      current = word
+    } else {
+      current = next
+    }
+  }
+  if (current) out.push(current)
+  return out
+}
+
 function estimateMs(text, lang) {
-  const perChar = lang === 'th' ? 75 : 62
-  return Math.max(700, text.length * perChar)
+  return Math.max(700, text.length * (lang === 'th' ? 75 : 62))
 }
 
 function wait(ms) {
   return new Promise((resolve) => window.setTimeout(resolve, ms))
 }
 
-function playRecorded(key, rate, myToken) {
-  return new Promise((resolve) => {
-    const audio = new Audio(`${audioBase}${key}.mp3`)
-    currentAudio = audio
-    audio.playbackRate = rate
-    let done = false
-    const finish = (ok) => {
-      if (done) return
-      done = true
-      if (currentAudio === audio) currentAudio = null
-      resolve(ok)
-    }
-    audio.onended = () => finish(true)
-    audio.onerror = () => finish(false)
-    if (myToken !== token) {
-      finish(true)
-      return
-    }
-    audio.play().catch(() => finish(false))
-  })
-}
+/* ------------------------------------------------------------------ */
+/*  Playback                                                           */
+/* ------------------------------------------------------------------ */
 
-function playSynth(segment, character, myToken, rate) {
+function playSynth(text, lang, speaker, myToken, rate) {
   return new Promise((resolve) => {
-    const estimate = estimateMs(segment.text, segment.lang)
-    const voice = segment.lang === 'th' ? findVoice('th') : findVoice('en')
-    const silent = !isSpeechSupported() || (segment.lang === 'th' && !voice)
-
-    if (silent) {
+    const estimate = estimateMs(text, lang)
+    const voice = pickVoice(speaker, lang)
+    if (!isSpeechSupported() || (lang === 'th' && !voice)) {
       window.setTimeout(resolve, estimate / rate)
       return
     }
 
+    const character = CHARACTERS[speaker] || CHARACTERS.narrator
     const prefs = getSpeechPreferences()
-    const utterance = new SpeechSynthesisUtterance(segment.text)
-    utterance.lang = segment.lang === 'th' ? 'th-TH' : (prefs.lang && prefs.lang !== 'auto' ? prefs.lang : 'en-US')
+    const other = pickVoice(speaker === 'pig' ? 'buffalo' : 'pig', lang)
+    const sharedVoice = speaker !== 'narrator' && voice && other && voice.name === other.name
+    const utterance = new SpeechSynthesisUtterance(text)
+    utterance.lang = voice?.lang || (lang === 'th' ? 'th-TH' : 'en-US')
     if (voice) utterance.voice = voice
-    // Thai system voices sound unnatural when pitch-shifted, so keep them neutral.
-    utterance.pitch = segment.lang === 'th' ? 1 : character.pitch
-    utterance.rate = character.rate * rate * (segment.lang === 'en' ? Number(prefs.rate || 1) : 1)
+    // natural voices sound best unmodified; only shift pitch to tell the two apart
+    utterance.pitch = sharedVoice ? character.pitch : 1
+    utterance.rate = character.rate * rate * (lang === 'en' ? Number(prefs.rate || 1) : 1)
 
     let done = false
     const finish = () => {
@@ -135,8 +209,7 @@ function playSynth(segment, character, myToken, rate) {
       window.clearTimeout(safety)
       resolve()
     }
-    // Some browsers never fire onend; never hang the lesson.
-    const safety = window.setTimeout(finish, estimate * 2.5 + 2500)
+    const safety = window.setTimeout(finish, estimate * 2.5 + 3000)
     utterance.onend = finish
     utterance.onerror = finish
     if (myToken !== token) {
@@ -149,24 +222,19 @@ function playSynth(segment, character, myToken, rate) {
 
 async function playOne(text, speaker, rate, myToken) {
   const clean = normalizeSpeech(text)
-  if (!clean) return
-  const recorded = await loadManifest()
-  if (myToken !== token) return
-  const key = voiceKey(speaker, clean)
-  if (recorded.has(key) && (await playRecorded(key, rate, myToken))) return
-
-  const character = CHARACTERS[speaker] || CHARACTERS.narrator
   for (const segment of splitMixedText(clean)) {
-    if (myToken !== token) return
-    await playSynth(segment, character, myToken, rate)
+    for (const piece of chunk(segment.text)) {
+      if (myToken !== token) return
+      await playSynth(piece, segment.lang, speaker, myToken, rate)
+    }
   }
 }
 
 export function stopVoice() {
   token += 1
-  if (currentAudio) {
-    currentAudio.pause()
-    currentAudio = null
+  if (keepAlive) {
+    window.clearInterval(keepAlive)
+    keepAlive = null
   }
   if (isSpeechSupported()) window.speechSynthesis.cancel()
   if (state.speaker) setState({ speaker: null, lineId: null })
@@ -174,8 +242,6 @@ export function stopVoice() {
 
 /**
  * Speak one line, or several lines in a row, as a character.
- * Each line is looked up separately in the recorded audio, so keep lines
- * fixed (no string building) when they should get an ElevenLabs recording.
  * Resolves true when finished normally, false when interrupted.
  */
 export async function speakLine(text, { speaker = 'narrator', lineId = null, rate = 1, gap = 250 } = {}) {
@@ -184,6 +250,13 @@ export async function speakLine(text, { speaker = 'narrator', lineId = null, rat
   const lines = (Array.isArray(text) ? text : [text]).filter((line) => normalizeSpeech(line))
   if (lines.length === 0) return true
 
+  // Chrome may pause long speech in the background; nudge it while talking.
+  if (isSpeechSupported()) {
+    keepAlive = window.setInterval(() => {
+      if (window.speechSynthesis.paused) window.speechSynthesis.resume()
+    }, 5000)
+  }
+
   setState({ speaker, lineId })
   for (let i = 0; i < lines.length; i += 1) {
     if (myToken !== token) return false
@@ -191,6 +264,10 @@ export async function speakLine(text, { speaker = 'narrator', lineId = null, rat
     if (i < lines.length - 1 && myToken === token) await wait(gap)
   }
   if (myToken !== token) return false
+  if (keepAlive) {
+    window.clearInterval(keepAlive)
+    keepAlive = null
+  }
   setState({ speaker: null, lineId: null })
   return true
 }

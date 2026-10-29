@@ -81,7 +81,7 @@ export default function MascotHelper({ page }) {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 z-[60] flex flex-col items-end gap-3 sm:bottom-6 sm:right-6">
+    <div className="fixed bottom-[calc(5rem+env(safe-area-inset-bottom))] right-3 z-[60] flex flex-col items-end gap-3 sm:right-5 xl:bottom-6 xl:right-6">
       {open && (
         <div className="glass-strong relative w-[min(23rem,calc(100vw-2rem))] origin-bottom-right animate-pop overflow-hidden rounded-[2rem] p-5" role="dialog" aria-label="หมูควายสอน">
           <div aria-hidden className={`pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full blur-3xl ${speaker === 'pig' ? 'bg-pink-500/40' : 'bg-sky-400/40'}`} />
@@ -112,7 +112,7 @@ export default function MascotHelper({ page }) {
       )}
 
       {!open && peek && (
-        <button onClick={toggle} className="glass-strong animate-pop rounded-2xl rounded-br-sm px-4 py-3 text-left text-sm text-pink-50 shadow-xl">
+        <button onClick={toggle} className="glass-strong hidden animate-pop rounded-2xl rounded-br-sm px-4 py-3 text-left text-sm text-pink-50 shadow-xl xl:block">
           สวัสดี! เราคือ <b>หมูหวาน</b> กับ <b>ควายขยัน</b> 🐷🐃<br />
           <span className="text-pink-200/80">กดที่เรา แล้วฟังเทคนิคสอบได้เลย 🔊</span>
         </button>
