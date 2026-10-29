@@ -12,11 +12,11 @@ import { useAuth } from '../context/AuthContext'
 
 const quickActions = [
   { key: 'class', icon: '🐷', title: 'ห้องเรียนหมูควาย', desc: 'ฟังสอนบทละ 1 นาที', tone: 'from-pink-500 to-orange-400', primary: true },
-  { key: 'mock-exam', icon: '📝', title: 'Mock Exam', desc: '60 ข้อ · จับเวลาจริง', tone: 'from-violet-600 to-indigo-600' },
-  { key: 'practice', icon: '🏋️', title: 'Practice', desc: 'ฝึกทีละข้อ เฉลยทันที', tone: 'from-fuchsia-600 to-pink-600' },
-  { key: 'grammar', icon: '📖', title: 'Grammar', desc: 'บทเรียน + drill', tone: 'from-amber-500 to-orange-600' },
-  { key: 'academy', icon: '🎓', title: 'Academy', desc: 'คอร์สเป็นระบบ', tone: 'from-emerald-500 to-teal-600' },
-  { key: 'listening', icon: '🎧', title: 'ฟังเสียง', desc: 'Native listening', tone: 'from-sky-500 to-blue-600' },
+  { key: 'plan', icon: '🗺️', title: 'หลักสูตร 4 สัปดาห์', desc: 'รู้ว่าวันนี้ต้องทำอะไร', tone: 'from-violet-600 to-indigo-600' },
+  { key: 'tests', icon: '📝', title: 'คลังข้อสอบ', desc: 'แนวทุน + TOEIC · IELTS', tone: 'from-fuchsia-600 to-pink-600' },
+  { key: 'words', icon: '🃏', title: 'บัตรคำศัพท์', desc: 'ทบทวนแบบเว้นระยะ', tone: 'from-sky-500 to-blue-600' },
+  { key: 'mistakes', icon: '📒', title: 'สมุดข้อผิด', desc: 'ทบทวนข้อที่เคยผิด', tone: 'from-rose-500 to-red-500' },
+  { key: 'listening', icon: '🎧', title: 'ฟังเสียง', desc: 'ฟังแล้วพูดตาม', tone: 'from-emerald-500 to-teal-600' },
 ]
 
 function getGreeting(name) {
@@ -81,7 +81,7 @@ export default function Dashboard({ onNavigate, selectedSetId, onChangeSet, onSe
             <button
               key={a.key}
               onClick={() => onNavigate(a.key)}
-              className={`group relative overflow-hidden rounded-[1.75rem] p-5 text-left transition duration-300 hover:-translate-y-1.5 ${a.primary ? 'col-span-2 md:col-span-1 ring-2 ring-white/40' : ''} bg-gradient-to-br ${a.tone} shadow-[0_20px_40px_-24px_rgba(0,0,0,0.9)]`}
+              className={`group relative overflow-hidden rounded-[1.75rem] p-5 text-left transition duration-300 hover:-translate-y-1.5 ${a.primary ? 'ring-2 ring-white/40' : ''} bg-gradient-to-br ${a.tone} shadow-[0_20px_40px_-24px_rgba(0,0,0,0.9)]`}
             >
               <span aria-hidden className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-white/20 blur-xl transition-transform duration-500 group-hover:scale-150" />
               <span className="relative mb-6 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/20 text-2xl backdrop-blur transition-transform duration-300 group-hover:-rotate-12 group-hover:scale-110">{a.icon}</span>

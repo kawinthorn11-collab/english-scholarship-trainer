@@ -16,6 +16,11 @@ import Account from './pages/Account'
 import ConfirmModal from './components/ConfirmModal'
 import Landing from './pages/Landing'
 import ClassRoom from './pages/ClassRoom'
+import StudyPlan from './pages/StudyPlan'
+import TestsHub from './pages/TestsHub'
+import IntlQuiz from './pages/IntlQuiz'
+import Mistakes from './pages/Mistakes'
+import Words from './pages/Words'
 import MascotHelper from './components/MascotHelper'
 import { AuroraBackground, BrandLogo, ScrollProgress, SiteFooter } from './components/AppChrome'
 import { useScrollReveal } from './hooks/useScrollReveal'
@@ -28,6 +33,10 @@ const pagePaths = {
   landing: '/',
   dashboard: '/dashboard',
   class: '/class',
+  plan: '/plan',
+  tests: '/tests',
+  words: '/words',
+  mistakes: '/mistakes',
   'mock-exam': '/exam',
   practice: '/practice',
   results: '/results',
@@ -87,6 +96,12 @@ function getRouteFromPathname(path) {
   if (path === '/') return { page: 'landing', lessonId: null }
   if (path === '/dashboard') return { page: 'dashboard', lessonId: null }
   if (path === '/class') return { page: 'class', lessonId: null }
+  if (path === '/plan') return { page: 'plan', lessonId: null }
+  if (path === '/tests') return { page: 'tests', lessonId: null }
+  if (path === '/words') return { page: 'words', lessonId: null }
+  if (path === '/mistakes') return { page: 'mistakes', lessonId: null }
+  const testMatch = path.match(/^\/tests\/([^/]+)$/)
+  if (testMatch) return { page: 'intl-test', lessonId: decodeURIComponent(testMatch[1]) }
   if (path === '/exam') return { page: 'mock-exam', lessonId: null }
   if (path === '/practice') return { page: 'practice', lessonId: null }
   if (path === '/results') return { page: 'results', lessonId: null }
@@ -160,6 +175,7 @@ function getAcademyUnitFromPath() {
 }
 
 function getPathForPage(page, lessonId, academyModuleId, academyUnitId) {
+  if (page === 'intl-test' && lessonId) return `/tests/${encodeURIComponent(lessonId)}`
   if (page === 'grammar-lesson' && lessonId) return `/grammar/${encodeURIComponent(lessonId)}`
   if (page === 'grammar-drill' && lessonId) return `/grammar/${encodeURIComponent(lessonId)}/drill`
   if (page === 'academy-module' && academyModuleId) return `/academy/${encodeURIComponent(academyModuleId)}`
@@ -218,7 +234,7 @@ function App() {
     } = {}
   ) => {
     setPage(target)
-    if (target === 'grammar-lesson' || target === 'grammar-drill') {
+    if (target === 'grammar-lesson' || target === 'grammar-drill' || target === 'intl-test') {
       setSelectedLessonId(lessonId)
     }
     if (target === 'academy') {
@@ -302,23 +318,27 @@ function App() {
     commitNavigation('academy-unit', { academyModuleId: moduleId, academyUnitId: unitId })
   }
 
+  const openTest = (testId) => {
+    setSelectedLessonId(testId)
+    commitNavigation('intl-test', { lessonId: testId })
+  }
+
   const startAcademyDrill = (moduleId, unitId) => {
     commitNavigation('academy-drill', { academyModuleId: moduleId, academyUnitId: unitId })
   }
 
   const mainWidth = page === 'landing'
     ? 'max-w-6xl'
-    : ['dashboard', 'class', 'grammar', 'academy', 'academy-module'].includes(page) ? 'max-w-5xl' : 'max-w-4xl'
+    : ['dashboard', 'class', 'plan', 'tests', 'words', 'grammar', 'academy', 'academy-module'].includes(page) ? 'max-w-5xl' : 'max-w-4xl'
 
   const navItems = [
     { key: 'dashboard', label: 'Home', icon: '🏠', active: page === 'dashboard' },
     { key: 'class', label: 'ห้องเรียน', icon: '🐷', active: page === 'class' },
-    { key: 'mock-exam', label: 'Exam', icon: '📝', active: page === 'mock-exam' },
-    { key: 'practice', label: 'Practice', icon: '🏋️', active: page === 'practice' },
-    { key: 'grammar', label: 'Grammar', icon: '📖', active: page.startsWith('grammar') },
-    { key: 'academy', label: 'Academy', icon: '🎓', active: page.startsWith('academy') },
-    { key: 'listening', label: 'Listening', icon: '🎧', active: page === 'listening' },
-    { key: 'results', label: 'Results', icon: '📊', active: page === 'results' },
+    { key: 'plan', label: 'หลักสูตร', icon: '🗺️', active: page === 'plan' },
+    { key: 'tests', label: 'ข้อสอบ', icon: '📝', active: ['tests', 'intl-test', 'mock-exam', 'practice', 'results', 'mistakes'].includes(page) },
+    { key: 'words', label: 'คำศัพท์', icon: '🃏', active: page === 'words' },
+    { key: 'grammar', label: 'Grammar', icon: '📖', active: page.startsWith('grammar') || page.startsWith('academy') },
+    { key: 'listening', label: 'ฟังเสียง', icon: '🎧', active: page === 'listening' },
   ]
 
   return (
@@ -392,6 +412,11 @@ function App() {
         {page === 'register' && <Register onNavigate={navigate} onNavigatePath={navigatePath} />}
             {page === 'landing' && <Landing onNavigate={navigate} />}
             {page === 'class' && <ClassRoom onNavigate={navigate} />}
+            {page === 'plan' && <StudyPlan onNavigate={navigate} onOpenTest={openTest} />}
+            {page === 'tests' && <TestsHub onNavigate={navigate} onOpenTest={openTest} />}
+            {page === 'intl-test' && <IntlQuiz key={selectedLessonId} testId={selectedLessonId} onNavigate={navigate} />}
+            {page === 'mistakes' && <Mistakes onNavigate={navigate} />}
+            {page === 'words' && <Words />}
             {page === 'dashboard' && <Dashboard onNavigate={navigate} selectedSetId={selectedSetId} onChangeSet={changeSet} onSelectLesson={selectLesson} />}
             {page === 'mock-exam' && (
               <MockExam

@@ -3,6 +3,7 @@ import { loadAcademyUnit } from '../data/grammarAcademy/index.js'
 import SpeakButton from '../components/SpeakButton'
 import Mascot from '../components/Mascot'
 import { speakLine } from '../utils/voice'
+import { feedbackLines } from '../data/duoLessons'
 import { Confetti, ProgressRing } from '../components/ui'
 import { recordAcademyDrillAttempt } from '../utils/academyProgress'
 import { recordGrammarDrillCompleted, recordQuestionAnswered } from '../utils/localStats'
@@ -56,7 +57,7 @@ export default function GrammarAcademyDrill({ moduleId, unitId, onNavigate, onSe
     recordQuestionAnswered(currentQuestion.skillTag, choice === currentQuestion.correctAnswer)
     sendLearningEvent('question_answered', { skillTag: currentQuestion.skillTag })
     setAnswers((current) => ({ ...current, [currentIndex]: choice }))
-    speakLine(choice === currentQuestion.correctAnswer ? 'ถูกต้อง! เก่งมาก' : 'ยังไม่ใช่นะ ฟังคำอธิบายกัน ' + (currentQuestion.explanationThai || ''), { speaker: choice === currentQuestion.correctAnswer ? 'pig' : 'buffalo', lineId: 'drill-feedback' })
+    speakLine(choice === currentQuestion.correctAnswer ? feedbackLines.correct : feedbackLines.wrong, { speaker: choice === currentQuestion.correctAnswer ? 'pig' : 'buffalo', lineId: 'drill-feedback' })
   }
 
   const finishDrill = () => {

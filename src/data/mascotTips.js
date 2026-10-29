@@ -39,7 +39,7 @@ const generalTips = [
   ...grammarTips.slice(0, 2),
 ]
 
-const tipsByArea = {
+export const tipsByArea = {
   landing: generalTips,
   dashboard: [...generalTips, ...grammarTips.slice(2, 4)],
   exam: examTips,
@@ -52,6 +52,7 @@ const tipsByArea = {
 
 export function getTipArea(page = '') {
   if (page === 'mock-exam') return 'exam'
+  if (['tests', 'intl-test', 'mistakes'].includes(page)) return 'practice'
   if (page.startsWith('grammar') || page.startsWith('academy')) return 'grammar'
   if (page === 'login' || page === 'register' || page === 'account') return 'auth'
   return tipsByArea[page] ? page : 'dashboard'

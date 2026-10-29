@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react'
+import { shuffleExam } from '../utils/shuffle'
 import { getExamSet } from '../data/examSets/index.js'
 import QuestionCard from '../components/QuestionCard'
 import ExplanationPanel from '../components/ExplanationPanel'
@@ -8,11 +9,14 @@ import { recordQuestionAnswered } from '../utils/localStats'
 import { sendLearningEvent } from '../utils/globalStats'
 import Mascot from '../components/Mascot'
 import { speakLine } from '../utils/voice'
+import { feedbackLines } from '../data/duoLessons'
+import { addMistake, mistakeFromExamQuestion } from '../utils/learningStore'
 import { PageHeader } from '../components/ui'
 
 export default function Practice({ selectedSetId, onNavigate }) {
   const examSet = getExamSet(selectedSetId)
-  const allQuestions = examSet?.questions || []
+  // Shuffle answer choices once per visit (the source data favours choice 2).
+  const [allQuestions] = useState(() => shuffleExam(examSet?.questions || []))
 
   const [section, setSection] = useState(null)
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -60,7 +64,10 @@ export default function Practice({ selectedSetId, onNavigate }) {
     sendLearningEvent('question_answered', { skillTag: currentQuestion.skillTag })
     setSelectedAnswer(choice)
     setShowResult(true)
-    speakLine(isCorrect ? 'ถูกต้อง! เก่งมาก' : `ยังไม่ใช่นะ คำตอบที่ถูกคือ ${currentQuestion.correctAnswer}`, { speaker: isCorrect ? 'pig' : 'buffalo', lineId: 'practice-feedback' })
+    if (!isCorrect) {
+      addMistake(mistakeFromExamQuestion({ ...currentQuestion, passage: currentPassage }, `Practice · ${examSet?.title || ''}`))
+    }
+    speakLine(isCorrect ? feedbackLines.correct : feedbackLines.wrong, { speaker: isCorrect ? 'pig' : 'buffalo', lineId: 'practice-feedback' })
   }
 
   const handleNext = () => { navigateTo(Math.min(filteredQuestions.length - 1, currentIndex + 1)) }

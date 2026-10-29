@@ -11,13 +11,12 @@ export function shuffle(array) {
 }
 
 /**
- * Shuffle questions and their choices.
- * Returns new question objects with shuffled choices — correctAnswer still works
- * because it stores the text value, not an index.
+ * Shuffle each question's choices but keep question order, so cloze passages
+ * still read blank (1), (2), (3)... in sequence.
+ * correctAnswer still works because it stores the text value, not an index.
  */
 export function shuffleExam(questions) {
-  const shuffledQuestions = shuffle(questions)
-  return shuffledQuestions.map((q) => ({
+  return questions.map((q) => ({
     ...q,
     choices: shuffle(q.choices),
   }))

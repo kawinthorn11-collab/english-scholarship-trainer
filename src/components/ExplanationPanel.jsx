@@ -29,7 +29,7 @@ export default function ExplanationPanel({ question }) {
           <h4 className="font-display text-lg font-semibold text-white">ครูควายอธิบาย</h4>
           <p className="text-xs text-purple-300/80">Detailed Explanation</p>
         </div>
-        <ListenButton text={`${question.explanationThai || ''} ${question.examTrick || ''}`} speaker="buffalo" label="ฟังคำอธิบาย" />
+        <ListenButton text={[question.explanationThai, question.examTrick]} speaker="buffalo" label="ฟังคำอธิบาย" />
       </div>
 
       <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-emerald-400/30 bg-emerald-500/10 px-4 py-3 font-semibold text-emerald-200">

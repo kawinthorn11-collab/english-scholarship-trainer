@@ -93,8 +93,9 @@ export function SiteFooter({ onNavigate }) {
         </div>
         <div className="flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm text-purple-300/80">
           <button onClick={() => onNavigate('dashboard')} className="transition hover:text-white">Dashboard</button>
-          <button onClick={() => onNavigate('mock-exam')} className="transition hover:text-white">Mock Exam</button>
-          <button onClick={() => onNavigate('academy')} className="transition hover:text-white">Academy</button>
+          <button onClick={() => onNavigate('plan')} className="transition hover:text-white">หลักสูตร</button>
+          <button onClick={() => onNavigate('tests')} className="transition hover:text-white">คลังข้อสอบ</button>
+          <button onClick={() => onNavigate('academy')} className="transition hover:text-white">Grammar Academy</button>
           <button onClick={() => onNavigate('listening')} className="transition hover:text-white">Listening</button>
         </div>
       </div>

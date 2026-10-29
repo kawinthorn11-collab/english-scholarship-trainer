@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import Mascot, { SpeechBubble } from '../components/Mascot'
 import { Confetti } from '../components/ui'
-import { duoCast, duoLessons, encourageLines, getDuoLesson, praiseLines } from '../data/duoLessons'
+import { duoCast, duoLessons, encourageLines, feedbackLines, getDuoLesson, praiseLines } from '../data/duoLessons'
 import { useVoice } from '../hooks/useVoice'
 import { hasThaiVoice, speakLine, stopVoice } from '../utils/voice'
 import { isSpeechSupported } from '../utils/speech'
@@ -56,15 +56,14 @@ export default function ClassRoom({ onNavigate }) {
     const run = async () => {
       if (step < total) {
         const current = lesson.lines[step]
-        const text = current.example ? `${current.text} ${current.example}` : current.text
-        const finished = await speakLine(text, { speaker: current.who, lineId: `${lesson.id}-${step}`, rate })
+        const finished = await speakLine([current.text, current.example], { speaker: current.who, lineId: `${lesson.id}-${step}`, rate })
         if (!finished || cancelled) return
         await new Promise((resolve) => window.setTimeout(resolve, 380))
         if (!cancelled) setStep((value) => value + 1)
       } else {
         setPlaying(false)
         recordListeningActivity({ seconds: total * 4 })
-        await speakLine(`ถึงเวลาทดสอบ! ${lesson.quiz.question}`, { speaker: 'pig', lineId: `${lesson.id}-quiz`, rate })
+        await speakLine([feedbackLines.quizIntro, lesson.quiz.question], { speaker: 'pig', lineId: `${lesson.id}-quiz`, rate })
       }
     }
     run()
@@ -109,8 +108,7 @@ export default function ClassRoom({ onNavigate }) {
   const replayLine = () => {
     if (!line) return
     setPlaying(false)
-    const text = line.example ? `${line.text} ${line.example}` : line.text
-    speakLine(text, { speaker: line.who, lineId: `${lesson.id}-${step}`, rate })
+    speakLine([line.text, line.example], { speaker: line.who, lineId: `${lesson.id}-${step}`, rate })
   }
 
   const answer = (choice) => {
@@ -122,7 +120,7 @@ export default function ClassRoom({ onNavigate }) {
       setDone(next)
       saveDone(next)
     }
-    speakLine(`${correct ? pick(praiseLines) : pick(encourageLines)} ${lesson.quiz.explain}`, {
+    speakLine([correct ? pick(praiseLines) : pick(encourageLines), lesson.quiz.explain], {
       speaker: correct ? 'pig' : 'buffalo',
       lineId: `${lesson.id}-answer`,
       rate,

@@ -36,13 +36,14 @@ export function PokeMascot({ character = 'pig', mood = 'happy', size = 160, clas
 /** Pill button that reads a text aloud with a character voice. */
 export function ListenButton({ text, speaker = 'pig', label = 'ฟังเสียง', className = '' }) {
   const voice = useVoice()
-  const id = `listen-${speaker}-${text.slice(0, 24)}`
+  const lines = Array.isArray(text) ? text : [text]
+  const id = `listen-${speaker}-${lines.join(' ').slice(0, 32)}`
   const active = voice.lineId === id
 
   return (
     <button
       type="button"
-      onClick={() => (active ? stopVoice() : speakLine(text, { speaker, lineId: id }))}
+      onClick={() => (active ? stopVoice() : speakLine(lines, { speaker, lineId: id }))}
       className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition hover:-translate-y-0.5 ${active ? 'border-white bg-white text-pink-600 shadow-lg' : 'border-white/25 bg-white/10 text-white hover:bg-white/20'} ${className}`}
     >
       <span className={active ? 'animate-pulse' : ''}>{active ? '⏹' : '🔊'}</span>

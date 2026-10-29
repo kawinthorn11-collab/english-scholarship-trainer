@@ -236,5 +236,20 @@ export const pokeLines = {
   ],
 }
 
+// Fixed feedback phrases (fixed so they can be pre-recorded).
+export const feedbackLines = {
+  correct: 'ถูกต้อง! เก่งมาก',
+  wrong: 'ยังไม่ใช่นะ ดูเฉลยด้านล่างกัน',
+  quizIntro: 'ถึงเวลาทดสอบ!',
+}
+
+// Intro skit on the landing page.
+export const introSkit = [
+  { who: 'pig', text: 'Hello! หมูหวานเอง วันนี้มาติวสอบชิงทุนกัน!' },
+  { who: 'buffalo', text: 'ส่วนนี่ควายขยัน ใครว่าควายโง่ ตัวนี้สอบได้ทุนนะ!' },
+  { who: 'pig', text: 'ไม่ต้องอ่านเยอะ กดฟังเราสอนได้เลย' },
+  { who: 'buffalo', text: 'Let us study together. Ready?' },
+]
+
 export const praiseLines = ['เก่งมาก! ถูกต้องเลย', 'สุดยอด! Excellent!', 'เยี่ยมไปเลย! Great job!']
 export const encourageLines = ['ไม่เป็นไรนะ ฟังเฉลยแล้วจำไว้', 'เกือบแล้ว! ลองดูเฉลยกัน', 'ผิดวันนี้ ดีกว่าผิดในห้องสอบ!']
