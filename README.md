@@ -20,7 +20,7 @@
 | 📝 **ข้อสอบจำลอง** | 3 ชุด ชุดละ 60 ข้อ 60 นาที (Grammar 30 + Reading 30) จับเวลาเหมือนห้องสอบจริง สลับข้อทุกครั้ง |
 | 💡 **เฉลยละเอียด** | ทุกข้ออธิบายทั้งไทยและอังกฤษ บอกว่าทำไมช้อยส์อื่นผิด เทคนิคทำข้อสอบ และจุดที่คนไทยพลาดบ่อย |
 | 🎯 **วิเคราะห์จุดอ่อน** | หลังสอบบอกเลยว่าควรซ่อมทักษะไหน แล้วพาไปบทเรียนที่ตรงจุด |
-| 📖 **Grammar Lessons + Academy** | บทเรียน grammar 20 หัวข้อ และคอร์สเป็นระบบเกือบ 200 ยูนิต พร้อม drill |
+| 📖 **Grammar Lessons + Academy** | บทเรียน grammar 20 หัวข้อ และคอร์ส Academy 9 โมดูล 28 บท เขียนเองทั้งหมด พร้อมแบบฝึก 168 ข้อ |
 | 🔊 **ฝึกฟังเสียง Native** | ฟังประโยคข้อสอบแบบช้า/ปกติ ฝึก shadowing ได้ |
 
 ข้อสอบและบทความทั้งหมดเป็นเนื้อหาที่แต่งขึ้นใหม่ (original) ไม่ได้คัดลอกจากข้อสอบจริง
@@ -90,7 +90,7 @@ scripts/            สคริปต์ตรวจความถูกต้
 - **Pig & Buffalo Classroom** – one-minute spoken dialogue lessons (Thai + English text-to-speech) with a quiz at the end
 - **Mock exams** – three original 60-question, 60-minute sets with bilingual, choice-by-choice explanations
 - **Weak-skill analysis** that links straight to the matching grammar lesson
-- **Grammar lessons, a ~200-unit Grammar Academy, and native-speed listening practice**
+- **Grammar lessons, a hand-written 28-unit Grammar Academy, and native-speed listening practice**
 - Works without an account; progress is stored on the device
 
 All questions and passages are original. Contributions of questions, explanations, lessons, and code are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
