@@ -1,0 +1,83 @@
+// Academic and exam-frequent vocabulary for the flashcards.
+// Grouped into decks so learners can study a small set at a time.
+
+export const wordDecks = [
+  {
+    id: 'academic-1',
+    title: 'Academic Core 1',
+    titleThai: 'ศัพท์วิชาการพื้นฐาน',
+    words: [
+      { word: 'substantial', type: 'adj.', thai: 'มาก, เป็นชิ้นเป็นอัน', example: 'The scholarship covers a substantial part of the tuition.' },
+      { word: 'mitigate', type: 'v.', thai: 'บรรเทา, ลดความรุนแรง', example: 'Trees help mitigate the effects of air pollution.' },
+      { word: 'feasible', type: 'adj.', thai: 'ทำได้จริง', example: 'The plan is feasible if we start early.' },
+      { word: 'consequently', type: 'adv.', thai: 'ดังนั้น, ผลที่ตามมาคือ', example: 'He studied every day; consequently, his score improved.' },
+      { word: 'comprehensive', type: 'adj.', thai: 'ครอบคลุม, ละเอียดทุกด้าน', example: 'The course offers a comprehensive review of grammar.' },
+      { word: 'inevitable', type: 'adj.', thai: 'หลีกเลี่ยงไม่ได้', example: 'Mistakes are inevitable when you learn something new.' },
+      { word: 'enhance', type: 'v.', thai: 'เพิ่มพูน, ทำให้ดีขึ้น', example: 'Reading every day can enhance your vocabulary.' },
+      { word: 'ambiguous', type: 'adj.', thai: 'กำกวม', example: 'The question was ambiguous, so many students got it wrong.' },
+      { word: 'allocate', type: 'v.', thai: 'จัดสรร', example: 'The school allocated more money to the library.' },
+      { word: 'consistent', type: 'adj.', thai: 'สม่ำเสมอ, สอดคล้องกัน', example: 'Consistent practice is better than studying all night.' },
+      { word: 'significant', type: 'adj.', thai: 'สำคัญ, มีนัยสำคัญ', example: 'There was a significant increase in the number of applicants.' },
+      { word: 'evaluate', type: 'v.', thai: 'ประเมิน', example: 'Teachers evaluate each essay carefully.' },
+    ],
+  },
+  {
+    id: 'academic-2',
+    title: 'Academic Core 2',
+    titleThai: 'ศัพท์วิชาการขั้นถัดไป',
+    words: [
+      { word: 'sustain', type: 'v.', thai: 'รักษาไว้, ทำให้คงอยู่', example: 'It is hard to sustain motivation without clear goals.' },
+      { word: 'subsequent', type: 'adj.', thai: 'ที่ตามมาภายหลัง', example: 'Subsequent studies confirmed the results.' },
+      { word: 'deteriorate', type: 'v.', thai: 'แย่ลง, เสื่อมลง', example: 'Without practice, language skills can deteriorate.' },
+      { word: 'prominent', type: 'adj.', thai: 'โดดเด่น, มีชื่อเสียง', example: 'She became a prominent researcher in her field.' },
+      { word: 'advocate', type: 'v. / n.', thai: 'สนับสนุน, ผู้สนับสนุน', example: 'Many experts advocate learning a second language early.' },
+      { word: 'vulnerable', type: 'adj.', thai: 'เปราะบาง, ได้รับอันตรายง่าย', example: 'Young children are vulnerable to air pollution.' },
+      { word: 'insufficient', type: 'adj.', thai: 'ไม่เพียงพอ', example: 'One week is insufficient time to prepare for the exam.' },
+      { word: 'emphasize', type: 'v.', thai: 'เน้นย้ำ', example: 'The teacher emphasized the importance of reading.' },
+      { word: 'prohibit', type: 'v.', thai: 'ห้าม', example: 'Phones are prohibited in the exam room.' },
+      { word: 'acquire', type: 'v.', thai: 'ได้มา, เรียนรู้', example: 'Children acquire languages quickly.' },
+      { word: 'diverse', type: 'adj.', thai: 'หลากหลาย', example: 'The university has a diverse group of students.' },
+      { word: 'objective', type: 'n. / adj.', thai: 'เป้าหมาย; ที่เป็นกลาง', example: 'The main objective of the course is to improve writing skills.' },
+    ],
+  },
+  {
+    id: 'exam-signals',
+    title: 'Signal Words',
+    titleThai: 'คำเชื่อมที่ช่วยอ่านข้อสอบ Reading',
+    words: [
+      { word: 'however', type: 'adv.', thai: 'อย่างไรก็ตาม (ขัดแย้ง)', example: 'The plan was expensive. However, it worked very well.' },
+      { word: 'moreover', type: 'adv.', thai: 'ยิ่งไปกว่านั้น (เพิ่มเติม)', example: 'The course is free. Moreover, it is available online.' },
+      { word: 'nevertheless', type: 'adv.', thai: 'ถึงกระนั้น', example: 'It was raining; nevertheless, the match continued.' },
+      { word: 'whereas', type: 'conj.', thai: 'ในขณะที่ (เปรียบเทียบ)', example: 'My brother likes math, whereas I prefer languages.' },
+      { word: 'therefore', type: 'adv.', thai: 'ดังนั้น', example: 'She practised daily; therefore, she passed the test.' },
+      { word: 'despite', type: 'prep.', thai: 'แม้ว่า (ตามด้วยคำนาม)', example: 'Despite the heavy rain, the students arrived on time.' },
+      { word: 'in other words', type: 'phr.', thai: 'กล่าวอีกนัยหนึ่ง', example: 'He was exhausted; in other words, he needed a rest.' },
+      { word: 'for instance', type: 'phr.', thai: 'ตัวอย่างเช่น', example: 'Some fruits, for instance mangoes, grow well in Thailand.' },
+      { word: 'unless', type: 'conj.', thai: 'ถ้าไม่, เว้นแต่', example: 'You will not improve unless you practise.' },
+      { word: 'whereby', type: 'adv.', thai: 'ซึ่งโดยวิธีนั้น', example: 'They created a system whereby students can borrow laptops.' },
+      { word: 'thereby', type: 'adv.', thai: 'ด้วยเหตุนั้น, โดยวิธีนั้น', example: 'She saved money, thereby avoiding a loan.' },
+      { word: 'albeit', type: 'conj.', thai: 'แม้ว่า (ภาษาทางการ)', example: 'The result was positive, albeit smaller than expected.' },
+    ],
+  },
+  {
+    id: 'scholarship',
+    title: 'Scholarship & Campus',
+    titleThai: 'ศัพท์เรื่องทุนและชีวิตมหาวิทยาลัย',
+    words: [
+      { word: 'tuition', type: 'n.', thai: 'ค่าเล่าเรียน', example: 'The scholarship pays the full tuition for four years.' },
+      { word: 'eligible', type: 'adj.', thai: 'มีคุณสมบัติ', example: 'Students with a GPA above 3.0 are eligible to apply.' },
+      { word: 'deadline', type: 'n.', thai: 'กำหนดส่ง', example: 'The application deadline is March 15.' },
+      { word: 'transcript', type: 'n.', thai: 'ใบแสดงผลการเรียน', example: 'Please attach your high school transcript.' },
+      { word: 'recommendation', type: 'n.', thai: 'การแนะนำ, จดหมายรับรอง', example: 'Two letters of recommendation are required.' },
+      { word: 'interview', type: 'n. / v.', thai: 'การสัมภาษณ์', example: 'Shortlisted students will be invited to an interview.' },
+      { word: 'enroll', type: 'v.', thai: 'ลงทะเบียนเรียน', example: 'She enrolled in an international program.' },
+      { word: 'faculty', type: 'n.', thai: 'คณะ; คณาจารย์', example: 'He studies in the Faculty of Engineering.' },
+      { word: 'curriculum', type: 'n.', thai: 'หลักสูตร', example: 'The curriculum includes courses taught in English.' },
+      { word: 'renew', type: 'v.', thai: 'ต่ออายุ', example: 'You must keep good grades to renew the scholarship.' },
+      { word: 'financial aid', type: 'n.', thai: 'ความช่วยเหลือทางการเงิน', example: 'Many students apply for financial aid.' },
+      { word: 'diligent', type: 'adj.', thai: 'ขยัน, อุตสาหะ', example: 'Diligent students review their mistakes carefully.' },
+    ],
+  },
+]
+
+export const allWords = wordDecks.flatMap((deck) => deck.words.map((w) => ({ ...w, deck: deck.id })))

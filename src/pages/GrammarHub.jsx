@@ -123,6 +123,18 @@ export default function GrammarHub({ onNavigate, onSelectLesson }) {
       )}
 
       <button
+        onClick={() => onNavigate('academy')}
+        className="glass glow-card flex w-full items-center gap-4 rounded-[1.75rem] p-5 text-left transition hover:-translate-y-1"
+      >
+        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-violet-500/30 text-2xl">🎓</span>
+        <span className="min-w-0 flex-1">
+          <span className="block font-semibold text-white">Grammar Academy</span>
+          <span className="block text-sm text-purple-100/75">คลังหัวข้อ grammar แยกตามโมดูล พร้อม drill สั้น ๆ</span>
+        </span>
+        <span className="text-purple-200">→</span>
+      </button>
+
+      <button
         onClick={() => onNavigate('dashboard')}
         className="text-sm font-semibold text-purple-300 transition hover:text-white"
       >

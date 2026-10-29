@@ -11,6 +11,7 @@ import { getPassageForQuestion, getPassageTitle } from '../utils/passage'
 import SpeakButton from '../components/SpeakButton'
 import { recordExamCompleted, recordExamStarted, recordQuestionAnswered } from '../utils/localStats'
 import { sendLearningEvent } from '../utils/globalStats'
+import { addMistake, mistakeFromExamQuestion } from '../utils/learningStore'
 import Mascot from '../components/Mascot'
 import ResultSummary from '../components/ResultSummary'
 
@@ -88,6 +89,11 @@ export default function MockExam({ selectedSetId, onNavigate, onExamStart, onExa
     }
 
     saveAttempt(attempt)
+    examQuestions.forEach((q) => {
+      if (answers[q.id] && answers[q.id] !== q.correctAnswer) {
+        addMistake(mistakeFromExamQuestion({ ...q, passage: getPassageForQuestion(q, allQuestions) }, `Mock Exam · ${examSet?.title || ''}`))
+      }
+    })
     recordExamCompleted(result.percentage)
     result.details.forEach((detail) => {
       recordQuestionAnswered(detail.skillTag, detail.isCorrect)

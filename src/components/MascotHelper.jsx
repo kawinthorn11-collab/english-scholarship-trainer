@@ -59,7 +59,7 @@ export default function MascotHelper({ page }) {
 
   const sayTip = (i = index) => {
     const t = tips[i % tips.length]
-    speakLine(`${t.title}. ${t.text} ${t.example || ''}`, { speaker: i % 2 === 0 ? 'pig' : 'buffalo', lineId: `tip-${area}-${i}` })
+    speakLine([t.title, t.text, t.example], { speaker: i % 2 === 0 ? 'pig' : 'buffalo', lineId: `tip-${area}-${i}` })
   }
 
   const nextTip = () => {

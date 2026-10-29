@@ -4,6 +4,7 @@ import { examSets } from '../data/examSets/index.js'
 import SpeakButton from '../components/SpeakButton'
 import Mascot from '../components/Mascot'
 import { speakLine } from '../utils/voice'
+import { feedbackLines } from '../data/duoLessons'
 import { Confetti, ProgressRing } from '../components/ui'
 import { recordQuizAttempt } from '../utils/storage'
 import { shuffle } from '../utils/shuffle'
@@ -81,7 +82,7 @@ export default function GrammarDrill({ lessonId, onNavigate, onSelectLesson }) {
     setSelectedAnswer(choice)
     setShowResult(true)
     recordQuestionAnswered(currentQuestion.skillTag, isCorrect)
-    speakLine(isCorrect ? 'ถูกต้อง! เก่งมาก' : 'ยังไม่ใช่นะ ฟังคำอธิบายกัน ' + (currentQuestion.explanationThai || ''), { speaker: isCorrect ? 'pig' : 'buffalo', lineId: 'drill-feedback' })
+    speakLine(isCorrect ? feedbackLines.correct : feedbackLines.wrong, { speaker: isCorrect ? 'pig' : 'buffalo', lineId: 'drill-feedback' })
     sendLearningEvent('question_answered', { skillTag: currentQuestion.skillTag })
     if (isCorrect) {
       setScore((s) => s + 1)

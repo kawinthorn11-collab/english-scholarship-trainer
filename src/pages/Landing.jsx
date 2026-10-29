@@ -8,6 +8,7 @@ import { examSetList } from '../data/examSets/index.js'
 import { getAvailableLessons } from '../data/grammarLessons/index.js'
 import { academyStats } from '../data/grammarAcademy/index.js'
 import { landingQuiz } from '../data/mascotTips'
+import { introSkit } from '../data/duoLessons'
 
 const features = [
   { icon: '📝', title: 'Mock Exam เสมือนจริง', desc: '60 ข้อ 60 นาที จับเวลาเหมือนห้องสอบ พร้อมสลับข้อทุกครั้ง', tone: 'from-violet-500/40 to-indigo-500/10', span: 'lg:col-span-2' },
@@ -231,12 +232,7 @@ function MiniQuiz() {
   )
 }
 
-const skit = [
-  { who: 'pig', text: 'Hello! หมูหวานเอง วันนี้มาติวสอบชิงทุนกัน!' },
-  { who: 'buffalo', text: 'ส่วนนี่ควายขยัน ใครว่าควายโง่ ตัวนี้สอบได้ทุนนะ!' },
-  { who: 'pig', text: 'ไม่ต้องอ่านเยอะ กดฟังเราสอนได้เลย' },
-  { who: 'buffalo', text: 'Let us study together. Ready?' },
-]
+const skit = introSkit
 
 function HeroSkit() {
   const [i, setI] = useState(0)
