@@ -1,39 +1,18 @@
-import { academyOutline, academyTotalUnits } from './academyOutline.js'
+// Grammar Academy: a hand-written course of 9 modules.
+// Each module file defines its units in full (see defineUnit.js).
+import sentenceCore from './m1Sentence.js'
+import tenses from './m2Tenses.js'
+import passive from './m3Passive.js'
+import verbPatterns from './m4VerbPatterns.js'
+import modalsConditionals from './m5Modals.js'
+import nounsDeterminers from './m6Nouns.js'
+import modifiers from './m7Modifiers.js'
+import clauses from './m8Clauses.js'
+import examStrategy from './m9Strategy.js'
 
-const moduleLoaders = {
-  'sentence-text': () => import('./sentenceText.js'),
-  'verb-forms': () => import('./verbForms.js'),
-  'infinitive-gerund-participle': () => import('./infinitiveGerundParticiple.js'),
-  'noun-phrase': () => import('./nounPhrase.js'),
-  'adjectives-adverbs-prepositions': () => import('./adjectivesAdverbsPrepositions.js'),
-  'main-sub-clauses': () => import('./mainClausesSubClauses.js'),
-  'reported-relative': () => import('./reportedSpeechRelativeClauses.js'),
-  'forms-endings-exam-polish': () => import('./formsEndingsExamPolish.js'),
-  'exam-grammar-strategy': () => import('./examGrammarStrategy.js'),
-}
+const modules = [sentenceCore, tenses, passive, verbPatterns, modalsConditionals, nounsDeterminers, modifiers, clauses, examStrategy]
 
-function slugify(text) {
-  return text
-    .toLowerCase()
-    .replace(/['’]/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-}
-
-function makeUnitMeta(module, title, index) {
-  const unitNumber = String(index + 1).padStart(2, '0')
-  return {
-    id: `${unitNumber}-${slugify(title)}`,
-    title,
-    titleThai: `บทเรียนตัวแม่: ${title}`,
-    moduleId: module.id,
-    moduleTitle: module.title,
-    difficulty: module.difficulty,
-    examImportance: module.examImportance,
-  }
-}
-
-export const academyModuleCatalog = academyOutline.map((module, index) => ({
+export const academyModuleCatalog = modules.map((module, index) => ({
   id: module.id,
   order: index + 1,
   title: module.title,
@@ -44,15 +23,27 @@ export const academyModuleCatalog = academyOutline.map((module, index) => ({
   examImportance: module.examImportance,
   memoryTheme: module.memoryTheme,
   unitCount: module.units.length,
-  practiceCount: module.units.length * 5,
-  units: module.units.map((title, unitIndex) => makeUnitMeta(module, title, unitIndex)),
+  practiceCount: module.practiceCount,
+  units: module.units.map((unit) => ({
+    id: unit.id,
+    title: unit.title,
+    titleThai: unit.titleThai,
+    moduleId: module.id,
+    moduleTitle: module.title,
+    difficulty: module.difficulty,
+    examImportance: module.examImportance,
+  })),
 }))
 
+const totalUnits = modules.reduce((n, module) => n + module.units.length, 0)
+
 export const academyStats = {
-  moduleCount: academyModuleCatalog.length,
-  totalUnits: academyTotalUnits,
-  totalPracticeQuestions: academyTotalUnits * 5,
+  moduleCount: modules.length,
+  totalUnits,
+  totalPracticeQuestions: modules.reduce((n, module) => n + module.practiceCount, 0),
 }
+
+const flatUnits = academyModuleCatalog.flatMap((module) => module.units)
 
 export function getAcademyModuleMeta(moduleId) {
   return academyModuleCatalog.find((module) => module.id === moduleId) || null
@@ -63,38 +54,29 @@ export function getAcademyUnitMeta(moduleId, unitId) {
 }
 
 export function getFirstAcademyUnitMeta() {
-  return academyModuleCatalog[0]?.units[0] || null
+  return flatUnits[0] || null
 }
 
 export function getNextAcademyUnitMeta(moduleId, unitId) {
-  const flatUnits = academyModuleCatalog.flatMap((module) => module.units)
   const index = flatUnits.findIndex((unit) => unit.moduleId === moduleId && unit.id === unitId)
   return index >= 0 ? flatUnits[index + 1] || null : null
 }
 
 export function getPreviousAcademyUnitMeta(moduleId, unitId) {
-  const flatUnits = academyModuleCatalog.flatMap((module) => module.units)
   const index = flatUnits.findIndex((unit) => unit.moduleId === moduleId && unit.id === unitId)
   return index > 0 ? flatUnits[index - 1] : null
 }
 
 export async function loadAcademyModule(moduleId) {
-  const loader = moduleLoaders[moduleId]
-  if (!loader) return null
-  const module = await loader()
-  return module.default
+  return modules.find((module) => module.id === moduleId) || null
 }
 
 export async function loadAcademyUnit(moduleId, unitId) {
   const module = await loadAcademyModule(moduleId)
   if (!module) return { module: null, unit: null }
-  return {
-    module,
-    unit: module.units.find((unit) => unit.id === unitId) || null,
-  }
+  return { module, unit: module.units.find((unit) => unit.id === unitId) || null }
 }
 
 export async function loadAllAcademyModules() {
-  const modules = await Promise.all(academyModuleCatalog.map((module) => loadAcademyModule(module.id)))
-  return modules.filter(Boolean)
+  return modules
 }

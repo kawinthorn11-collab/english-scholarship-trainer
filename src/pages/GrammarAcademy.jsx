@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { academyModuleCatalog, academyStats, getFirstAcademyUnitMeta } from '../data/grammarAcademy/index.js'
+import { academyModuleCatalog, academyStats, getAcademyUnitMeta, getFirstAcademyUnitMeta } from '../data/grammarAcademy/index.js'
 import { getAcademyProgressStats, getAcademyUnitKey } from '../utils/academyProgress'
 import { searchAcademyCatalog } from '../utils/academySearch'
 import { PageHeader, SectionTitle, StatTile } from '../components/ui'
@@ -17,7 +17,8 @@ export default function GrammarAcademy({ moduleId, onNavigate, onSelectAcademyMo
 
   const startAcademy = () => {
     const last = progress.lastStudiedUnit
-    if (last) {
+    // progress saved before the course rewrite may point to units that no longer exist
+    if (last && getAcademyUnitMeta(last.moduleId, last.unitId)) {
       onSelectAcademyUnit(last.moduleId, last.unitId)
       return
     }
@@ -85,13 +86,13 @@ export default function GrammarAcademy({ moduleId, onNavigate, onSelectAcademyMo
       <PageHeader
         eyebrow="Grammar Academy"
         icon="🎓"
-        title="คอร์สแกรมมาร์ตัวแม่"
+        title="คอร์ส Grammar เป็นระบบ"
         subtitle="เรียน grammar แบบไทยเข้าใจง่าย แต่คิดเป็นระบบเหมือนคนทำข้อสอบเก่ง: อ่านโครงสร้างก่อน แปลทีหลัง ตัดช้อยส์ด้วยเหตุผล แล้วเก็บกับดักให้หมด"
         mood="teach"
       >
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
           <button onClick={startAcademy} className="btn btn-primary shrink-0">
-            {progress.lastStudiedUnit ? 'เรียนต่อจากเดิม →' : 'เริ่มเรียนแบบตัวแม่ →'}
+            {progress.lastStudiedUnit && getAcademyUnitMeta(progress.lastStudiedUnit.moduleId, progress.lastStudiedUnit.unitId) ? 'เรียนต่อจากเดิม →' : 'เริ่มบทแรก →'}
           </button>
           <div className="min-w-0 flex-1">
             <div className="flex justify-between text-xs text-purple-200/80">

@@ -1,0 +1,100 @@
+import { defineModule, defineUnit } from './defineUnit.js'
+
+export default defineModule(
+  {
+    id: 'passive',
+    title: 'Passive and Causative',
+    titleThai: 'ประโยคถูกกระทำ และ have something done',
+    descriptionThai: 'รู้ว่าประธานเป็นผู้ทำหรือผู้ถูกทำ แล้วผัน be + V3 ให้ตรงกับ tense',
+    estimatedStudyTime: '1.5-2 ชั่วโมง',
+    difficulty: 'Core',
+    examImportance: 'สูง',
+    memoryTheme: 'ประธานทำเองไม่ได้ = passive',
+  },
+  [
+    defineUnit({
+      id: 'passive-voice',
+      title: 'Passive voice in every tense',
+      titleThai: 'Passive ทุก tense',
+      tags: ['passive_voice'],
+      intro: 'ถามตัวเองว่า “ประธานลงมือทำเองได้ไหม” ถ้าไม่ได้ ใช้ passive',
+      explain: 'Passive voice = be + V3 ใช้เมื่อประธานเป็นผู้ถูกกระทำ เช่น The bridge was built in 1990. (สะพานไม่ได้สร้างตัวเอง)\n\nส่วนที่เปลี่ยนตาม tense คือ be เท่านั้น: is/are built (present), was/were built (past), has/have been built (present perfect), is being built (continuous), will be built (future), can/must/should be built (modal)\n\nสัญญาณว่าควรเป็น passive: ประธานเป็นสิ่งของ, มี by + ผู้กระทำ, หรือกริยาที่ต้องมีกรรมแต่หลังช่องว่างไม่มีกรรม\n\nกริยาที่ไม่มีกรรม (intransitive) เช่น happen, arrive, die, occur, disappear เป็น passive ไม่ได้: The accident happened (ไม่ใช่ was happened)',
+      english: 'The passive is be + past participle; only "be" changes for tense. Use it when the subject receives the action, often with "by". Intransitive verbs such as happen, occur and arrive have no passive form.',
+      patterns: [
+        ['Present', 'am/is/are + V3', 'ทั่วไป / ประจำ', 'English is spoken worldwide.'],
+        ['Past', 'was/were + V3', 'เกิดในอดีต', 'The results were announced yesterday.'],
+        ['Present perfect', 'has/have been + V3', 'ถึงปัจจุบัน', 'The forms have already been sent.'],
+        ['Modal', 'can/must/should/will + be + V3', 'กริยาช่วย + be + V3', 'Phones must be switched off.'],
+      ],
+      correct: [
+        ['The new library is being built now.', 'ห้องสมุดใหม่กำลังถูกสร้าง', 'continuous passive'],
+        ['The winners will be announced on Monday.', 'ผู้ชนะจะถูกประกาศวันจันทร์', 'future passive'],
+        ['This essay was written by a first-year student.', 'เรียงความนี้เขียนโดยนักศึกษาปีหนึ่ง', 'by + ผู้กระทำ'],
+        ['The accident happened at midnight.', 'อุบัติเหตุเกิดตอนเที่ยงคืน', 'happen ไม่มี passive'],
+      ],
+      wrong: [
+        ['The letter was wrote last week.', 'The letter was written last week.', 'passive ต้องใช้ V3'],
+        ['The problem was occurred suddenly.', 'The problem occurred suddenly.', 'occur ไม่มี passive'],
+        ['Rice grows in Thailand by farmers.', 'Rice is grown in Thailand by farmers.', 'ข้าวไม่ได้ปลูกตัวเอง'],
+      ],
+      traps: [
+        ['ประธานเป็นคนแต่ถูกกระทำ', 'The students were given ... ประธานเป็นคนก็ passive ได้', 'ดูว่าประธานทำ หรือถูกทำ'],
+        ['V2 กับ V3 หน้าตาต่างกัน', 'was took / was wrote คือกับดัก', 'จำ V3 ของกริยาผิดปกติ'],
+      ],
+      tips: ['สะพานไม่ได้สร้างตัวเอง จดหมายไม่ได้เขียนตัวเอง → passive', 'happen, occur, arrive, die = ทำกับใครไม่ได้ จึงถูกกระทำไม่ได้'],
+      mistakes: [['ลืม be', 'The project completed yesterday → The project was completed yesterday'], ['ใส่ passive ให้ happen', 'happen / occur ใช้ active เสมอ']],
+      steps: ['ประธานลงมือทำเองได้ไหม', 'ไม่ได้ → passive (be + V3)', 'หา tense จากคำบอกเวลา', 'ผัน be ให้ตรงกับประธานและ tense'],
+      drills: [
+        ['The museum ___ in 1932.', ['built', 'was built', 'has built', 'is building'], 'was built', 'พิพิธภัณฑ์สร้างตัวเองไม่ได้ จึงเป็น passive และ in 1932 เป็นอดีต จึงใช้ was built'],
+        ['All applications must ___ before Friday.', ['submit', 'be submitted', 'submitted', 'been submitted'], 'be submitted', 'ใบสมัครไม่ได้ส่งตัวเอง หลัง modal must ใช้ be + V3'],
+        ['The road ___ at the moment, so take another route.', ['repairs', 'is repairing', 'is being repaired', 'was repaired'], 'is being repaired', 'at the moment บอกว่ากำลังเกิดขึ้น และถนนถูกซ่อม จึงใช้ present continuous passive is being repaired'],
+        ['A strange thing ___ during the exam.', ['was happened', 'happened', 'has been happened', 'was happening by'], 'happened', 'happen เป็นกริยาที่ไม่มีกรรม ทำเป็น passive ไม่ได้ จึงใช้ active happened'],
+        ['Three new teachers ___ since January.', ['have hired', 'were hired', 'have been hired', 'hired'], 'have been hired', 'ครูถูกจ้าง (passive) และ since January ต่อเนื่องถึงตอนนี้ จึงใช้ have been hired'],
+        ['English ___ as a second language in many countries.', ['teaches', 'is taught', 'taught', 'is teaching'], 'is taught', 'ภาษาอังกฤษถูกสอน เป็นความจริงทั่วไป จึงใช้ present simple passive is taught'],
+      ],
+      checklist: ['ผัน be + V3 ได้ทุก tense', 'ใช้ modal + be + V3 ได้', 'รู้กริยาที่ไม่มี passive', 'จำ V3 กริยาผิดปกติที่พบบ่อย'],
+    }),
+    defineUnit({
+      id: 'causative',
+      title: 'Causative: have / get something done',
+      titleThai: 'ให้คนอื่นทำให้',
+      tags: ['passive_voice'],
+      intro: 'I had my hair cut = ฉันไปให้ช่างตัดผมให้ (ไม่ได้ตัดเอง)',
+      explain: 'Causative ใช้บอกว่าเราจัดการให้คนอื่นทำบางอย่างให้ รูปที่ออกสอบบ่อยมีสองแบบ\n\n1) have / get + สิ่งของ + V3: I had my car repaired. (ให้ช่างซ่อมรถ) เน้นสิ่งของที่ถูกทำ\n2) have + คน + V1 / get + คน + to V1: I had the mechanic repair my car. / I got my brother to help me. เน้นคนที่ทำให้\n\nเพิ่มเติม: make + คน + V1 (บังคับ), let + คน + V1 (อนุญาต), help + คน + (to) V1 ข้อสอบมักวาง to ผิดตำแหน่งหลัง make และ let',
+      english: 'Use have/get + object + past participle when someone else does a job for you. With a person as object: have someone do, get someone to do. Make and let take a bare infinitive (make him wait, let her go).',
+      patterns: [
+        ['ให้ทำ (เน้นของ)', 'have / get + something + V3', 'สิ่งของถูกทำ', 'She got her phone fixed.'],
+        ['ให้คนทำ', 'have + person + V1', 'ไม่มี to', 'I had the technician check it.'],
+        ['ชวน / โน้มน้าวให้ทำ', 'get + person + to V1', 'มี to', 'He got his friend to drive him.'],
+        ['บังคับ / อนุญาต', 'make / let + person + V1', 'ไม่มี to', 'The teacher let us leave early.'],
+      ],
+      correct: [
+        ['We are having our house painted.', 'เรากำลังให้คนทาสีบ้าน', 'have + ของ + V3'],
+        ['My mother made me tidy my room.', 'แม่บังคับให้ฉันจัดห้อง', 'make + คน + V1'],
+        ['I need to get my passport renewed.', 'ฉันต้องไปต่ออายุพาสปอร์ต', 'get + ของ + V3'],
+        ['Could you help me carry these boxes?', 'ช่วยฉันยกกล่องหน่อยได้ไหม', 'help + คน + V1'],
+      ],
+      wrong: [
+        ['I had my hair cutting.', 'I had my hair cut.', 'สิ่งของถูกทำ ใช้ V3'],
+        ['She made him to apologise.', 'She made him apologise.', 'make + คน + V1 ไม่มี to'],
+        ['I got my brother help me.', 'I got my brother to help me.', 'get + คน + to V1'],
+      ],
+      traps: [
+        ['have + ของ + V3 vs have + คน + V1', 'ช้อยส์สลับรูป V1 กับ V3', 'ดูกรรม: เป็นคน → V1 / เป็นของ → V3'],
+        ['make และ let ไม่มี to', 'ช้อยส์ to V1 ดูสุภาพกว่า', 'make/let + V1 เสมอ (passive: be made to V1)'],
+      ],
+      tips: ['ของทำเองไม่ได้ → V3 / คนทำได้ → V1', 'make กับ let ไม่ชอบ to'],
+      mistakes: [['I cut my hair (ทั้งที่ไปร้าน)', 'ไปร้านตัด ใช้ I had my hair cut'], ['make him to go', 'make him go']],
+      steps: ['ดูกรรมหลัง have/get/make/let', 'ของ → V3', 'คน + have/make/let → V1', 'คน + get → to V1'],
+      drills: [
+        ['I need to have my laptop ___ before the exam.', ['repair', 'repaired', 'repairing', 'to repair'], 'repaired', 'กรรมคือ my laptop ซึ่งเป็นสิ่งของที่ถูกซ่อม จึงใช้ have + ของ + V3 repaired'],
+        ['The coach made the players ___ ten more laps.', ['run', 'to run', 'running', 'ran'], 'run', 'make + คน + V1 (ไม่มี to) จึงใช้ run'],
+        ['She finally got her parents ___ her study abroad.', ['let', 'to let', 'letting', 'lets'], 'to let', 'get + คน + to V1 ใช้เมื่อโน้มน้าวให้คนทำ จึงใช้ to let'],
+        ['We had the documents ___ into English.', ['translate', 'translated', 'translating', 'to translate'], 'translated', 'เอกสารถูกแปล (สิ่งของ) จึงใช้ have + ของ + V3 translated'],
+        ['My teacher let me ___ the exam again.', ['to take', 'take', 'taking', 'took'], 'take', 'let + คน + V1 ไม่มี to จึงใช้ take'],
+        ['I’ll have my assistant ___ you the file.', ['send', 'sent', 'to send', 'sending'], 'send', 'have + คน + V1 (assistant เป็นคนทำ) จึงใช้ send'],
+      ],
+      checklist: ['ใช้ have/get + ของ + V3 ได้', 'แยก have + คน + V1 กับ get + คน + to V1', 'ใช้ make / let โดยไม่มี to', 'รู้ความหมาย “ให้คนอื่นทำให้”'],
+    }),
+  ]
+)

@@ -77,7 +77,7 @@ export default function GrammarAcademyUnit({ moduleId, unitId, onNavigate, onSel
         </div>
       </nav>
 
-      <Section id="explain" title="ตัวแม่อธิบายให้">
+      <Section id="explain" title="ครูควายอธิบาย">
         <p className="whitespace-pre-line text-[15px] leading-relaxed text-purple-100/85">{unit.deepExplanationThai}</p>
         <p className="mt-4 rounded-3xl border border-white/[0.08] bg-white/[0.04] p-5 text-[15px] leading-relaxed text-purple-100/85">{unit.explanationEnglish}</p>
       </Section>

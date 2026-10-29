@@ -26,7 +26,7 @@
 **What it is**
 MooKwai is a free, open-source web app that helps Thai high-school students prepare for the English entrance and scholarship exams of international universities such as Assumption University (ABAC). Tuition at these programs is far beyond what many families can pay, so a scholarship is often the only way in, and good exam-prep material is usually locked behind paid tutoring.
 
-The app offers three original 60-question timed mock exams with bilingual, choice-by-choice explanations, weak-skill analysis that links to the matching grammar lesson, a grammar course of about 200 units, and one-minute spoken lessons in which two cartoon teachers (a pig and a water buffalo) explain grammar out loud in Thai and English. It needs no account and works on low-end phones. All questions are original.
+The app offers three original 60-question timed mock exams with bilingual, choice-by-choice explanations, weak-skill analysis that links to the matching grammar lesson, a hand-written 28-unit grammar course with 168 practice questions, and one-minute spoken lessons in which two cartoon teachers (a pig and a water buffalo) explain grammar out loud in Thai and English. It needs no account and works on low-end phones. All questions are original.
 
 **Who uses it**
 [Describe real usage honestly: e.g. "Shared with students at <school> and <tutoring group>; about N learners used it in the last 30 days according to <source>." If you have no numbers yet, say it launched recently and who it was shared with.]
@@ -46,5 +46,5 @@ I maintain the project alone, as a student. Claude would let me review contribut
 ## ฉบับภาษาไทย (สำหรับตรวจความหมาย)
 
 MooKwai เป็นเว็บโอเพนซอร์สฟรีที่ช่วยนักเรียนไทยเตรียมสอบภาษาอังกฤษเพื่อชิงทุนมหาวิทยาลัยนานาชาติ เช่น ABAC ซึ่งค่าเทอมสูงมากจนทุนเป็นทางเดียวของหลายครอบครัว
-เว็บมีข้อสอบจำลองที่แต่งขึ้นเอง 3 ชุด เฉลยละเอียดสองภาษา วิเคราะห์จุดอ่อน คอร์ส grammar ประมาณ 200 ยูนิต และบทเรียนแบบฟังที่ครูหมูกับครูควายพูดสอน ไม่ต้องสมัครสมาชิก ใช้บนมือถือได้
+เว็บมีข้อสอบจำลองที่แต่งขึ้นเอง 3 ชุด เฉลยละเอียดสองภาษา วิเคราะห์จุดอ่อน คอร์ส grammar 28 บทที่เขียนเองทั้งหมด และบทเรียนแบบฟังที่ครูหมูกับครูควายพูดสอน ไม่ต้องสมัครสมาชิก ใช้บนมือถือได้
 ผมดูแลโปรเจกต์คนเดียว Claude จะช่วยให้ตรวจงานที่ครูส่งมาได้เร็วขึ้น ตรวจความถูกต้องของข้อสอบใหม่ และเพิ่มบทเรียนได้มากขึ้น

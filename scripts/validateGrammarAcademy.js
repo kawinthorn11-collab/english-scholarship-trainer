@@ -37,6 +37,8 @@ function isBlank(value) {
   return value === undefined || value === null || value === ''
 }
 
+const seenQuestions = new Set()
+
 function validateModule(module, seenModuleIds, seenUnitIds) {
   const errors = []
 
@@ -64,39 +66,43 @@ function validateModule(module, seenModuleIds, seenUnitIds) {
     if (String(unit.deepExplanationThai || '').length < 220) {
       errors.push(`Unit ${unitKey} deepExplanationThai is too short`)
     }
-    if (!Array.isArray(unit.grammarPatterns) || unit.grammarPatterns.length < 4) {
-      errors.push(`Unit ${unitKey} needs at least 4 grammarPatterns`)
+    if (!Array.isArray(unit.grammarPatterns) || unit.grammarPatterns.length < 3) {
+      errors.push(`Unit ${unitKey} needs at least 3 grammarPatterns`)
     }
-    if (!Array.isArray(unit.correctExamples) || unit.correctExamples.length < 6) {
-      errors.push(`Unit ${unitKey} needs at least 6 correctExamples`)
+    if (!Array.isArray(unit.correctExamples) || unit.correctExamples.length < 4) {
+      errors.push(`Unit ${unitKey} needs at least 4 correctExamples`)
     }
-    if (!Array.isArray(unit.wrongExamples) || unit.wrongExamples.length < 4) {
-      errors.push(`Unit ${unitKey} needs at least 4 wrongExamples`)
+    if (!Array.isArray(unit.wrongExamples) || unit.wrongExamples.length < 3) {
+      errors.push(`Unit ${unitKey} needs at least 3 wrongExamples`)
     }
-    if (!Array.isArray(unit.examTraps) || unit.examTraps.length < 4) {
-      errors.push(`Unit ${unitKey} needs at least 4 examTraps`)
+    if (!Array.isArray(unit.examTraps) || unit.examTraps.length < 2) {
+      errors.push(`Unit ${unitKey} needs at least 2 examTraps`)
     }
-    if (!Array.isArray(unit.funnyMemoryTips) || unit.funnyMemoryTips.length < 3) {
-      errors.push(`Unit ${unitKey} needs at least 3 funnyMemoryTips`)
+    if (!Array.isArray(unit.funnyMemoryTips) || unit.funnyMemoryTips.length < 2) {
+      errors.push(`Unit ${unitKey} needs at least 2 funnyMemoryTips`)
     }
-    if (!Array.isArray(unit.miniDrills) || unit.miniDrills.length < 5) {
-      errors.push(`Unit ${unitKey} needs at least 5 miniDrills`)
+    if (!Array.isArray(unit.miniDrills) || unit.miniDrills.length < 6) {
+      errors.push(`Unit ${unitKey} needs at least 6 miniDrills`)
     } else {
       unit.miniDrills.forEach((question, index) => {
         const prefix = `Unit ${unitKey} miniDrills[${index}]`
         if (!question.question) errors.push(`${prefix} missing question`)
+        if (seenQuestions.has(question.question)) errors.push(`${prefix} duplicates another drill question`)
+        seenQuestions.add(question.question)
         if (!Array.isArray(question.choices) || question.choices.length !== 4) {
           errors.push(`${prefix} must have exactly 4 choices`)
+        } else if (new Set(question.choices).size !== 4) {
+          errors.push(`${prefix} has duplicate choices`)
         } else if (!question.choices.includes(question.correctAnswer)) {
           errors.push(`${prefix} correctAnswer is not in choices`)
         }
-        if (!question.explanationThai || question.explanationThai.length < 80) {
+        if (!question.explanationThai || question.explanationThai.length < 25) {
           errors.push(`${prefix} explanationThai is missing or too short`)
         }
       })
     }
-    if (!Array.isArray(unit.masteryChecklist) || unit.masteryChecklist.length < 6) {
-      errors.push(`Unit ${unitKey} needs at least 6 masteryChecklist items`)
+    if (!Array.isArray(unit.masteryChecklist) || unit.masteryChecklist.length < 4) {
+      errors.push(`Unit ${unitKey} needs at least 4 masteryChecklist items`)
     }
   }
 
@@ -123,11 +129,11 @@ if (modules.length !== academyModuleCatalog.length) {
 if (totalUnits !== academyStats.totalUnits) {
   errors.push(`Expected ${academyStats.totalUnits} units, found ${totalUnits}`)
 }
-if (totalUnits < 198) {
-  errors.push(`Expected at least 198 units, found ${totalUnits}`)
+if (totalUnits < 25) {
+  errors.push(`Expected at least 25 hand-written units, found ${totalUnits}`)
 }
-if (totalQuestions < 990) {
-  errors.push(`Expected at least 990 mini drill questions, found ${totalQuestions}`)
+if (totalQuestions < 150) {
+  errors.push(`Expected at least 150 drill questions, found ${totalQuestions}`)
 }
 
 if (errors.length > 0) {

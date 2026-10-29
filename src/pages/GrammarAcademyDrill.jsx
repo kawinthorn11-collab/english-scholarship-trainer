@@ -8,6 +8,7 @@ import { Confetti, ProgressRing } from '../components/ui'
 import { recordAcademyDrillAttempt } from '../utils/academyProgress'
 import { recordGrammarDrillCompleted, recordQuestionAnswered } from '../utils/localStats'
 import { sendLearningEvent } from '../utils/globalStats'
+import { shuffleExam } from '../utils/shuffle'
 
 export default function GrammarAcademyDrill({ moduleId, unitId, onNavigate, onSelectAcademyUnit }) {
   const [state, setState] = useState({ loading: true, module: null, unit: null })
@@ -19,7 +20,8 @@ export default function GrammarAcademyDrill({ moduleId, unitId, onNavigate, onSe
     let active = true
     loadAcademyUnit(moduleId, unitId).then(({ module, unit }) => {
       if (!active) return
-      setState({ loading: false, module, unit })
+      // shuffle answer choices so their position never gives the answer away
+      setState({ loading: false, module, unit, questions: unit ? shuffleExam(unit.miniDrills) : [] })
       setCurrentIndex(0)
       setAnswers({})
       setFinished(false)
@@ -38,14 +40,14 @@ export default function GrammarAcademyDrill({ moduleId, unitId, onNavigate, onSe
       <div className="space-y-4 text-center">
         <p className="text-purple-300">Academy drill not found.</p>
         <button onClick={() => onNavigate('academy')} className="btn btn-primary">
-          Back to Academy
+          กลับหน้า Academy
         </button>
       </div>
     )
   }
 
   const { module, unit } = state
-  const questions = unit.miniDrills
+  const questions = state.questions
   const currentQuestion = questions[currentIndex]
   const selectedAnswer = answers[currentIndex]
   const showResult = Boolean(selectedAnswer)
@@ -95,16 +97,16 @@ export default function GrammarAcademyDrill({ moduleId, unitId, onNavigate, onSe
           </ProgressRing>
           <Mascot character="pig" mood={percentage >= 80 ? 'cheer' : percentage >= 50 ? 'happy' : 'oops'} size={140} />
         </div>
-        <p className="text-xs text-purple-300/80">บันทึกคะแนนลง localStorage แล้ว ใช้งานแบบ Guest ได้เต็มระบบ</p>
+        <p className="text-xs text-purple-300/80">บันทึกคะแนนไว้ในเครื่องนี้แล้ว</p>
         <div className="flex flex-col gap-3 sm:flex-row">
           <button onClick={() => { setCurrentIndex(0); setAnswers({}); setFinished(false) }} className="flex-1 btn btn-primary">
-            Retry Drill
+            🔁 ทำอีกครั้ง
           </button>
           <button onClick={() => onSelectAcademyUnit(moduleId, unitId)} className="flex-1 btn btn-ghost">
-            Review Unit
+            ทบทวนบทเรียน
           </button>
           <button onClick={() => onNavigate('academy')} className="flex-1 btn btn-ghost">
-            Back to Academy
+            กลับหน้า Academy
           </button>
         </div>
       </div>
@@ -164,7 +166,7 @@ export default function GrammarAcademyDrill({ moduleId, unitId, onNavigate, onSe
           <Mascot character={selectedAnswer === currentQuestion.correctAnswer ? 'pig' : 'buffalo'} mood={selectedAnswer === currentQuestion.correctAnswer ? 'cheer' : 'oops'} size={80} className="shrink-0 self-center" />
           <div>
             <p className={`font-display text-lg font-semibold ${selectedAnswer === currentQuestion.correctAnswer ? 'text-emerald-200' : 'text-rose-200'}`}>
-              {selectedAnswer === currentQuestion.correctAnswer ? 'ถูกต้อง ตัวแม่ยิ้มแล้ว 🎉' : `คำตอบที่ถูกคือ ${currentQuestion.correctAnswer}`}
+              {selectedAnswer === currentQuestion.correctAnswer ? 'ถูกต้อง! เก่งมาก 🎉' : `คำตอบที่ถูกคือ ${currentQuestion.correctAnswer}`}
             </p>
             <p className="mt-1 text-[15px] leading-relaxed text-purple-100/85">{currentQuestion.explanationThai}</p>
           </div>

@@ -1,0 +1,100 @@
+import { defineModule, defineUnit } from './defineUnit.js'
+
+export default defineModule(
+  {
+    id: 'exam-strategy',
+    title: 'Word Forms and Cloze Strategy',
+    titleThai: 'รูปคำ และกลยุทธ์ทำข้อสอบเติมคำ',
+    descriptionThai: 'ดูคำลงท้ายแล้วรู้ชนิดคำ และขั้นตอนทำข้อสอบ cloze ที่ใช้ได้กับทุกข้อ',
+    estimatedStudyTime: '1.5-2 ชั่วโมง',
+    difficulty: 'Exam',
+    examImportance: 'สูงมาก',
+    memoryTheme: 'ตำแหน่งบอกชนิดคำ ชนิดคำบอกคำลงท้าย',
+  },
+  [
+    defineUnit({
+      id: 'word-formation',
+      title: 'Word formation: suffixes and prefixes',
+      titleThai: 'คำลงท้ายบอกชนิดคำ',
+      tags: ['word_form'],
+      intro: 'ช้อยส์ 4 ตัวรากเดียวกัน ให้ดูตำแหน่งแล้วเลือกจากคำลงท้าย',
+      explain: 'ข้อสอบ word form ให้คำรากเดียวกันสี่รูป เช่น decide / decision / decisive / decisively สิ่งที่ต้องทำคือดูว่าช่องว่างต้องการคำชนิดไหน\n\nคำนาม: -tion, -sion, -ment, -ness, -ity, -ance/-ence, -er/-or (คน), -ism, -ship\nคำคุณศัพท์: -ful, -less, -ous, -ive, -al, -able/-ible, -ic, -y\nกริยา: -ize/-ise, -en, -ify, -ate\nกริยาวิเศษณ์: adjective + -ly\n\nตำแหน่งที่บอกชนิดคำ: หลัง a/an/the/my/this → คำนาม (หรือ adj + นาม) · หลัง be/seem/become → adjective · หน้าคำนาม → adjective · ขยายกริยาหรือ adjective → adverb · หลัง modal/to → กริยา\n\nคำนำหน้าเปลี่ยนความหมาย: un-, in-, im-, il-, ir-, dis- (ตรงข้าม), mis- (ผิด), re- (อีกครั้ง), over- (เกินไป)',
+      english: 'Identify the part of speech the gap needs from its position (after a determiner → noun; after be/seem → adjective; before a noun → adjective; modifying a verb or adjective → adverb; after a modal or to → verb), then pick the form with the matching suffix. Prefixes such as un-, in-, dis-, mis- and re- change meaning.',
+      patterns: [
+        ['ตำแหน่งคำนาม', 'a / the / my / adjective + ___', 'มักลงท้าย -tion -ment -ness -ity', 'Her decision surprised everyone.'],
+        ['ตำแหน่งคุณศัพท์', 'be / seem + ___ / ___ + noun', 'มักลงท้าย -ful -ous -ive -able', 'The results were impressive.'],
+        ['ตำแหน่งกริยาวิเศษณ์', 'verb + ___ / ___ + adjective', 'ลงท้าย -ly', 'She answered confidently.'],
+        ['ตำแหน่งกริยา', 'modal / to + ___', 'ลงท้าย -ize -en -ify', 'We need to simplify the process.'],
+      ],
+      correct: [
+        ['The government plans to strengthen the economy.', 'รัฐบาลวางแผนทำให้เศรษฐกิจแข็งแรง', 'to + กริยา -en'],
+        ['There has been a significant improvement in her grades.', 'เกรดของเธอดีขึ้นอย่างมีนัยสำคัญ', 'a + adj + noun'],
+        ['The instructions were completely unclear.', 'คำสั่งไม่ชัดเจนเลย', 'adv + adj'],
+        ['His explanation was easy to understand.', 'คำอธิบายของเขาเข้าใจง่าย', 'his + คำนาม'],
+      ],
+      wrong: [
+        ['She made a wise decide.', 'She made a wise decision.', 'a + adj + คำนาม'],
+        ['The test was very difficulty.', 'The test was very difficult.', 'หลัง be + very → adjective'],
+        ['He speaks English fluent.', 'He speaks English fluently.', 'ขยายกริยา → adverb'],
+      ],
+      traps: [
+        ['คำนามบุคคล vs คำนามสิ่งของ', 'employer / employee / employment ต่างกัน', 'ดูว่าประโยคต้องการคน หรือสิ่ง'],
+        ['-ly ที่เป็นคุณศัพท์', 'friendly, costly, lively เป็น adjective', 'ใช้หลัง be ได้ ขยายกริยาไม่ได้'],
+      ],
+      tips: ['ตำแหน่งก่อน ความหมายทีหลัง', 'จำคำลงท้ายเป็นชุด: -tion/-ment/-ness = นาม, -ful/-ous/-ive = คุณศัพท์'],
+      mistakes: [['เลือกจากความหมายไทยอย่างเดียว', 'ดูตำแหน่งในประโยคก่อน'], ['สับสน economic / economical', 'economic = เกี่ยวกับเศรษฐกิจ, economical = ประหยัด']],
+      steps: ['ดูคำหน้าและหลังช่องว่าง', 'ระบุชนิดคำที่ต้องการ', 'เลือกช้อยส์ที่คำลงท้ายตรงชนิด', 'เช็กความหมายและเอกพจน์/พหูพจน์'],
+      drills: [
+        ['The ___ of the new bridge took three years.', ['construct', 'constructive', 'construction', 'constructively'], 'construction', 'หลัง The และก่อน of ต้องเป็นคำนาม คำลงท้าย -tion คือ construction'],
+        ['Her speech was very ___.', ['inspire', 'inspiration', 'inspiring', 'inspiringly'], 'inspiring', 'หลัง was very ต้องเป็นคุณศัพท์ และสุนทรพจน์เป็นสิ่งที่สร้างแรงบันดาลใจ จึงใช้ inspiring'],
+        ['The company needs to ___ its costs.', ['minimum', 'minimal', 'minimize', 'minimally'], 'minimize', 'หลัง to (needs to) ต้องเป็นกริยา คำลงท้าย -ize คือ minimize'],
+        ['The students worked ___ to finish the project on time.', ['efficient', 'efficiency', 'efficiently', 'efficiencies'], 'efficiently', 'ขยายกริยา worked ต้องเป็นกริยาวิเศษณ์ efficiently'],
+        ['It is ___ to drive without a licence.', ['legal', 'illegal', 'legally', 'illegality'], 'illegal', 'หลัง is ต้องเป็นคุณศัพท์ และความหมายคือขับรถโดยไม่มีใบขับขี่ผิดกฎหมาย จึงใช้ illegal'],
+        ['The ___ of the two reports showed clear differences.', ['compare', 'comparable', 'comparison', 'comparatively'], 'comparison', 'หลัง The และก่อน of ต้องเป็นคำนาม comparison'],
+      ],
+      checklist: ['ระบุชนิดคำจากตำแหน่ง', 'จำคำลงท้ายของแต่ละชนิด', 'ใช้ prefix ปฏิเสธถูก', 'แยกคำนามบุคคลกับสิ่งของ'],
+    }),
+    defineUnit({
+      id: 'cloze-strategy',
+      title: 'Cloze test strategy',
+      titleThai: 'ขั้นตอนทำข้อสอบเติมคำในบทความ',
+      tags: ['tense', 'conjunction', 'word_form'],
+      intro: 'อ่านภาพรวมก่อน ตอบทีละช่องด้วย 4 คำถาม แล้วอ่านทวนทั้งย่อหน้า',
+      explain: 'ข้อสอบ cloze คือบทความที่มีช่องว่างหลายช่อง วิธีที่ได้ผลที่สุดคือ:\n\n1) อ่านบทความทั้งหมดเร็ว ๆ 30 วินาทีก่อนตอบ เพื่อรู้เรื่องราว เวลา (อดีต/ปัจจุบัน) และน้ำเสียง\n2) ทุกช่อง ถามตัวเอง 4 ข้อ: ต้องการชนิดคำอะไร (นาม กริยา คุณศัพท์ คำเชื่อม) · ถ้าเป็นกริยา tense อะไรและ active/passive · ประธานเอกพจน์หรือพหูพจน์ · ความหมายเชื่อมกับประโยคก่อนหน้าแบบไหน (ขัดแย้ง เหตุผล เพิ่มเติม)\n3) ตัดช้อยส์ที่ผิด grammar ก่อน แล้วค่อยใช้ความหมายตัดสินตัวที่เหลือ\n4) คำเชื่อมระหว่างประโยค (however, therefore, moreover) ต้องอ่านประโยคก่อนหน้าและหลังเสมอ\n5) อ่านทวนทั้งย่อหน้าหลังเติมครบ ถ้าสะดุดตรงไหน กลับไปตรวจตรงนั้น\n\nเวลา: ช่องละไม่เกิน 40 วินาที ข้อที่ติดให้ข้ามแล้วกลับมาทีหลัง',
+      english: 'Skim the whole passage first for topic, time frame and tone. For each gap ask: which part of speech, which tense/voice, singular or plural, and what logical link to the previous sentence. Eliminate grammatically impossible choices, then decide by meaning, and reread the completed paragraph.',
+      patterns: [
+        ['ชนิดคำ', 'ดูคำหน้า/หลังช่องว่าง', 'ด่านแรกเสมอ', 'the ___ of → noun'],
+        ['เวลา', 'คำบอกเวลาในบทความ', 'บทความเล่าอดีตมักใช้ past', 'Last year, the school ___ (opened) a new lab.'],
+        ['ความสัมพันธ์', 'contrast / cause / addition', 'เลือกคำเชื่อมให้ตรง', 'The plan was cheap; ___, it failed. → however'],
+        ['ตัดตัวเลือก', 'grammar ก่อน ความหมายทีหลัง', 'ลดความเสี่ยงเดา', 'เหลือ 2 ตัว → ลองแทนทั้งประโยค'],
+      ],
+      correct: [
+        ['The museum was closed for repairs; therefore, we visited the park instead.', 'พิพิธภัณฑ์ปิดซ่อม เราจึงไปสวนแทน', 'therefore = ผลลัพธ์'],
+        ['Although the course was difficult, most students enjoyed it.', 'แม้คอร์สจะยาก นักเรียนส่วนใหญ่ก็ชอบ', 'contrast'],
+        ['The project, which started in 2020, has helped hundreds of families.', 'โครงการที่เริ่มในปี 2020 ช่วยครอบครัวหลายร้อยครอบครัว', 'มีกริยาแท้ has helped'],
+        ['In addition to free tuition, the scholarship provides a monthly allowance.', 'นอกจากค่าเรียนฟรี ทุนยังให้ค่าใช้จ่ายรายเดือน', 'in addition to + noun'],
+      ],
+      wrong: [
+        ['The plan was expensive; therefore, many people supported it.', 'The plan was expensive; however, many people supported it.', 'ความหมายขัดแย้งต้องใช้ however'],
+        ['The volunteers which cleaned the beach was tired.', 'The volunteers who cleaned the beach were tired.', 'คนใช้ who และ volunteers พหูพจน์'],
+        ['Last month the school open a new library.', 'Last month the school opened a new library.', 'last month → past simple'],
+      ],
+      traps: [
+        ['คำเชื่อมที่ความหมายกลับด้าน', 'therefore กับ however สลับกันหลอก', 'อ่านประโยคก่อนหน้าทุกครั้ง'],
+        ['tense ของบทความ', 'ช่องว่างบางช่องไม่มีคำบอกเวลาในประโยค', 'ใช้เวลาจากภาพรวมของบทความ'],
+      ],
+      tips: ['อ่านทั้งเรื่องก่อนเติม เหมือนดูตัวอย่างหนังก่อนดูจริง', 'grammar ตัดสินแพ้ชนะก่อน ความหมายเป็นกรรมการตัดสินรอบสุดท้าย'],
+      mistakes: [['ตอบทีละช่องโดยไม่อ่านภาพรวม', 'skim ทั้งบทความก่อน 30 วินาที'], ['เลือกคำเชื่อมจากประโยคเดียว', 'ดูประโยคก่อนและหลังเสมอ']],
+      steps: ['Skim ทั้งบทความ', 'แต่ละช่อง: ชนิดคำ → tense → จำนวน → ความหมาย', 'ตัดช้อยส์ผิด grammar', 'อ่านทวนย่อหน้า'],
+      drills: [
+        ['The school library was old and small. ___, the students raised money to build a new one.', ['However', 'Therefore', 'Although', 'Despite'], 'Therefore', 'ห้องสมุดเก่าและเล็กเป็นเหตุ นักเรียนจึงระดมทุน (ผลลัพธ์) จึงใช้ Therefore'],
+        ['The new library ___ in 2023 and now has over 10,000 books.', ['opens', 'opened', 'has opened', 'was opening'], 'opened', 'in 2023 เป็นเวลาในอดีตที่ระบุชัด จึงใช้ past simple opened'],
+        ['Many students now spend their free time there, ___ they used to go home early.', ['because', 'whereas', 'so', 'unless'], 'whereas', 'เปรียบเทียบสิ่งที่ทำตอนนี้กับเมื่อก่อนซึ่งต่างกัน จึงใช้ whereas'],
+        ['The librarian, ___ has worked at the school for twenty years, is very proud.', ['which', 'who', 'whose', 'what'], 'who', 'librarian เป็นคนและช่องว่างเป็นประธานของ has worked จึงใช้ who'],
+        ['The project shows that small actions can make a big ___.', ['differ', 'different', 'difference', 'differently'], 'difference', 'หลัง a big ต้องเป็นคำนาม make a difference เป็นสำนวนตายตัว'],
+        ['When you are unsure about a gap, what should you do first?', ['Guess the longest choice', 'Identify the part of speech the gap needs', 'Translate every word into Thai', 'Skip the whole passage'], 'Identify the part of speech the gap needs', 'ขั้นแรกคือดูว่าช่องว่างต้องการคำชนิดไหน เพราะตัดตัวเลือกที่ผิดได้เร็วที่สุด การเดาหรือแปลทุกคำเสียเวลาและไม่แม่น'],
+      ],
+      checklist: ['skim บทความก่อนเติม', 'ถาม 4 คำถามกับทุกช่อง', 'อ่านประโยคก่อนหน้าเมื่อเลือกคำเชื่อม', 'อ่านทวนหลังเติมครบ'],
+    }),
+  ]
+)
