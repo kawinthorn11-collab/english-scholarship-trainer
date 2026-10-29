@@ -7,6 +7,7 @@ import { hasThaiVoice, speakLine, stopVoice } from '../utils/voice'
 import { isSpeechSupported } from '../utils/speech'
 import { recordListeningActivity } from '../utils/localStats'
 import { useSpeech } from '../hooks/useSpeech'
+import SpeechSettings from '../components/SpeechSettings'
 
 const DONE_KEY = 'duo-lessons-done'
 
@@ -39,6 +40,7 @@ export default function ClassRoom({ onNavigate }) {
   const [listenOnly, setListenOnly] = useState(false)
   const [picked, setPicked] = useState(null)
   const [done, setDone] = useState(readDone)
+  const [showVoice, setShowVoice] = useState(false)
   const voice = useVoice()
   useSpeech() // re-render once the device's voices finish loading
 
@@ -251,6 +253,7 @@ export default function ClassRoom({ onNavigate }) {
               <IconButton label="ฟังประโยคนี้อีกครั้ง" onClick={replayLine} disabled={inQuiz}>🔁</IconButton>
               <Toggle on={slow} onClick={() => setSlow((v) => !v)}>🐢 ช้า</Toggle>
               <Toggle on={listenOnly} onClick={() => setListenOnly((v) => !v)}>👂 ฟังอย่างเดียว</Toggle>
+              <Toggle on={showVoice} onClick={() => setShowVoice((v) => !v)}>🎙️ เลือกเสียง</Toggle>
             </div>
           )}
 
@@ -265,10 +268,12 @@ export default function ClassRoom({ onNavigate }) {
             <p className="mt-5 text-center text-xs text-white/70">เบราว์เซอร์นี้ไม่รองรับเสียงพูด ตัวการ์ตูนจะยังขยับปากและแสดงข้อความให้อ่านแทน</p>
           )}
           {isSpeechSupported() && started && !thaiVoice && (
-            <p className="mt-5 text-center text-xs text-white/70">💡 เครื่องนี้ยังไม่มีเสียงภาษาไทย จึงจะได้ยินเฉพาะภาษาอังกฤษ (เพิ่มเสียงไทยได้ในการตั้งค่าภาษาของเครื่อง)</p>
+            <p className="mt-5 text-center text-xs text-white/70">💡 เครื่องนี้ยังไม่มีเสียงภาษาไทย จึงจะได้ยินเฉพาะภาษาอังกฤษ — กด 🎙️ เลือกเสียง เพื่อดูวิธีเพิ่มเสียงไทยฟรี</p>
           )}
         </div>
       </section>
+
+      {showVoice && <SpeechSettings />}
 
       {/* Lesson picker */}
       <section>

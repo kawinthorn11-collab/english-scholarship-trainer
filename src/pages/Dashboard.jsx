@@ -9,6 +9,7 @@ import { SectionTitle, StatTile } from '../components/ui'
 import { getLocalStats } from '../utils/localStats'
 import { getWordOfTheDay } from '../data/mascotTips'
 import { useAuth } from '../context/AuthContext'
+import InstallCard from '../components/InstallCard'
 
 const quickActions = [
   { key: 'class', icon: '🐷', title: 'ห้องเรียนหมูควาย', desc: 'ฟังสอนบทละ 1 นาที', tone: 'from-pink-500 to-orange-400', primary: true },
@@ -72,6 +73,8 @@ export default function Dashboard({ onNavigate, selectedSetId, onChangeSet, onSe
   return (
     <div className="space-y-10 sm:space-y-12">
       <ComicCoach onNavigate={onNavigate} greeting={getGreeting(user?.user_metadata?.display_name)} />
+
+      <InstallCard />
 
       {/* Quick actions */}
       <section>

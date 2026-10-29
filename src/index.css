@@ -76,6 +76,15 @@
     cursor: pointer;
   }
 
+  /* no double-tap zoom delay on phones and tablets */
+  button,
+  a,
+  input,
+  select,
+  label {
+    touch-action: manipulation;
+  }
+
   /* Slim custom scrollbar */
   * {
     scrollbar-width: thin;

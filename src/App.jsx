@@ -355,8 +355,9 @@ function App() {
         />
       )}
 
-      <nav className="sticky top-0 z-50 h-16 border-b border-white/[0.06] bg-ink/70 backdrop-blur-xl">
-        <div className="mx-auto flex h-full max-w-7xl items-center justify-between gap-4 px-4">
+      <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[200] focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:font-semibold focus:text-pink-700">ข้ามไปเนื้อหาหลัก</a>
+      <nav aria-label="เมนูหลัก" className="sticky top-0 z-50 border-b border-white/[0.06] bg-ink/80 pt-[env(safe-area-inset-top)] backdrop-blur-xl">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4">
           <BrandLogo onClick={() => navigate('landing')} />
 
           <div className="hidden items-center gap-1 rounded-full border border-white/[0.06] bg-white/[0.03] p-1 xl:flex">
@@ -406,7 +407,7 @@ function App() {
         )}
       </nav>
 
-      <main className={`relative z-10 mx-auto ${mainWidth} px-4 pb-32 pt-8 sm:pt-10`}>
+      <main id="main-content" tabIndex={-1} className={`relative z-10 mx-auto ${mainWidth} px-4 pb-40 pt-8 outline-none sm:pt-10 xl:pb-32`}>
         <div key={routeKey} data-page-root className="page-enter">
         {page === 'login' && <Login onNavigate={navigate} onNavigatePath={navigatePath} />}
         {page === 'register' && <Register onNavigate={navigate} onNavigatePath={navigatePath} />}
@@ -484,7 +485,43 @@ function App() {
 
       {page !== 'mock-exam' && <SiteFooter onNavigate={navigate} />}
       <MascotHelper page={page} />
+      {page !== 'mock-exam' && <MobileTabBar page={page} onNavigate={navigate} onMenu={() => setMenuOpen((v) => !v)} menuOpen={menuOpen} />}
     </div>
+  )
+}
+
+const TABS = [
+  { key: 'dashboard', label: 'หน้าหลัก', icon: '🏠', match: (p) => p === 'dashboard' || p === 'landing' },
+  { key: 'class', label: 'ห้องเรียน', icon: '🐷', match: (p) => p === 'class' },
+  { key: 'tests', label: 'ข้อสอบ', icon: '📝', match: (p) => ['tests', 'intl-test', 'practice', 'results', 'mistakes'].includes(p) },
+  { key: 'words', label: 'คำศัพท์', icon: '🃏', match: (p) => p === 'words' },
+]
+
+/** App-style bottom navigation for phones and tablets. */
+function MobileTabBar({ page, onNavigate, onMenu, menuOpen }) {
+  return (
+    <nav aria-label="เมนูด่วน" className="fixed inset-x-0 bottom-0 z-[55] border-t border-white/10 bg-ink/90 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl xl:hidden">
+      <div className="mx-auto grid max-w-2xl grid-cols-5">
+        {TABS.map((tab) => {
+          const active = tab.match(page)
+          return (
+            <button
+              key={tab.key}
+              onClick={() => onNavigate(tab.key)}
+              aria-current={active ? 'page' : undefined}
+              className={`flex min-h-16 flex-col items-center justify-center gap-0.5 text-[11px] font-semibold transition ${active ? 'text-white' : 'text-purple-200/70'}`}
+            >
+              <span className={`flex h-8 w-12 items-center justify-center rounded-full text-xl transition ${active ? 'bg-gradient-to-r from-pink-500 to-orange-400 shadow-lg shadow-pink-900/40' : ''}`}>{tab.icon}</span>
+              {tab.label}
+            </button>
+          )
+        })}
+        <button onClick={onMenu} aria-expanded={menuOpen} className={`flex min-h-16 flex-col items-center justify-center gap-0.5 text-[11px] font-semibold ${menuOpen ? 'text-white' : 'text-purple-200/70'}`}>
+          <span className="flex h-8 w-12 items-center justify-center rounded-full text-xl">☰</span>
+          เมนู
+        </button>
+      </div>
+    </nav>
   )
 }
 

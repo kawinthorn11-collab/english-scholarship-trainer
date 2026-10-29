@@ -13,9 +13,7 @@
     "validate:academy": "node scripts/validateGrammarAcademy.js",
     "validate:analytics": "node scripts/validateAnalytics.js",
     "validate:speech": "node scripts/validateSpeech.js",
-    "validate:intl": "node scripts/validateIntl.js",
-    "voices": "node scripts/generateVoices.mjs",
-    "voices:check": "node scripts/generateVoices.mjs --dry-run"
+    "validate:intl": "node scripts/validateIntl.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.106.1",
