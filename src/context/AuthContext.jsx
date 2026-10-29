@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react'
 import { supabase, isSupabaseConfigured } from '../lib/supabaseClient'
+import { resetSyncStatus, startAutoSync } from '../utils/cloudSync'
 
 const AuthContext = createContext(null)
 
@@ -50,6 +51,13 @@ export function AuthProvider({ children }) {
     return () => authListener.unsubscribe()
   }, [])
 
+  // Members: keep learning progress synced to their account.
+  const userId = user?.id
+  useEffect(() => {
+    if (!userId) return undefined
+    return startAutoSync(userId)
+  }, [userId])
+
   async function fetchSubscription(userId) {
     if (!supabase) return
     const { data } = await supabase
@@ -67,7 +75,11 @@ export function AuthProvider({ children }) {
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
-        options: { data: { display_name: displayName } },
+        options: {
+          data: { display_name: displayName },
+          // send the confirmation link back to this site, not localhost
+          emailRedirectTo: `${window.location.origin}${import.meta.env.BASE_URL || '/'}login`,
+        },
       })
       if (data?.session) {
         setSession(data.session)
@@ -94,6 +106,7 @@ export function AuthProvider({ children }) {
   async function signOut() {
     if (!supabase) return
     await supabase.auth.signOut()
+    resetSyncStatus()
     setUser(null)
     setSession(null)
     setSubscription(null)
