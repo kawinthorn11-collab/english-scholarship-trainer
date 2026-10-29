@@ -140,7 +140,7 @@ export default function Dashboard({ onNavigate, selectedSetId, onChangeSet, onSe
       {/* Exam set selector */}
       <section>
         <SectionTitle icon="📚" title="เลือกชุดข้อสอบ" subtitle={selectedSet?.description} />
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2">
           {examSetList.map((set) => {
             const active = set.setId === selectedSetId
             return (

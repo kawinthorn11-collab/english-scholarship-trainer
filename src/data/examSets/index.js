@@ -4,11 +4,13 @@
 import set01 from './set01.js'
 import set02 from './set02.js'
 import set03 from './set03/index.js'
+import set04 from './set04.js'
 
 export const examSets = {
   [set01.setId]: set01,
   [set02.setId]: set02,
   [set03.setId]: set03,
+  [set04.setId]: set04,
 }
 
 /**

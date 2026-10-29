@@ -37,7 +37,7 @@ export default function ExplanationPanel({ question }) {
         <SpeakButton text={question.correctAnswer} label="Answer" size="sm" />
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className={`grid gap-4 ${question.explanationEnglish ? 'md:grid-cols-2' : ''}`}>
         <Block icon="🇹🇭" title="อธิบายภาษาไทย">{question.explanationThai}</Block>
         <Block icon="🇬🇧" title="English Explanation" speak={question.explanationEnglish}>{question.explanationEnglish}</Block>
       </div>
@@ -61,7 +61,7 @@ export default function ExplanationPanel({ question }) {
         </ul>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className={`grid gap-4 ${['', '', 'md:grid-cols-2', 'md:grid-cols-3'][[question.examTrick, question.commonMistake, question.miniLesson].filter(Boolean).length]}`}>
         <Block icon="🧠" title="Exam Trick" tone="violet">{question.examTrick}</Block>
         <Block icon="⚠️" title="Common Mistake" tone="rose">{question.commonMistake}</Block>
         <Block icon="📘" title="Mini Lesson" tone="sky">{question.miniLesson}</Block>

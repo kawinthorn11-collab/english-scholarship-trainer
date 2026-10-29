@@ -17,7 +17,7 @@
 | ฟีเจอร์ | รายละเอียด |
 | --- | --- |
 | 🎧 **ห้องเรียนหมูควาย** | บทเรียนบทละ 1 นาที ฟังครูหมูกับครูควายคุยสอนทีละประโยค มีโหมดช้าและโหมดฟังอย่างเดียว จบบทมีคำถามพร้อมเฉลยแบบพูด |
-| 📝 **ข้อสอบจำลอง** | 3 ชุด ชุดละ 60 ข้อ 60 นาที (Grammar 30 + Reading 30) จับเวลาเหมือนห้องสอบจริง สลับข้อทุกครั้ง |
+| 📝 **ข้อสอบจำลอง** | 4 ชุด ชุดละ 60 ข้อ 60 นาที (Grammar 30 + Reading 30) รวมชุดที่จัดรูปแบบตามข้อสอบเข้ามหาวิทยาลัยนานาชาติจริง จับเวลาเหมือนห้องสอบ สลับช้อยส์ทุกครั้ง |
 | 💡 **เฉลยละเอียด** | ทุกข้ออธิบายทั้งไทยและอังกฤษ บอกว่าทำไมช้อยส์อื่นผิด เทคนิคทำข้อสอบ และจุดที่คนไทยพลาดบ่อย |
 | 🎯 **วิเคราะห์จุดอ่อน** | หลังสอบบอกเลยว่าควรซ่อมทักษะไหน แล้วพาไปบทเรียนที่ตรงจุด |
 | 📖 **Grammar Lessons + Academy** | บทเรียน grammar 20 หัวข้อ และคอร์ส Academy 9 โมดูล 28 บท เขียนเองทั้งหมด พร้อมแบบฝึก 168 ข้อ |
@@ -88,7 +88,7 @@ scripts/            สคริปต์ตรวจความถูกต้
 **MooKwai** is a free web app that helps Thai high-school students prepare for English scholarship exams at international universities, where tuition is out of reach for many families.
 
 - **Pig & Buffalo Classroom** – one-minute spoken dialogue lessons (Thai + English text-to-speech) with a quiz at the end
-- **Mock exams** – three original 60-question, 60-minute sets with bilingual, choice-by-choice explanations
+- **Mock exams** – four original 60-question, 60-minute sets (one laid out like the real entrance exam) with choice-by-choice explanations
 - **Weak-skill analysis** that links straight to the matching grammar lesson
 - **Grammar lessons, a hand-written 28-unit Grammar Academy, and native-speed listening practice**
 - Works without an account; progress is stored on the device
