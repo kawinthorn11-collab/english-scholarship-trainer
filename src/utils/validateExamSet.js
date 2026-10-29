@@ -12,9 +12,11 @@ const REQUIRED_SET_FIELDS = [
 const REQUIRED_QUESTION_FIELDS = [
   'id', 'setId', 'section', 'passageId', 'passageTitle', 'passage',
   'question', 'choices', 'correctAnswer', 'skillTag', 'difficulty',
-  'explanationThai', 'explanationEnglish', 'whyCorrect', 'whyWrong',
-  'examTrick', 'commonMistake', 'miniLesson', 'extraPractice',
+  'explanationThai', 'whyWrong', 'examTrick',
 ]
+
+// Optional enrichments: checked only when present.
+const OPTIONAL_TEXT_FIELDS = ['explanationEnglish', 'whyCorrect', 'commonMistake', 'miniLesson']
 
 const VALID_SECTIONS = ['Grammar', 'Reading']
 const VALID_DIFFICULTIES = ['easy', 'medium', 'hard']
@@ -168,12 +170,13 @@ export function validateExamSet(examSet) {
     }
 
     // Non-empty explanation fields
-    const textFields = [
-      'explanationThai', 'explanationEnglish', 'whyCorrect',
-      'examTrick', 'commonMistake', 'miniLesson',
-    ]
-    for (const f of textFields) {
+    for (const f of ['explanationThai', 'examTrick']) {
       if (typeof q[f] !== 'string' || q[f].trim() === '') {
+        errors.push(`${prefix} field "${f}" is empty`)
+      }
+    }
+    for (const f of OPTIONAL_TEXT_FIELDS) {
+      if (q[f] !== undefined && (typeof q[f] !== 'string' || q[f].trim() === '')) {
         errors.push(`${prefix} field "${f}" is empty`)
       }
     }
@@ -191,8 +194,8 @@ export function validateExamSet(examSet) {
       if (!ep.explanation || !ep.explanation.trim()) {
         errors.push(`${prefix} extraPractice.explanation is empty`)
       }
-    } else {
-      errors.push(`${prefix} extraPractice missing or invalid`)
+    } else if (q.extraPractice !== undefined) {
+      errors.push(`${prefix} extraPractice is invalid`)
     }
 
     // Reading must have a passage somewhere — either inline or shared via passageId
