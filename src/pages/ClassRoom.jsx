@@ -7,6 +7,7 @@ import { hasThaiVoice, speakLine, stopVoice } from '../utils/voice'
 import { isSpeechSupported } from '../utils/speech'
 import { recordListeningActivity } from '../utils/localStats'
 import { useSpeech } from '../hooks/useSpeech'
+import { hasRecordedVoices } from '../utils/voiceClips'
 import SpeechSettings from '../components/SpeechSettings'
 
 const DONE_KEY = 'duo-lessons-done'
@@ -200,7 +201,7 @@ export default function ClassRoom({ onNavigate }) {
                     <span aria-hidden className="absolute inset-0 rounded-full border-4 border-white/60" style={{ animation: 'ping-soft 1.8s ease-out infinite' }} />
                     <span className="ml-1.5">▶</span>
                   </button>
-                  <p className="font-display text-lg text-white">กดเพื่อฟังบทเรียน</p>
+                  <button onClick={play} className="font-display text-lg text-white underline-offset-4 hover:underline">กดเพื่อฟังบทเรียน</button>
                 </div>
               ) : line ? (
                 <div key={`${lesson.id}-${step}`} className="space-y-4" style={{ animation: 'fade-up 0.45s ease both' }}>
@@ -267,7 +268,7 @@ export default function ClassRoom({ onNavigate }) {
           {!isSpeechSupported() && (
             <p className="mt-5 text-center text-xs text-white/70">เบราว์เซอร์นี้ไม่รองรับเสียงพูด ตัวการ์ตูนจะยังขยับปากและแสดงข้อความให้อ่านแทน</p>
           )}
-          {isSpeechSupported() && started && !thaiVoice && (
+          {isSpeechSupported() && started && !thaiVoice && !hasRecordedVoices() && (
             <p className="mt-5 text-center text-xs text-white/70">💡 เครื่องนี้ยังไม่มีเสียงภาษาไทย จึงจะได้ยินเฉพาะภาษาอังกฤษ — กด 🎙️ เลือกเสียง เพื่อดูวิธีเพิ่มเสียงไทยฟรี</p>
           )}
         </div>
