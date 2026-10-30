@@ -30,6 +30,30 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Teachers' voices: record every fixed line with natural neural voices
+      # (Thai + English). Clips are cached between runs, so only new or
+      # changed lines are recorded. If recording fails the site still works
+      # and falls back to the device's own voices.
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Restore recorded voices
+        uses: actions/cache@v4
+        with:
+          path: public/voice
+          key: voice-${{ hashFiles('src/data/**', 'scripts/collectSpeech.mjs', 'scripts/recordVoices.py', 'src/utils/speechText.js') }}
+          restore-keys: voice-
+
+      - name: Record teacher voices
+        continue-on-error: true
+        timeout-minutes: 40
+        run: |
+          pip install edge-tts==7.3.1
+          node scripts/collectSpeech.mjs > speech-lines.json
+          python scripts/recordVoices.py speech-lines.json public/voice
+
       - name: Build
         env:
           # Member login. Set these in Settings → Secrets and variables → Actions → Variables.

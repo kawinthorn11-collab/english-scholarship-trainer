@@ -4,6 +4,10 @@ import './index.css'
 import App from './App.jsx'
 import './utils/install'
 import { AuthProvider } from './context/AuthContext.jsx'
+import { installAudioUnlock, loadVoiceClips } from './utils/voiceClips'
+
+loadVoiceClips()
+installAudioUnlock()
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

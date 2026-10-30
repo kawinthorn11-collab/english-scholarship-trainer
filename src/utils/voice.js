@@ -8,6 +8,10 @@
 //
 // The engine broadcasts who is talking so mascots can animate in sync.
 import { getSpeechPreferences, isSpeechSupported } from './speech'
+import { normalizeSpeech, splitMixedText } from './speechText'
+import { playClip, stopClip } from './voiceClips'
+
+export { normalizeSpeech, splitMixedText }
 
 const PREFS_KEY = 'mk-voice-prefs-v1'
 
@@ -130,27 +134,6 @@ export function hasNaturalVoices() {
 /*  Text handling                                                      */
 /* ------------------------------------------------------------------ */
 
-export function normalizeSpeech(text) {
-  return String(text || '')
-    .replace(/[\p{Extended_Pictographic}\u{FE0F}\u{200D}]/gu, '')
-    .replace(/_{2,}\(?\d*\)?_*/g, ' blank ')
-    .replace(/\s+/g, ' ')
-    .trim()
-}
-
-/** Split text into Thai / English runs. Emoji and symbols are dropped. */
-export function splitMixedText(text) {
-  const segments = []
-  const re = /([฀-๿][฀-๿\s\d.,!?ๆ"'“”()%:-]*)|([A-Za-z][A-Za-z0-9\s.,;:'"’!?()/%-]*)/g
-  let match
-  while ((match = re.exec(String(text || ''))) !== null) {
-    const value = (match[1] || match[2] || '').replace(/\s+/g, ' ').trim()
-    if (!value || !/[฀-๿A-Za-z]/.test(value)) continue
-    segments.push({ lang: match[1] ? 'th' : 'en', text: value })
-  }
-  return segments
-}
-
 // Chrome stops long utterances after ~15 seconds, so keep chunks short.
 function chunk(text, max = 160) {
   if (text.length <= max) return [text]
@@ -220,8 +203,11 @@ function playSynth(text, lang, speaker, myToken, rate) {
   })
 }
 
-async function playOne(text, speaker, rate, myToken) {
+async function playOne(text, speaker, rate, myToken, useClips) {
   const clean = normalizeSpeech(text)
+  // Recorded neural voice first; the device's own voices only as a fallback.
+  if (useClips && await playClip(clean, speaker, rate, () => myToken !== token)) return
+  if (myToken !== token) return
   for (const segment of splitMixedText(clean)) {
     for (const piece of chunk(segment.text)) {
       if (myToken !== token) return
@@ -236,15 +222,18 @@ export function stopVoice() {
     window.clearInterval(keepAlive)
     keepAlive = null
   }
+  stopClip()
   if (isSpeechSupported()) window.speechSynthesis.cancel()
   if (state.speaker) setState({ speaker: null, lineId: null })
 }
 
 /**
  * Speak one line, or several lines in a row, as a character.
+ * Recorded clips are used when available; `useClips: false` forces the
+ * device voice (used to preview the device voices in Voice Settings).
  * Resolves true when finished normally, false when interrupted.
  */
-export async function speakLine(text, { speaker = 'narrator', lineId = null, rate = 1, gap = 250 } = {}) {
+export async function speakLine(text, { speaker = 'narrator', lineId = null, rate = 1, gap = 250, useClips = true } = {}) {
   stopVoice()
   const myToken = token
   const lines = (Array.isArray(text) ? text : [text]).filter((line) => normalizeSpeech(line))
@@ -260,7 +249,7 @@ export async function speakLine(text, { speaker = 'narrator', lineId = null, rat
   setState({ speaker, lineId })
   for (let i = 0; i < lines.length; i += 1) {
     if (myToken !== token) return false
-    await playOne(lines[i], speaker, rate, myToken)
+    await playOne(lines[i], speaker, rate, myToken, useClips)
     if (i < lines.length - 1 && myToken === token) await wait(gap)
   }
   if (myToken !== token) return false
