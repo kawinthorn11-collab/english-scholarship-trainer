@@ -16,7 +16,7 @@ export default function Mascot({ character = 'pig', mood = 'happy', talking = fa
   return (
     <div
       className={`mascot mascot--${mood} ${talking ? 'mascot--talking' : ''} inline-block select-none ${className}`}
-      style={{ width: size }}
+      style={{ width: size > 100 ? `min(${size}px, 30vw)` : size }}
       role="img"
       aria-label={label}
     >
