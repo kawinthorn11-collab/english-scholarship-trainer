@@ -20,10 +20,9 @@ const features = [
 ]
 
 const steps = [
-  { icon: '🎯', title: 'ทำข้อสอบจำลอง', desc: 'วัดระดับตัวเองด้วยข้อสอบ 60 ข้อ' },
-  { icon: '🔍', title: 'ดูจุดอ่อน', desc: 'ระบบวิเคราะห์ทักษะที่ยังพลาด' },
-  { icon: '🎧', title: 'ฟังหมูควายสอน', desc: 'บทละ 1 นาที ฟังแล้วตอบ' },
-  { icon: '🏆', title: 'คะแนนพุ่ง!', desc: 'กลับมาสอบใหม่แล้วเห็นพัฒนาการ' },
+  { icon: '🎧', title: 'ฟังครูสอน 1 นาที', desc: 'ครูหมูกับครูควายพูดสอนทีละประโยค แค่ฟังก็เข้าใจ', target: 'class' },
+  { icon: '📝', title: 'ลองทำข้อสอบ', desc: 'ข้อสอบสั้นและข้อสอบจำลองเต็มชุด มีเฉลยภาษาไทยทุกข้อ', target: 'tests' },
+  { icon: '🔁', title: 'ทบทวนจุดที่พลาด', desc: 'ระบบจำข้อที่ผิดไว้ให้ ทบทวนจนตอบถูกเอง', target: 'mistakes' },
 ]
 
 const marqueeWords = ['substantial', 'mitigate', 'feasible', 'consequently', 'advocate', 'comprehensive', 'inevitable', 'prominent', 'sustain', 'enhance', 'diligent', 'ambiguous']
@@ -33,27 +32,32 @@ export default function Landing({ onNavigate }) {
   const lessonsCount = getAvailableLessons().length
 
   return (
-    <div className="space-y-28 pb-10 sm:space-y-36">
+    <div className="space-y-20 pb-10 sm:space-y-32">
       {/* HERO */}
-      <section className="relative grid items-center gap-12 pt-6 lg:grid-cols-[1.1fr_0.9fr] lg:pt-14">
-        <div className="space-y-7 text-center lg:text-left">
+      <section className="relative grid grid-cols-1 items-center gap-12 pt-6 lg:grid-cols-[1.1fr_0.9fr] lg:pt-14">
+        <div className="min-w-0 space-y-7 text-center lg:text-left">
           <span className="chip animate-fade-up">✨ ฝึกสอบชิงทุนแบบมีครูส่วนตัว</span>
           <h1 className="animate-fade-up text-4xl font-semibold leading-[1.15] text-white [animation-delay:80ms] sm:text-5xl lg:text-6xl">
             เตรียมสอบชิงทุน
             <br />
-            ภาษาอังกฤษ <span className="gradient-text">ให้ปังกว่าที่เคย</span>
+            ภาษาอังกฤษ <span className="gradient-text">ฟรี</span>
+            <br className="sm:hidden" />{' '}
+            <span className="gradient-text">แค่กดฟังก็เริ่มได้</span>
           </h1>
           <p className="mx-auto max-w-xl animate-fade-up text-lg leading-relaxed text-purple-200/80 [animation-delay:160ms] lg:mx-0">
             ฟัง <b className="text-pink-200">ครูหมูหวาน</b> กับ <b className="text-sky-200">ครูควายขยัน</b> คุยสอน grammar แบบสั้น ๆ ทีละประโยค ไม่ต้องอ่านเยอะ แล้วลุยข้อสอบจำลองพร้อมเฉลยละเอียด
           </p>
           <div className="flex animate-fade-up flex-col items-center gap-3 [animation-delay:240ms] sm:flex-row sm:justify-center lg:justify-start">
             <button onClick={() => onNavigate('class')} className="btn btn-primary w-full px-8 py-4 text-lg sm:w-auto">
-              🎧 ฟังหมูควายสอน
+              ▶ เริ่มบทเรียนแรก (1 นาที)
             </button>
             <button onClick={() => onNavigate('dashboard')} className="btn btn-ghost w-full px-8 py-4 text-lg sm:w-auto">
-              เริ่มเรียนเลย 🚀
+              ดูเมนูทั้งหมด
             </button>
           </div>
+          <p className="animate-fade-up text-sm text-purple-200/80 [animation-delay:280ms]">
+            ✓ ฟรีทั้งหมด &nbsp; ✓ ไม่ต้องสมัคร &nbsp; ✓ ใช้ในมือถือได้
+          </p>
           <div className="grid animate-fade-up grid-cols-3 gap-3 pt-4 [animation-delay:320ms]">
             <HeroStat value={totalQuestions} suffix="+" label="ข้อสอบเสมือนจริง" />
             <HeroStat value={lessonsCount} label="บทเรียน Grammar" />
@@ -62,6 +66,25 @@ export default function Landing({ onNavigate }) {
         </div>
 
         <HeroSkit />
+      </section>
+
+      {/* HOW IT WORKS */}
+      <section className="space-y-10">
+        <SectionIntro eyebrow="ใช้ยังไง?" title="แค่ 3 ขั้น" subtitle="กดที่กล่องไหนก็ได้เพื่อเริ่มขั้นนั้นเลย" />
+        <ol className="relative grid gap-5 md:grid-cols-3">
+          {steps.map((s, i) => (
+            <li key={s.title}>
+              <button onClick={() => onNavigate(s.target)} className="glass lift relative h-full w-full rounded-[1.75rem] p-6 text-center">
+                <span className="relative mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 text-3xl shadow-lg shadow-fuchsia-900/40">
+                  {s.icon}
+                  <span className="absolute -right-1 -top-1 flex h-7 w-7 items-center justify-center rounded-full bg-amber-300 text-sm font-bold text-amber-950">{i + 1}</span>
+                </span>
+                <span className="block text-lg font-semibold text-white">{s.title}</span>
+                <span className="mt-1 block text-sm text-purple-200/80">{s.desc}</span>
+              </button>
+            </li>
+          ))}
+        </ol>
       </section>
 
       {/* MARQUEE */}
@@ -98,24 +121,6 @@ export default function Landing({ onNavigate }) {
       <section className="space-y-10">
         <SectionIntro eyebrow="ลองเรียนกับหมูควาย" title="ลองตอบดูสักข้อ 👇" subtitle="ตอบแล้วครูควายจะพูดอธิบายให้ฟังทันที 🔊" />
         <MiniQuiz />
-      </section>
-
-      {/* STEPS */}
-      <section className="space-y-10">
-        <SectionIntro eyebrow="เส้นทางสู่ทุน" title="4 ขั้นตอนง่าย ๆ" />
-        <div className="relative grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          <div aria-hidden className="absolute left-0 right-0 top-12 hidden h-px bg-gradient-to-r from-transparent via-fuchsia-400/50 to-transparent lg:block" />
-          {steps.map((s, i) => (
-            <div key={s.title} className="glass lift relative rounded-[1.75rem] p-6 text-center">
-              <div className="relative mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 text-3xl shadow-lg shadow-fuchsia-900/40">
-                {s.icon}
-                <span className="absolute -right-1 -top-1 flex h-6 w-6 items-center justify-center rounded-full bg-amber-300 text-xs font-bold text-amber-950">{i + 1}</span>
-              </div>
-              <h3 className="text-lg font-semibold text-white">{s.title}</h3>
-              <p className="mt-1 text-sm text-purple-200/75">{s.desc}</p>
-            </div>
-          ))}
-        </div>
       </section>
 
       {/* CTA */}
@@ -257,11 +262,12 @@ function HeroSkit() {
   }
 
   const playing = voice.lineId?.startsWith('skit-')
+  const small = typeof window !== 'undefined' && window.innerWidth < 640
 
   return (
-    <div className="relative mx-auto flex w-full max-w-lg flex-col items-center">
+    <div className="relative mx-auto flex w-full min-w-0 max-w-lg flex-col items-center">
       <div aria-hidden className="absolute inset-0 m-auto h-80 w-80 rounded-full bg-gradient-to-br from-pink-500/50 via-orange-400/30 to-sky-400/30 blur-3xl" />
-      <div aria-hidden className="absolute inset-0 m-auto h-[24rem] w-[24rem] animate-spin-slow rounded-full border-2 border-dashed border-white/15" />
+      <div aria-hidden className="absolute inset-0 m-auto h-[18rem] w-[18rem] animate-spin-slow sm:h-[24rem] sm:w-[24rem] rounded-full border-2 border-dashed border-white/15" />
       <SpeechBubble
         key={i}
         side="bottom"
@@ -270,8 +276,8 @@ function HeroSkit() {
         text={line.text}
       />
       <div className="relative z-10 flex items-end justify-center -space-x-6">
-        <PokeMascot character="pig" mood={line.who === 'pig' ? 'wave' : 'happy'} size={230} className={`transition-transform duration-500 ${line.who === 'pig' ? 'scale-105' : 'scale-95'}`} />
-        <PokeMascot character="buffalo" mood={line.who === 'buffalo' ? 'teach' : 'happy'} size={245} className={`transition-transform duration-500 ${line.who === 'buffalo' ? 'scale-105' : 'scale-95'}`} />
+        <PokeMascot character="pig" mood={line.who === 'pig' ? 'wave' : 'happy'} size={small ? 150 : 230} className={`transition-transform duration-500 ${line.who === 'pig' ? 'scale-105' : 'scale-95'}`} />
+        <PokeMascot character="buffalo" mood={line.who === 'buffalo' ? 'teach' : 'happy'} size={small ? 160 : 245} className={`transition-transform duration-500 ${line.who === 'buffalo' ? 'scale-105' : 'scale-95'}`} />
         <FloatingChip className="-left-10 top-2 [animation-delay:0s]" icon="📖" text="Grammar" />
         <FloatingChip className="-right-8 top-0 [animation-delay:1.2s]" icon="🎧" text="ฟังเสียง" />
         <FloatingChip className="-left-14 bottom-10 [animation-delay:2.1s]" icon="⏱" text="60 ข้อ / 60 นาที" />

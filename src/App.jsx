@@ -418,7 +418,7 @@ function App() {
             {page === 'intl-test' && <IntlQuiz key={selectedLessonId} testId={selectedLessonId} onNavigate={navigate} />}
             {page === 'mistakes' && <Mistakes onNavigate={navigate} />}
             {page === 'words' && <Words />}
-            {page === 'dashboard' && <Dashboard onNavigate={navigate} selectedSetId={selectedSetId} onChangeSet={changeSet} onSelectLesson={selectLesson} />}
+            {page === 'dashboard' && <Dashboard onNavigate={navigate} selectedSetId={selectedSetId} onChangeSet={changeSet} onSelectLesson={selectLesson} onOpenTest={openTest} />}
             {page === 'mock-exam' && (
               <MockExam
                 selectedSetId={selectedSetId}

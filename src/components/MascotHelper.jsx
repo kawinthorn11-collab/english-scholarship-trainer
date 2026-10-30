@@ -31,6 +31,7 @@ export default function MascotHelper({ page }) {
   const [peek, setPeek] = useState(false)
   const [prevArea, setPrevArea] = useState(area)
   const voice = useVoice()
+  const small = typeof window !== 'undefined' && window.innerWidth < 640
 
   if (prevArea !== area) {
     setPrevArea(area)
@@ -120,13 +121,13 @@ export default function MascotHelper({ page }) {
 
       <button
         onClick={toggle}
-        className="group relative flex h-16 w-[5.5rem] items-end justify-center rounded-full border border-white/20 bg-gradient-to-br from-pink-500 to-orange-400 shadow-[0_16px_40px_-10px_rgba(255,61,139,0.9)] transition hover:scale-105 active:scale-95 sm:h-[76px] sm:w-[6.5rem]"
+        className="group relative flex h-12 w-[4.5rem] items-end justify-center rounded-full border border-white/20 bg-gradient-to-br from-pink-500 to-orange-400 shadow-[0_16px_40px_-10px_rgba(255,61,139,0.9)] transition hover:scale-105 active:scale-95 sm:h-[76px] sm:w-[6.5rem]"
         aria-label={open ? 'ปิดหมูควายสอน' : 'เปิดหมูควายสอน (มีเสียง)'}
         aria-expanded={open}
       >
         {!open && <span aria-hidden className="absolute inset-0 rounded-full border-2 border-pink-300/70" style={{ animation: 'ping-soft 2.4s ease-out infinite' }} />}
-        <Mascot character="pig" mood={open ? 'teach' : 'wave'} talking={voice.speaker === 'pig' && open} size={46} className="-mb-1 -mr-2 transition-transform group-hover:-rotate-6" />
-        <Mascot character="buffalo" mood="happy" talking={voice.speaker === 'buffalo' && open} size={48} className="-mb-1 transition-transform group-hover:rotate-6" />
+        <Mascot character="pig" mood={open ? 'teach' : 'wave'} talking={voice.speaker === 'pig' && open} size={small ? 34 : 46} className="-mb-1 -mr-2 transition-transform group-hover:-rotate-6" />
+        <Mascot character="buffalo" mood="happy" talking={voice.speaker === 'buffalo' && open} size={small ? 36 : 48} className="-mb-1 transition-transform group-hover:rotate-6" />
       </button>
     </div>
   )

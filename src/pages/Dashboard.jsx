@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { getAttempts, getGrammarProgress } from '../utils/storage'
 import { getStatsFromAttempts } from '../utils/analysis'
 import { examSetList, getExamSet } from '../data/examSets/index.js'
@@ -10,14 +11,16 @@ import { getLocalStats } from '../utils/localStats'
 import { getWordOfTheDay } from '../data/mascotTips'
 import { useAuth } from '../context/AuthContext'
 import InstallCard from '../components/InstallCard'
+import StartHere from '../components/StartHere'
+import { dismissStart, getStartSteps, isBrandNew, isStartDismissed } from '../utils/startSteps'
 
 const quickActions = [
-  { key: 'class', icon: '🐷', title: 'ห้องเรียนหมูควาย', desc: 'ฟังสอนบทละ 1 นาที', tone: 'from-pink-500 to-orange-400', primary: true },
-  { key: 'plan', icon: '🗺️', title: 'หลักสูตร 4 สัปดาห์', desc: 'รู้ว่าวันนี้ต้องทำอะไร', tone: 'from-violet-600 to-indigo-600' },
-  { key: 'tests', icon: '📝', title: 'คลังข้อสอบ', desc: 'แนวทุน + TOEIC · IELTS', tone: 'from-fuchsia-600 to-pink-600' },
-  { key: 'words', icon: '🃏', title: 'บัตรคำศัพท์', desc: 'ทบทวนแบบเว้นระยะ', tone: 'from-sky-500 to-blue-600' },
-  { key: 'mistakes', icon: '📒', title: 'สมุดข้อผิด', desc: 'ทบทวนข้อที่เคยผิด', tone: 'from-rose-500 to-red-500' },
-  { key: 'listening', icon: '🎧', title: 'ฟังเสียง', desc: 'ฟังแล้วพูดตาม', tone: 'from-emerald-500 to-teal-600' },
+  { key: 'class', icon: '🐷', title: 'ฟังครูสอน', desc: 'บทละ 1 นาที ฟังแล้วตอบ', tone: 'from-pink-500 to-orange-400', primary: true },
+  { key: 'tests', icon: '📝', title: 'ทำข้อสอบ', desc: 'ข้อสอบจำลองทุน, TOEIC, IELTS', tone: 'from-fuchsia-600 to-pink-600' },
+  { key: 'words', icon: '🃏', title: 'ท่องศัพท์', desc: 'บัตรคำ กดฟังเสียงได้', tone: 'from-sky-500 to-blue-600' },
+  { key: 'plan', icon: '🗺️', title: 'แผนเรียน 4 สัปดาห์', desc: 'บอกว่าแต่ละวันทำอะไร', tone: 'from-violet-600 to-indigo-600' },
+  { key: 'mistakes', icon: '📒', title: 'ข้อที่เคยตอบผิด', desc: 'ทบทวนจนจำได้', tone: 'from-rose-500 to-red-500' },
+  { key: 'listening', icon: '🎧', title: 'ฝึกฟัง-พูดตาม', desc: 'เสียงเจ้าของภาษา', tone: 'from-emerald-500 to-teal-600' },
 ]
 
 function getGreeting(name) {
@@ -28,8 +31,10 @@ function getGreeting(name) {
   return `สวัสดีตอนเย็น${who} 🌙`
 }
 
-export default function Dashboard({ onNavigate, selectedSetId, onChangeSet, onSelectLesson }) {
+export default function Dashboard({ onNavigate, selectedSetId, onChangeSet, onSelectLesson, onOpenTest }) {
   const { user } = useAuth()
+  const [showStart, setShowStart] = useState(() => !isStartDismissed() && getStartSteps().some((s) => !s.done))
+  const brandNew = isBrandNew()
   const attempts = getAttempts()
   const setAttempts = attempts.filter((a) => a.setId === selectedSetId)
   const stats = getStatsFromAttempts(setAttempts)
@@ -72,31 +77,36 @@ export default function Dashboard({ onNavigate, selectedSetId, onChangeSet, onSe
 
   return (
     <div className="space-y-10 sm:space-y-12">
-      <ComicCoach onNavigate={onNavigate} greeting={getGreeting(user?.user_metadata?.display_name)} />
-
-      <InstallCard />
+      {showStart ? (
+        <StartHere onNavigate={onNavigate} onOpenTest={onOpenTest} onDismiss={() => { dismissStart(); setShowStart(false) }} />
+      ) : (
+        <ComicCoach onNavigate={onNavigate} greeting={getGreeting(user?.user_metadata?.display_name)} />
+      )}
 
       {/* Quick actions */}
       <section>
-        <SectionTitle icon="⚡" title="เริ่มเรียนอะไรดี?" subtitle="เลือกโหมดที่อยากฝึกวันนี้" />
+        <SectionTitle icon="⚡" title={showStart ? 'หรือเลือกเองได้เลย' : 'วันนี้อยากฝึกอะไร?'} subtitle="กดที่กล่องเพื่อเข้าไปฝึก" />
         <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
           {quickActions.map((a) => (
             <button
               key={a.key}
               onClick={() => onNavigate(a.key)}
-              className={`group relative overflow-hidden rounded-[1.75rem] p-5 text-left transition duration-300 hover:-translate-y-1.5 ${a.primary ? 'ring-2 ring-white/40' : ''} bg-gradient-to-br ${a.tone} shadow-[0_20px_40px_-24px_rgba(0,0,0,0.9)]`}
+              className={`group relative overflow-hidden rounded-[1.75rem] p-4 text-left transition duration-300 sm:p-5 hover:-translate-y-1.5 ${a.primary ? 'ring-2 ring-white/40' : ''} bg-gradient-to-br ${a.tone} shadow-[0_20px_40px_-24px_rgba(0,0,0,0.9)]`}
             >
               <span aria-hidden className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-white/20 blur-xl transition-transform duration-500 group-hover:scale-150" />
-              <span className="relative mb-6 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/20 text-2xl backdrop-blur transition-transform duration-300 group-hover:-rotate-12 group-hover:scale-110">{a.icon}</span>
-              <span className="relative block font-display text-lg font-semibold text-white">{a.title}</span>
+              <span className="relative mb-3 flex h-10 w-10 items-center sm:mb-6 sm:h-12 sm:w-12 justify-center rounded-2xl bg-white/20 text-2xl backdrop-blur transition-transform duration-300 group-hover:-rotate-12 group-hover:scale-110">{a.icon}</span>
+              <span className="relative block pr-4 font-display text-base font-semibold text-white sm:text-lg">{a.title}</span>
               <span className="relative block text-xs text-white/80">{a.desc}</span>
-              <span aria-hidden className="absolute bottom-5 right-5 text-white/70 transition-transform duration-300 group-hover:translate-x-1">→</span>
+              <span aria-hidden className="absolute bottom-4 right-4 text-white/70 sm:bottom-5 sm:right-5 transition-transform duration-300 group-hover:translate-x-1">→</span>
             </button>
           ))}
         </div>
       </section>
 
+      {!brandNew && <InstallCard />}
+
       {/* Personal progress */}
+      {!brandNew && (
       <section>
         <SectionTitle icon="🌱" title="ความคืบหน้าของฉัน" subtitle="บันทึกไว้บนอุปกรณ์นี้อัตโนมัติ" />
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
@@ -108,9 +118,11 @@ export default function Dashboard({ onNavigate, selectedSetId, onChangeSet, onSe
           <StatTile icon="🎧" label="ฟังแล้ว" value={localStats.listenedItems || 0} accent="from-fuchsia-400/40 to-pink-500/10" />
         </div>
       </section>
+      )}
 
       {/* Scores + word of the day */}
-      <section className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
+      <section className={`grid gap-6 ${brandNew ? '' : 'lg:grid-cols-[1.4fr_1fr]'}`}>
+        {!brandNew && (
         <div className="glass rounded-[2rem] p-6 sm:p-7">
           <SectionTitle icon="📈" title="คะแนนของชุดนี้" subtitle={selectedSet?.title} />
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -121,6 +133,7 @@ export default function Dashboard({ onNavigate, selectedSetId, onChangeSet, onSe
           </div>
           <Sparkline values={scoreHistory} />
         </div>
+        )}
 
         <div className="glass relative overflow-hidden rounded-[2rem] p-6 sm:p-7">
           <div aria-hidden className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-amber-400/20 blur-3xl" />
@@ -138,6 +151,7 @@ export default function Dashboard({ onNavigate, selectedSetId, onChangeSet, onSe
       </section>
 
       {/* Exam set selector */}
+      {!brandNew && (
       <section>
         <SectionTitle icon="📚" title="เลือกชุดข้อสอบ" subtitle={selectedSet?.description} />
         <div className="grid gap-4 sm:grid-cols-2">
@@ -165,6 +179,7 @@ export default function Dashboard({ onNavigate, selectedSetId, onChangeSet, onSe
           })}
         </div>
       </section>
+      )}
 
       {/* Recommended Grammar Lessons (if weak skills exist) */}
       {recommendedLessons.length > 0 && (
@@ -214,7 +229,7 @@ export default function Dashboard({ onNavigate, selectedSetId, onChangeSet, onSe
       )}
 
       {/* Grammar progress summary */}
-      {availableLessons.length > 0 && (
+      {!brandNew && availableLessons.length > 0 && (
         <section className="glass flex flex-col gap-5 rounded-[2rem] p-6 sm:flex-row sm:items-center sm:p-7">
           <div className="min-w-0 flex-1">
             <p className="eyebrow">📚 Grammar Learning Progress</p>

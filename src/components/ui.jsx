@@ -16,7 +16,7 @@ export function PageHeader({ eyebrow, title, subtitle, mood, children, icon }) {
           {children && <div className="pt-2">{children}</div>}
         </div>
         {mood && (
-          <div className="mx-auto flex shrink-0 items-end -space-x-5 sm:mx-0">
+          <div className="hidden shrink-0 items-end -space-x-5 sm:flex">
             <Mascot character="pig" mood={mood === 'teach' ? 'happy' : mood} size={112} />
             <Mascot character="buffalo" mood={mood} size={122} />
           </div>
